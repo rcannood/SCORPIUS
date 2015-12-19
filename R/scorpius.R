@@ -276,7 +276,7 @@ find.modules <- function(smooth.expression, tag.genes) {
   dissim <- calculate.distance(t(smooth.expr))
   hcl <- hclust(as.dist(dissim), method="average")
   
-  labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid", )
+  labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid")
   labels2 <- WGCNA::mergeCloseModules(smooth.expr, labels, cutHeight = 0.3)$colors
   labels2 <- match(labels2, unique(labels2))
   
