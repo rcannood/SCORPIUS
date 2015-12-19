@@ -1,6 +1,25 @@
 ``` r
 library(SCORPIUS)
+```
+
+    ## Loading required package: DBI
+
+``` r
 library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+    ## 
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+    ## 
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 library(tidyr)
 ```
 
@@ -126,7 +145,7 @@ trajectory <- infer.trajectory(space, k=4)
 evaluate.trajectory(trajectory$time, progression)
 ```
 
-    ## [1] 0.9589824
+    ## [1] 0.9575763
 
 Different plotting options
 
@@ -169,26 +188,26 @@ head(tags$p.values, 20)
 ```
 
     ##             gene      p.value      q.value is.tag           category
-    ## 1            Mpo 5.477392e-82 8.627988e-78   TRUE         p <= 1e-40
-    ## 2          Prtn3 7.036260e-72 5.541758e-68   TRUE         p <= 1e-40
-    ## 3          H2-Aa 1.483380e-59 7.788732e-56   TRUE         p <= 1e-40
-    ## 4           Cd74 1.288486e-55 5.074059e-52   TRUE         p <= 1e-40
-    ## 5            Cd7 3.088776e-49 6.950629e-46   TRUE         p <= 1e-40
-    ## 6           Ctsg 2.790387e-49 6.950629e-46   TRUE         p <= 1e-40
-    ## 7         H2-Ab1 2.927322e-49 6.950629e-46   TRUE         p <= 1e-40
-    ## 8           Cd34 2.174884e-44 4.282347e-41   TRUE         p <= 1e-40
-    ## 9         H2-Eb1 2.672143e-43 4.676844e-40   TRUE 1e-40 < p <= 1e-20
-    ## 10          Ly6d 2.843103e-42 4.478455e-39   TRUE 1e-40 < p <= 1e-20
-    ## 11      AK152437 4.747042e-38 6.231284e-35   TRUE 1e-40 < p <= 1e-20
-    ## 12          Cd93 4.516503e-38 6.231284e-35   TRUE 1e-40 < p <= 1e-20
-    ## 13 2810417H13Rik 1.412088e-37 1.711017e-34   TRUE 1e-40 < p <= 1e-20
-    ## 14         Top2a 3.300674e-37 3.713730e-34   TRUE 1e-40 < p <= 1e-20
-    ## 15        Igfbp4 8.279744e-36 8.694835e-33   TRUE 1e-40 < p <= 1e-20
-    ## 16          Cst7 7.813861e-35 7.692747e-32   TRUE 1e-40 < p <= 1e-20
-    ## 17       Siglech 1.492379e-34 1.382821e-31   TRUE 1e-40 < p <= 1e-20
-    ## 18         Plbd1 5.088580e-34 4.453073e-31   TRUE 1e-40 < p <= 1e-20
-    ## 19         Stmn1 2.631893e-33 2.181978e-30   TRUE 1e-40 < p <= 1e-20
-    ## 20         Tubb5 7.878000e-33 6.204713e-30   TRUE 1e-40 < p <= 1e-20
+    ## 1            Mpo 3.548964e-81 5.590328e-77   TRUE         p <= 1e-40
+    ## 2          Prtn3 5.186054e-73 4.084536e-69   TRUE         p <= 1e-40
+    ## 3          H2-Aa 5.005075e-61 2.627998e-57   TRUE         p <= 1e-40
+    ## 4           Cd74 3.947931e-58 1.554695e-54   TRUE         p <= 1e-40
+    ## 5            Cd7 5.707193e-51 1.797994e-47   TRUE         p <= 1e-40
+    ## 6         H2-Ab1 1.729171e-50 4.539650e-47   TRUE         p <= 1e-40
+    ## 7           Ctsg 6.163574e-49 1.386980e-45   TRUE         p <= 1e-40
+    ## 8           Ly6d 6.059811e-45 1.193177e-41   TRUE         p <= 1e-40
+    ## 9           Cd34 1.081554e-43 1.703663e-40   TRUE 1e-40 < p <= 1e-20
+    ## 10        H2-Eb1 1.076953e-43 1.703663e-40   TRUE 1e-40 < p <= 1e-20
+    ## 11          Cd93 1.289420e-37 1.846450e-34   TRUE 1e-40 < p <= 1e-20
+    ## 12       Siglech 5.562703e-37 7.301975e-34   TRUE 1e-40 < p <= 1e-20
+    ## 13      AK152437 2.843067e-36 3.444922e-33   TRUE 1e-40 < p <= 1e-20
+    ## 14         Plbd1 1.275087e-35 1.434655e-32   TRUE 1e-40 < p <= 1e-20
+    ## 15        Igfbp4 2.451044e-35 2.573923e-32   TRUE 1e-40 < p <= 1e-20
+    ## 16          Cst7 3.831062e-34 3.771681e-31   TRUE 1e-40 < p <= 1e-20
+    ## 17 2810417H13Rik 9.976998e-34 9.244569e-31   TRUE 1e-40 < p <= 1e-20
+    ## 18        Ifitm2 9.658229e-33 8.452024e-30   TRUE 1e-40 < p <= 1e-20
+    ## 19         Top2a 2.640162e-32 2.188833e-29   TRUE 1e-40 < p <= 1e-20
+    ## 20           Myb 2.198175e-31 1.731283e-28   TRUE 1e-40 < p <= 1e-20
 
 Group genes into modules
 
