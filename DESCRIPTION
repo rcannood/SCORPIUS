@@ -1,0 +1,21 @@
+Package: SCORPIUS
+Title: SCORPIUS: Single-CEll ORdening & Path Inference UnSupervised
+Version: 1.0
+Authors@R: c(
+    person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("cre"))
+  )
+Description: Orden cells into a pseudo-timeline.
+Depends:
+    R (>= 3.0.0)
+License: GPL (>= 2)
+LazyData: true
+Author: Robrecht Cannoodt
+Maintainer: 'Robrecht Cannoodt' <robrecht.cannoodt@gmail.com>
+Imports:
+    dplyr,
+    fitdistrplus,
+    GA,
+    princurve
+URL: http://github.com/rcannood/SCORPIUS
+BugReports: https://github.com/rcannood/SCORPIUS/issues
+RoxygenNote: 5.0.1
