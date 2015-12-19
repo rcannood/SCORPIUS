@@ -26,11 +26,9 @@ celltypes
 
 #' We construct a vector of the progression of cells as integers and as factors
 progression <- sample.info %>% left_join(celltypes, by=colnames(celltypes)[-ncol(celltypes)]) %>% .$i
-progression
 
 levels <- celltypes %>% select(-i) %>% apply(1, paste, collapse="_")
 progression.str <- factor(sample.info[,colnames(celltypes)[-ncol(celltypes)],drop=F] %>% apply(1, paste, collapse="_"), levels)
-progression.str
 
 names(progression.str) <- names(progression) <- rownames(counts)
 
@@ -60,7 +58,7 @@ plot.dimensionality.reduction(space, colour = progression.str, contour=T)
 plot.dimensionality.reduction(space, contour=T)
 
 #' Infer trajectory
-trajectory <- infer.trajectory(space, k=5)
+trajectory <- infer.trajectory(space, k=4)
 evaluate.trajectory(trajectory$time, progression)
 
 #' Different plotting options
