@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param x 
+#' @param y 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 euclidean.distance <- function (x, y) {
   if (ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
@@ -8,8 +17,33 @@ euclidean.distance <- function (x, y) {
   z
 }
 
-knn.distances <- function(dists, k) {
-  t(apply(dists, 1, function(x) sort(x)[seq_len(min(k, length(x)))]))
+#' Title
+#'
+#' @param dists 
+#' @param k 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+knn.distances <- function(dist, k) {
+  t(sapply(seq_len(nrow(dist)), function(i) {
+    x <- dist[i,-i]
+    sort(x)[seq_len(min(k, length(x)))]
+  }))
+}
+
+#' Title
+#'
+#' @param dist 
+#' @param k 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+outlierness <- function(dist, k=10) {
+  rowMeans(knn.distances(dist, k))
 }
 
 #' Title
@@ -41,12 +75,9 @@ calculate.outlier <- function(dist, max.rem.pct=.9) {
   requireNamespace("fitdistrplus")
   rem <- numeric(0)
   results <- list()
-  knn10 <- function(x) { sort(x, decreasing = F)[seq_len(min(10, length(x)))] }
   while (length(rem) <= max.rem.pct*(nrow(dist))+1) {
     filt <- seq_len(nrow(dist)) %in% rem
-    dist.agg <- sapply(which(!filt), function(i) {
-      mean(knn10(dist[i,!filt & seq_len(ncol(dist)) != i]))
-    })
+    dist.agg <- outlierness(dist[!filt,!filt])
     fit <- fitdistrplus::fitdist(dist.agg, distr="norm")
     removed <- which(!filt)[which.max(dist.agg)]
     rem <- c(rem, removed)
