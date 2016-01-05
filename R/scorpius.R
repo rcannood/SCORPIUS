@@ -50,8 +50,8 @@ euclidean.distance <- function (x, y) {
 #'
 #' @examples
 knn.distances <- function(dist, k) {
-  if (!is.matrix(x) & !is.data.frame(x) & class(dist) != "dist")
-    stop(sQuote("x"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
+    stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
   if (class(dist) == "dist") {
     dist <- as.matrix(dist)
   }
