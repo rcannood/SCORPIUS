@@ -2,16 +2,11 @@
 % Please edit documentation in R/scorpius.R
 \name{knn.distances}
 \alias{knn.distances}
-\title{Title}
+\title{k Nearest Neighbour distances}
 \usage{
 knn.distances(dist, k)
 }
 \arguments{
 \item{k}{}
-
-\item{dists}{}
-}
-\description{
-Title
 }
 

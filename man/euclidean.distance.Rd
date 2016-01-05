@@ -2,16 +2,29 @@
 % Please edit documentation in R/scorpius.R
 \name{euclidean.distance}
 \alias{euclidean.distance}
-\title{Title}
+\title{Pairwise Euclidean distances between two sets of samples}
 \usage{
-euclidean.distance(x, y)
+dist(x, y)
 }
 \arguments{
-\item{x}{}
+\item{x}{A matrix or data.frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
-\item{y}{}
+\item{y}{A matrix or data.frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).}
+}
+\value{
+An \emph{M}-by-\emph{N} matrix containing the pairwise distances between the two given sets of samples.
 }
 \description{
-Title
+\code{euclidean.distance} calculates the pairwise Euclidean distances between two sets of samples
+}
+\examples{
+## generate two matrices with 50 and 100 samples
+x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
+y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
+dist <- euclidean.distance(x, y)
+
+## compare with the standard dist function
+dist2 <- as.matrix(dist(rbind(x, y)))[1:50, 51:150]
+plot(dist, dist2)
 }
 

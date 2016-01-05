@@ -1,36 +1,81 @@
-#' Title
+#' @title Pairwise Euclidean distances between two sets of samples
+#' 
+#' @description \code{euclidean.distance} calculates the pairwise Euclidean distances between two sets of samples
+#' 
+#' @usage 
+#' dist(x, y)
+#' 
+#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param y A numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
 #'
-#' @param x 
-#' @param y 
-#'
-#' @return
+#' @return An \emph{M}-by-\emph{N} matrix containing the pairwise distances between the two given sets of samples.
+#' 
 #' @export
 #'
 #' @examples
+#' ## generate two matrices with 50 and 100 samples
+#' x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
+#' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
+#' dist <- euclidean.distance(x, y)
+#' 
+#' ## compare with the standard dist function
+#' dist2 <- as.matrix(dist(rbind(x, y)))[1:50, 51:150]
+#' plot(dist, dist2)
 euclidean.distance <- function (x, y) {
+  if (!is.matrix(x) & !is.data.frame(x)) 
+    stop(sQuote("x"), " must be a numeric matrix or data frame")
+  if (!is.matrix(y) & !is.data.frame(x)) 
+    stop(sQuote("y"), " must be a numeric matrix or data frame")
   if (ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
-  z <- matrix(0, nrow = nrow(x), ncol = nrow(y))
-  for (k in 1:nrow(y)) {
-    z[, k] <- sqrt(colSums((t(x) - y[k, ])^2))
+  z <- matrix(NA, nrow = nrow(x), ncol = nrow(y), dimnames=list(rownames(x), rownames(y)))
+  for (k in seq_len(nrow(y))) {
+    z[,k] <- sqrt(colSums((t(x) - y[k,])^2))
   }
   z
 }
 
-#' Title
+#' @title k Nearest Neighbour distances
+#' 
+#' @description \code{knn.distances} returns the distances of the \emph{k} nearest neighbours of each sample.
+#' 
+#' @usage knn.distances(dist, k)
+#' 
+#' @param dist A numeric matrix, data frame or "\code{dist}" object.
+#' @param k The maximum number of nearest neighbours to search.
 #'
-#' @param dists 
-#' @param k 
-#'
-#' @return
+#' @return A matrix containing the distances of the \emph{k} nearest neighbours of each sample.
+#' 
 #' @export
 #'
 #' @examples
 knn.distances <- function(dist, k) {
-  t(sapply(seq_len(nrow(dist)), function(i) {
-    x <- dist[i,-i]
-    sort(x)[seq_len(min(k, length(x)))]
-  }))
+  if (!is.matrix(x) & !is.data.frame(x) & class(dist) != "dist")
+    stop(sQuote("x"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (class(dist) == "dist") {
+    dist <- as.matrix(dist)
+  }
+  realk <- min(k, nrow(dist)-1)
+  z <- matrix(NA, nrow = nrow(dist), ncol = realk, dimnames=list(rownames(dist), NULL))
+  for (i in seq_len(nrow(z))) {
+    z[i,] <- sort(dist[i,-i])[seq_len(realk)]
+  }
+  z
+}
+
+
+knn.ix <- function(dist, k) {
+  if (!is.matrix(x) & !is.data.frame(x) & class(dist) != "dist")
+    stop(sQuote("x"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (class(dist) == "dist") {
+    dist <- as.matrix(dist)
+  }
+  realk <- min(k, nrow(dist)-1)
+  z <- matrix(NA, nrow = nrow(dist), ncol = realk, dimnames=list(rownames(dist), NULL))
+  for (i in seq_len(nrow(z))) {
+    z[i,] <- order(dist[i,])[seq(2, realk+1)]
+  }
+  z
 }
 
 #' Title
@@ -150,7 +195,7 @@ cluster <- function(space, k) {
 #' @export
 #'
 #' @examples
-cluster.distance <- function(centers) {
+cluster.distance <- function(centers, space) {
   eucl.dist <- as.matrix(dist(centers))
   k <- nrow(centers)
   density.dist <- sapply(seq_len(k), function(i) {
@@ -182,9 +227,9 @@ cluster.distance <- function(centers) {
 #' @importFrom GA ga
 #' 
 #' @examples
-shortest.path <- function(centers) {
+shortest.path <- function(centers, space) {
   requireNamespace("GA")
-  cluster.distances <- cluster.distance(centers)
+  cluster.distances <- cluster.distance(centers, space)
   fitness <- function(ord) {
     -sum(mapply(ord[-1], ord[-length(ord)], FUN=function(i, j) cluster.distances[[i, j]]))
   }
@@ -209,7 +254,7 @@ infer.trajectory <- function(space, k, ...) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
   clust <- cluster(space, k)
-  start <- shortest.path(clust$centers)
+  start <- shortest.path(clust$centers, space)
   fit <- princurve::principal.curve(space, start=start, plot.true=F, trace=F, stretch = 0, ...)
   
   path <- fit$s[fit$tag,,drop=F]

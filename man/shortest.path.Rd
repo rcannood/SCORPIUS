@@ -4,7 +4,7 @@
 \alias{shortest.path}
 \title{Title}
 \usage{
-shortest.path(centers)
+shortest.path(centers, space)
 }
 \arguments{
 \item{centers}{}

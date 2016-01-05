@@ -4,7 +4,7 @@
 \alias{cluster.distance}
 \title{Title}
 \usage{
-cluster.distance(centers)
+cluster.distance(centers, space)
 }
 \arguments{
 \item{centers}{}
