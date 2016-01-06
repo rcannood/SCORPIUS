@@ -2,18 +2,30 @@
 % Please edit documentation in R/scorpius.R
 \name{reduce.dimensionality}
 \alias{reduce.dimensionality}
-\title{Title}
+\title{Dimensionality reduction}
 \usage{
-reduce.dimensionality(dist, ndim, rescale = T)
+reduce.dimensionality(dist, ndim, rescale=T)
 }
 \arguments{
-\item{ndim}{}
+\item{dist}{A numeric matrix, data frame or "\code{dist}" object.}
 
-\item{dis}{}
+\item{ndim}{The number of dimensions in the new space.}
 
-\item{scaled}{}
+\item{rescale}{A logical indicating whether or not the returned space should be rescaled and centered.}
+}
+\value{
+A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
 }
 \description{
-Title
+\code{reduce.dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
+}
+\examples{
+x <- matrix(runif(1000*10), ncol=10)
+dist <- euclidean.distance(x)
+space <- reduce.dimensionality(dist, ndim=2, rescale = F)
+plot(space)
+}
+\seealso{
+If \code{rescale} is TRUE, \code{\link{rescale.and.center}} is used to rescale and center the output space.
 }
 

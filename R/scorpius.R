@@ -23,14 +23,14 @@
 #' plot(dist, dist2)
 euclidean.distance <- function (x, y=NULL) {
   # input checks
-  if (!is.matrix(x) & !is.data.frame(x)) 
+  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   
   # if y is null, we can simply use the normal dist function
   if (is.null(y)) return(as.matrix(dist(x)))
   
   # more input checks
-  if (!is.matrix(y) & !is.data.frame(y)) 
+  if ((!is.matrix(y) && !is.data.frame(y)) || !is.numeric(y))
     stop(sQuote("y"), " must be a numeric matrix or data frame")
   if (ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
@@ -73,11 +73,11 @@ euclidean.distance <- function (x, y=NULL) {
 #' plot(dist, dist2)
 correlation.distance <- function(x, y=NULL, method="spearman") {
   # input checks
-  if (!is.matrix(x) & !is.data.frame(x)) 
+  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if (!is.null(y) & !is.matrix(y) & !is.data.frame(y)) 
+  if ((!is.null(y) && !is.matrix(y) && !is.data.frame(y)) || ((is.matrix(y) || is.data.frame(y)) && !is.numeric(y)))
     stop(sQuote("y"), " must be NULL, a numeric matrix or a data frame")
-  if (!is.null(y) | ncol(x) != ncol(y)) 
+  if (!is.null(y) && ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
   
   # transpose if necessary
@@ -115,10 +115,10 @@ correlation.distance <- function(x, y=NULL, method="spearman") {
 #' plot(density(knnd))
 knn.distances <- function(dist, k) {
   # input checks
-  if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
+  if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
-  if (!is.finite(k) | round(k) != k | length(max.range) != 1)
-    stop(sQuote("k"), " must be a whole number")
+  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
+    stop(sQuote("k"), " must be a whole number and k >= 1")
   if (class(dist) == "dist")
     dist <- as.matrix(dist)
   
@@ -162,10 +162,10 @@ knn.distances <- function(dist, k) {
 #' plot(x, cex=outl, pch=20)
 outlierness <- function(dist, k=10) {
   # input check
-  if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
+  if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
-  if (!is.finite(k) | round(k) != k | length(max.range) != 1)
-      stop(sQuote("k"), " must be a whole number")
+  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 1)
+      stop(sQuote("k"), " must be a whole number and k >= 1")
   if (class(dist) == "dist")
     dist <- as.matrix(dist)  
   
@@ -179,6 +179,9 @@ outlierness <- function(dist, k=10) {
 #' removing the samples with the highest \emph{outlierness}' and fitting a normal distribution
 #' to the remaining outlierness values. A selection of samples is made by picking the iteration
 #' at which the log likelihood is maximised.
+#'
+#' @usage 
+#' outlier.filter(dist)
 #'
 #' @param dist A numeric matrix, data frame or "\code{dist}" object.
 #'
@@ -202,11 +205,10 @@ outlierness <- function(dist, k=10) {
 #' plot(x, col=filt+2, cex=outlierness(dist)+.5, pch=20)
 outlier.filter <- function(dist) {
   # input check
-  if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
+  if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
-  if (class(dist) == "dist") {
+  if (class(dist) == "dist")
     dist <- as.matrix(dist)
-  }
   
   # make sure fitdistrplus is installed
   requireNamespace("fitdistrplus")
@@ -256,12 +258,16 @@ outlier.filter <- function(dist) {
 #' @title Scaling and centering of matrix-like objects
 #' 
 #' @description \code{rescale.and.center} uniformily scales a given matrix such that the returned space is centered on \code{center}, and each column was scaled equally such that the range of each column is at most \code{max.range}.
-#'
+#' 
+#' @usage
+#' rescale.and.center(x, center=0, max.range=1)
+#' 
 #' @param x A numeric matrix or data frame.
 #' @param center The new center point of the data.
 #' @param max.range The maximum range of each column.
 #'
 #' @return The centered, scaled matrix. ZThe numeric centering and scalings used are returned as attributes.
+#' 
 #' @export
 #'
 #' @examples
@@ -269,14 +275,13 @@ outlier.filter <- function(dist) {
 #' x.scaled <- rescale.and.center(x, center=0, max.range=1)
 #' # x.scaled has a maximum range of 1 per column, and is centered at 0.
 #' apply(x.scaled, 2, range) 
-
 rescale.and.center <- function(x, center=0, max.range=1) {
   # input checks 
-  if (!is.matrix(x) & !is.data.frame(x)) 
+  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   if (!is.finite(center))
     stop(sQuote("center"), " must be numeric")
-  if (length(center) != 1 & length(center) != ncol(x)) 
+  if (length(center) != 1 && length(center) != ncol(x)) 
     stop("length of ", sQuote("center"), " must be either 1 or ncol(x)")
   if (!is.finite(max.range))
     stop(sQuote("max.range"), " must be numeric")
@@ -307,53 +312,102 @@ rescale.and.center <- function(x, center=0, max.range=1) {
   rescaled
 }
 
-#' Title
+#' @title Dimensionality reduction
+#' 
+#' @description \code{reduce.dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
+#' 
+#' @usage 
+#' reduce.dimensionality(dist, ndim, rescale=T)
+#' 
+#' @param dist A numeric matrix, data frame or "\code{dist}" object. 
+#' @param ndim The number of dimensions in the new space.
+#' @param rescale A logical indicating whether or not the returned space should be rescaled and centered.
 #'
-#' @param dis 
-#' @param ndim 
-#' @param scaled 
-#'
-#' @return
+#' @return A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
+#' 
+#' @seealso If \code{rescale} is TRUE, \code{\link{rescale.and.center}} is used to rescale and center the output space.
+#' 
 #' @export
 #'
 #' @examples
+#' x <- matrix(runif(1000*10), ncol=10)
+#' dist <- euclidean.distance(x)
+#' space <- reduce.dimensionality(dist, ndim=2, rescale = F)
+#' plot(space)
 reduce.dimensionality <- function(dist, ndim, rescale=T) {
+  # input check
+  if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
+    stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(dist))
+    stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(dist)-1")
+  if (class(dist) == "dist")
+    dist <- as.matrix(dist)
   
   space <- cmdscale(dist, k = ndim)
-  if (rescale)
-    space <- rescale.and.center(space)
+  if (rescale) space <- rescale.and.center(space)
   colnames(space) <- paste("Comp", seq_len(ncol(space)), sep="")
   space
 }
 
-#' Title
+#' @title Infer linear trajectory through space
+#' 
+#' @description \code{infer.trajectory} infers a trajectory through samples in a given space in a four-step process:
+#' \enumerate{
+#'   \item Perform \emph{k}-means clustering
+#'   \item Calculate distance matrix between cluster centers using a custom distance function
+#'   \item Find the shortest path connecting all cluster centers using the custom distance matrix
+#'   \item Iteratively fit a curve to the given data using principal curves 
+#' }
+#' 
+#' @usage 
+#' infer.trajectory(space, k)
+#' 
+#' @param space A numeric matrix or data frame.
+#' @param k The number of clusters to cluster the data into.
 #'
-#' @param space 
-#' @param k 
-#'
-#' @return
+#' @return A list containing several objects:
+#' \itemize{
+#'   \item \code{clustering}: the initial \emph{k}-means clustering.
+#'   \item \code{initial.path}: the initial shortest path through the different cluster centers.
+#'   \item \code{final.path}: the final trajectory obtained by principal curves.
+#'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#' }
+#' 
 #' @export
+#' 
+#' @importFrom princurve principal.curve
+#' @importFrom dplyr percent_rank
 #'
-#' @examples
-cluster <- function(space, k) {
-  fit <- kmeans(space, centers = k)
-  list(
-    labels=fit$cluster, 
-    centers=fit$centers
-  )
-}
+#' @examples 
+#' ## generate example dataset and visualise it
+#' x <- seq(-1, 1, by=.002)
+#' group <- cut(x, breaks=4)
+#' y <- rowSums(poly(x, 3))*4
+#' space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
+#' space <- rescale.and.center(space)
+#' plot.dimensionality.reduction(space, colour=group)
+#' 
+#' ## infer trajectory and visualise
+#' traj <- infer.trajectory(space, k=4)
+#' plot.trajectory(space, traj$final.path, colour=group)
+infer.trajectory <- function(space, k) {
+  requireNamespace("princurve")
+  requireNamespace("dplyr")
+  
+  # input checks
+  if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
+    stop(sQuote("space"), " must be a numeric matrix or data frame")
+  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
+    stop(sQuote("k"), " must be a whole number and k >= 2")
 
-#' Title
-#'
-#' @param centers 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-cluster.distance <- function(centers, space) {
+  # cluster space into k clusters
+  kmeans.clust <- kmeans(space, centers = k)
+  centers <- kmeans.clust$centers
+  
+  # calculate the euclidean space between clusters
   eucl.dist <- as.matrix(dist(centers))
-  k <- nrow(centers)
+  
+  # calculate the densities along the straight lines between any two cluster centers
   density.dist <- sapply(seq_len(k), function(i) {
     sapply(seq_len(k), function(j) {
       if (i == j) {
@@ -369,69 +423,152 @@ cluster.distance <- function(centers, space) {
       }
     })
   })
-  eucl.dist * density.dist
-}
-
-
-#' Title
-#'
-#' @param centers 
-#'
-#' @return
-#' @export
-#' 
-#' @importFrom GA ga
-#' 
-#' @examples
-shortest.path <- function(centers, space) {
-  requireNamespace("GA")
-  cluster.distances <- cluster.distance(centers, space)
-  fitness <- function(ord) {
-    -sum(mapply(ord[-1], ord[-length(ord)], FUN=function(i, j) cluster.distances[[i, j]]))
+  
+  # combine both distance matrices
+  cluster.distances <- eucl.dist * density.dist
+  
+  # define a fitness function for an ordering of the cluster centers according to the cluster.distances such that the path length will be minimised.
+  fitness <- function(ord, dist=cluster.distances) {
+    -sum(mapply(ord[-1], ord[-length(ord)], FUN=function(i, j) dist[[i, j]]))
   }
-  ga.fit <- GA::ga(type="permutation", fitness=fitness, min=1, max=nrow(centers), monitor=function(...) { })
-  centers[ga.fit@solution[1,],,drop=F]
+  
+  # if k <= 7, it's easier to just check all permutations of seq_len(k), 
+  # else a genetic algorithm is used.
+  if (k <= 7) {
+    permutations <- function( x, prefix = c() ) {
+      if(length(x) == 0 ) return(prefix)
+      do.call(rbind, sapply(1:length(x), FUN = function(idx) permutations( x[-idx], c( prefix, x[idx])), simplify = FALSE))
+    }
+    ords <- permutations(seq_len(k))
+    fitnesses <- apply(ords, 1, fitness)
+    best.ord <- ords[which.max(fitnesses),]
+  } else {
+    ga.fit <- GA::ga(type="permutation", fitness=fitness, min=1, max=nrow(centers), monitor=function(...) { })
+    best.ord <- ga.fit@solution[1,]
+  }
+  
+  # use this ordering as the initial curve
+  initial.path <- centers[best.ord,,drop=F]
+  
+  # iteratively improve this curve using principal.curve
+  fit <- princurve::principal.curve(space, start=initial.path, plot.true=F, trace=F, stretch = 0)
+  
+  # construct final trajectory
+  final.path <- fit$s[fit$tag,,drop=F]
+  colnames(final.path) <- paste0("Comp", seq_len(ncol(final.path)))
+  rownames(final.path) <- NULL
+  
+  # construct timeline values
+  time <- dplyr::percent_rank(order(fit$tag))
+  names(time) <- rownames(space)
+  
+  # output result
+  trajectory <- list(clustering=kmeans.clust, initial.path=initial.path, final.path=final.path, time=time)
+  class(trajectory) <- "SCORPIUS::trajectory"
+  trajectory
 }
 
-#' Title
+#' @title Infer random trajectory through space
+#' 
+#' @description \code{infer.random.trajectory} infers a random trajectory in the given space.
+#' 
+#' @usage 
+#' infer.random.trajectory(space, k)
+#' 
+#' @param space A numeric matrix or data frame.
+#' @param k The number of clusters to cluster the data into.
 #'
-#' @param space 
-#' @param k 
-#' @param ... 
-#'
-#' @return
+#' @return A list of the same structure as \link{\code{infer.trajectory}}
+#' 
 #' @export
 #' 
 #' @importFrom princurve principal.curve
 #' @importFrom dplyr percent_rank
 #'
-#' @examples
-infer.trajectory <- function(space, k, ...) {
+#' @examples 
+#' ## generate example dataset and visualise it
+#' x <- seq(-1, 1, by=.002)
+#' group <- cut(x, breaks=4)
+#' y <- rowSums(poly(x, 3))*4
+#' space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
+#' space <- rescale.and.center(space)
+#' plot.dimensionality.reduction(space, colour=group)
+#' 
+#' ## infer trajectory and visualise
+#' traj <- infer.random.trajectory(space, k=10)
+#' plot.trajectory(space, traj$final.path, colour=group)
+infer.random.trajectory <- function(space, k) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
-  clust <- cluster(space, k)
-  start <- shortest.path(clust$centers, space)
-  fit <- princurve::principal.curve(space, start=start, plot.true=F, trace=F, stretch = 0, ...)
   
-  path <- fit$s[fit$tag,,drop=F]
-  colnames(path) <- paste0("Comp", seq_len(ncol(path)))
-  rownames(path) <- NULL
+  # input checks
+  if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
+    stop(sQuote("space"), " must be a numeric matrix or data frame")
+  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
+    stop(sQuote("k"), " must be a whole number and k >= 2")
   
-  value <- dplyr::percent_rank(order(fit$tag))
-  names(value) <- rownames(space)
+  # cluster space into k clusters
+  kmeans.clust <- kmeans(space, centers = k)
+  centers <- kmeans.clust$centers
   
-  list(clustering=clust, initial.path=start, final.path=path, time=value)
+  best.ord <- sample(seq_len(k))
+  
+  # use this ordering as the initial curve
+  initial.path <- centers[best.ord,,drop=F]
+  
+  # iteratively improve this curve using principal.curve
+  fit <- princurve::principal.curve(space, start=initial.path, plot.true=F, trace=F, stretch = 0, maxit=0)
+  
+  # construct final trajectory
+  final.path <- fit$s[fit$tag,,drop=F]
+  colnames(final.path) <- paste0("Comp", seq_len(ncol(final.path)))
+  rownames(final.path) <- NULL
+  
+  # construct timeline values
+  time <- dplyr::percent_rank(order(fit$tag))
+  names(time) <- rownames(space)
+  
+  # output result
+  trajectory <- list(clustering=kmeans.clust, initial.path=initial.path, final.path=final.path, time=time)
+  class(trajectory) <- "SCORPIUS::trajectory"
+  trajectory
 }
 
-#' Title
+#' @title Reverse a trajectory
+#' 
+#' @description Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse.trajectory}.
+#' 
+#' @usage 
+#' reverse.trajectory(trajectory)
+#' 
+#' @param trajectory A trajectory as returned by \code{infer.trajectory}.
 #'
-#' @param trajectory 
-#'
-#' @return
+#' @return The same trajectory, but in the other direction.
+#' 
 #' @export
 #'
 #' @examples
+#' ## generate example dataset and visualise it
+#' x <- seq(-1, 1, by=.002)
+#' group <- cut(x, breaks=4)
+#' y <- rowSums(poly(x, 3))*4
+#' space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
+#' space <- rescale.and.center(space)
+#' plot.dimensionality.reduction(space, colour=group)
+#' 
+#' ## infer trajectory and visualise
+#' traj <- infer.trajectory(space, k=4)
+#' plot.trajectory(space, traj$final.path, colour=group)
+#' 
+#' ## reverse this trajectory
+#' reverse.traj <- reverse.trajectory(traj)
+#' plot.trajectory(space, traj$final.path, colour=group)
+#' 
+#' ## it's the same but reversed?!
+#' plot(traj$time, reverse.traj$time, type="l")
 reverse.trajectory <- function(trajectory) {
+  if (class(trajectory) != "SCORPIUS::trajectory" && c("clustering", "initial.path", "final.path", "time") %in% names(trajectory)) 
+    stop(sQuote("trajectory"), " needs to be an object returned by infer.trajectory")
   trajectory$time <- 1-trajectory$time
   trajectory$final.path <- trajectory$final.path[rev(seq_len(nrow(trajectory$final.path))),,drop=F]
   trajectory$initial.path <- trajectory$initial.path[rev(seq_len(nrow(trajectory$initial.path))),,drop=F]
@@ -454,16 +591,16 @@ reverse.trajectory <- function(trajectory) {
 #' @importFrom dplyr arrange
 #'
 #' @examples
-find.trajectory.aligned.genes <- function(counts, time, degrees.of.freedom=8, p.adjust.method="BH", q.value.cutoff=1e-10, mc.cores=1) {
+find.trajectory.aligned.genes <- function(expression, time, degrees.of.freedom=8, p.adjust.method="BH", q.value.cutoff=1e-10, mc.cores=1) {
   lapply.fun <- 
     if (mc.cores==1) {
       function(...) pbapply::pblapply(...)
     } else {
       function(...) parallel::mclapply(..., mc.cores=mc.cores)
     }
-  runs <- lapply.fun(seq_len(ncol(counts)), function(i) {
-    fit <- glm(counts[,i]~splines::ns(time, degrees.of.freedom), family=gaussian(), epsilon=1e-5)
-    fit1 <- glm(counts[,i]~1, family=gaussian(), epsilon=1e-5)
+  runs <- lapply.fun(seq_len(ncol(expression)), function(i) {
+    fit <- glm(expression[,i]~splines::ns(time, degrees.of.freedom), family=gaussian(), epsilon=1e-5)
+    fit1 <- glm(expression[,i]~1, family=gaussian(), epsilon=1e-5)
     test <- anova(fit1, fit, test = "F")
     pval <- test[6][2, 1]
     
@@ -472,9 +609,9 @@ find.trajectory.aligned.genes <- function(counts, time, degrees.of.freedom=8, p.
   })
   pvals <- sapply(runs, function(x) x$pval)
   pvals[!is.finite(pvals)] <- 1
-  qvals <- p.adjust(pvals, method=p.adjust.method, n=ncol(counts))
+  qvals <- p.adjust(pvals, method=p.adjust.method, n=ncol(expression))
   smooth.expression <- sapply(runs, function(x) x$smooth)
-  dimnames(smooth.expression) <- dimnames(counts)
+  dimnames(smooth.expression) <- dimnames(expression)
   
   breaks <- c(1, .05, .001, 1e-5, 1e-10, 1e-20, 1e-40, -Inf)
   qval.cat <- cut(qvals, breaks=breaks)
@@ -482,7 +619,7 @@ find.trajectory.aligned.genes <- function(counts, time, degrees.of.freedom=8, p.
   
   is.tag <- qvals < q.value.cutoff
   
-  p.values <- data.frame(gene=colnames(counts), p.value=pvals, q.value=qvals, is.tag=is.tag, category=qval.cat, stringsAsFactors = F)
+  p.values <- data.frame(gene=colnames(expression), p.value=pvals, q.value=qvals, is.tag=is.tag, category=qval.cat, stringsAsFactors = F)
   p.values <- dplyr::arrange(p.values, q.value)
   
   genes <- p.values$gene[p.values$is.tag]
@@ -505,12 +642,13 @@ find.trajectory.aligned.genes <- function(counts, time, degrees.of.freedom=8, p.
 #' @examples
 find.modules <- function(smooth.expression, tag.genes) {
   smooth.expr <- smooth.expression[,tag.genes,drop=F]
-  dissim <- correlation.distance(smooth.expr, between.samples = F)
+  dissim <- correlation.distance(t(smooth.expr))
   hcl <- hclust(as.dist(dissim), method="average")
   
   labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid")
   labels2 <- WGCNA::mergeCloseModules(smooth.expr, labels, cutHeight = 0.3)$colors
   labels2 <- match(labels2, unique(labels2))
+  # labels2 <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid")
   
   modules <- dplyr::bind_rows(lapply(unique(labels2), function(l) {
     ix <- which(labels2==l)

@@ -4,7 +4,7 @@
 \alias{rescale.and.center}
 \title{Scaling and centering of matrix-like objects}
 \usage{
-rescale.and.center(x, center = 0, max.range = 1)
+rescale.and.center(x, center=0, max.range=1)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame.}

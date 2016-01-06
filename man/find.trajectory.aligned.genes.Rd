@@ -4,17 +4,17 @@
 \alias{find.trajectory.aligned.genes}
 \title{Title}
 \usage{
-find.trajectory.aligned.genes(counts, time, degrees.of.freedom = 8,
+find.trajectory.aligned.genes(expression, time, degrees.of.freedom = 8,
   p.adjust.method = "BH", q.value.cutoff = 1e-10, mc.cores = 1)
 }
 \arguments{
-\item{counts}{}
-
 \item{time}{}
 
 \item{degrees.of.freedom}{}
 
 \item{p.adjust.method}{}
+
+\item{counts}{}
 }
 \description{
 Title

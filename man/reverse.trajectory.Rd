@@ -2,14 +2,37 @@
 % Please edit documentation in R/scorpius.R
 \name{reverse.trajectory}
 \alias{reverse.trajectory}
-\title{Title}
+\title{Reverse a trajectory}
 \usage{
 reverse.trajectory(trajectory)
 }
 \arguments{
-\item{trajectory}{}
+\item{trajectory}{A trajectory as returned by \code{infer.trajectory}.}
+}
+\value{
+The same trajectory, but in the other direction.
 }
 \description{
-Title
+Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse.trajectory}.
+}
+\examples{
+## generate example dataset and visualise it
+x <- seq(-1, 1, by=.002)
+group <- cut(x, breaks=4)
+y <- rowSums(poly(x, 3))*4
+space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
+space <- rescale.and.center(space)
+plot.dimensionality.reduction(space, colour=group)
+
+## infer trajectory and visualise
+traj <- infer.trajectory(space, k=4)
+plot.trajectory(space, traj$final.path, colour=group)
+
+## reverse this trajectory
+reverse.traj <- reverse.trajectory(traj)
+plot.trajectory(space, traj$final.path, colour=group)
+
+## it's the same but reversed?!
+plot(traj$time, reverse.traj$time, type="l")
 }
 

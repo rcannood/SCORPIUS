@@ -2,18 +2,44 @@
 % Please edit documentation in R/scorpius.R
 \name{infer.trajectory}
 \alias{infer.trajectory}
-\title{Title}
+\title{Infer linear trajectory through space}
 \usage{
-infer.trajectory(space, k, ...)
+infer.trajectory(space, k)
 }
 \arguments{
-\item{space}{}
+\item{space}{A numeric matrix or data frame.}
 
-\item{k}{}
-
-\item{...}{}
+\item{k}{The number of clusters to cluster the data into.}
+}
+\value{
+A list containing several objects:
+\itemize{
+  \item \code{clustering}: the initial \emph{k}-means clustering.
+  \item \code{initial.path}: the initial shortest path through the different cluster centers.
+  \item \code{final.path}: the final trajectory obtained by principal curves.
+  \item \code{time}: the time point of each sample along the inferred trajectory.
+}
 }
 \description{
-Title
+\code{infer.trajectory} infers a trajectory through samples in a given space in a four-step process:
+\enumerate{
+  \item Perform \emph{k}-means clustering
+  \item Calculate distance matrix between cluster centers using a custom distance function
+  \item Find the shortest path connecting all cluster centers using the custom distance matrix
+  \item Iteratively fit a curve to the given data using principal curves 
+}
+}
+\examples{
+## generate example dataset and visualise it
+x <- seq(-1, 1, by=.002)
+group <- cut(x, breaks=4)
+y <- rowSums(poly(x, 3))*4
+space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
+space <- rescale.and.center(space)
+plot.dimensionality.reduction(space, colour=group)
+
+## infer trajectory and visualise
+traj <- infer.trajectory(space, k=4)
+plot.trajectory(space, traj$final.path, colour=group)
 }
 
