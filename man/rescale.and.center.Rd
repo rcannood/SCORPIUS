@@ -2,18 +2,27 @@
 % Please edit documentation in R/scorpius.R
 \name{rescale.and.center}
 \alias{rescale.and.center}
-\title{Title}
+\title{Scaling and centering of matrix-like objects}
 \usage{
-rescale.and.center(space, center = 0, max.range = 1)
+rescale.and.center(x, center = 0, max.range = 1)
 }
 \arguments{
-\item{space}{}
+\item{x}{A numeric matrix or data frame.}
 
-\item{center}{}
+\item{center}{The new center point of the data.}
 
-\item{max.range}{}
+\item{max.range}{The maximum range of each column.}
+}
+\value{
+The centered, scaled matrix. ZThe numeric centering and scalings used are returned as attributes.
 }
 \description{
-Title
+\code{rescale.and.center} uniformily scales a given matrix such that the returned space is centered on \code{center}, and each column was scaled equally such that the range of each column is at most \code{max.range}.
+}
+\examples{
+x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
+x.scaled <- rescale.and.center(x, center=0, max.range=1)
+# x.scaled has a maximum range of 1 per column, and is centered at 0.
+apply(x.scaled, 2, range) 
 }
 

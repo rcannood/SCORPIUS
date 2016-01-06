@@ -2,20 +2,20 @@
 % Please edit documentation in R/scorpius.R
 \name{euclidean.distance}
 \alias{euclidean.distance}
-\title{Pairwise Euclidean distances between two sets of samples}
+\title{(Pairwise) Euclidean distances between two sets of samples}
 \usage{
-dist(x, y)
+euclidean.distance(x, y)
 }
 \arguments{
-\item{x}{A matrix or data.frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
+\item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
-\item{y}{A matrix or data.frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).}
+\item{y}{\code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).}
 }
 \value{
-An \emph{M}-by-\emph{N} matrix containing the pairwise distances between the two given sets of samples.
+An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the Euclidean distances between the given sets of samples.
 }
 \description{
-\code{euclidean.distance} calculates the pairwise Euclidean distances between two sets of samples
+\code{euclidean.distance} calculates the (pairwise) Euclidean distances between one or two sets of samples.
 }
 \examples{
 ## generate two matrices with 50 and 100 samples

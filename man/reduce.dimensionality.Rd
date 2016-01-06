@@ -4,14 +4,14 @@
 \alias{reduce.dimensionality}
 \title{Title}
 \usage{
-reduce.dimensionality(dist, ndim, scaled = T)
+reduce.dimensionality(dist, ndim, rescale = T)
 }
 \arguments{
 \item{ndim}{}
 
-\item{scaled}{}
-
 \item{dis}{}
+
+\item{scaled}{}
 }
 \description{
 Title

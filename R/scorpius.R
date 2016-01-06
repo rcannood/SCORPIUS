@@ -1,14 +1,14 @@
-#' @title Pairwise Euclidean distances between two sets of samples
+#' @title (Pairwise) Euclidean distances between two sets of samples
 #' 
-#' @description \code{euclidean.distance} calculates the pairwise Euclidean distances between two sets of samples
+#' @description \code{euclidean.distance} calculates the (pairwise) Euclidean distances between one or two sets of samples.
 #' 
 #' @usage 
-#' dist(x, y)
+#' euclidean.distance(x, y)
 #' 
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
-#' @param y A numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param y \code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
 #'
-#' @return An \emph{M}-by-\emph{N} matrix containing the pairwise distances between the two given sets of samples.
+#' @return An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the Euclidean distances between the given sets of samples.
 #' 
 #' @export
 #'
@@ -21,18 +21,71 @@
 #' ## compare with the standard dist function
 #' dist2 <- as.matrix(dist(rbind(x, y)))[1:50, 51:150]
 #' plot(dist, dist2)
-euclidean.distance <- function (x, y) {
+euclidean.distance <- function (x, y=NULL) {
+  # input checks
   if (!is.matrix(x) & !is.data.frame(x)) 
     stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if (!is.matrix(y) & !is.data.frame(x)) 
+  
+  # if y is null, we can simply use the normal dist function
+  if (is.null(y)) return(as.matrix(dist(x)))
+  
+  # more input checks
+  if (!is.matrix(y) & !is.data.frame(y)) 
     stop(sQuote("y"), " must be a numeric matrix or data frame")
   if (ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
+  
+  # initialise a matrix with NAs
   z <- matrix(NA, nrow = nrow(x), ncol = nrow(y), dimnames=list(rownames(x), rownames(y)))
+  
+  # fill matrix by column
   for (k in seq_len(nrow(y))) {
     z[,k] <- sqrt(colSums((t(x) - y[k,])^2))
   }
-  z
+  
+  # return distances
+  return(z)
+}
+
+#' @title Correlation distance
+#' 
+#' @description \code{correlation.distance} calculates the (pairwise) correlation distances between one or two sets of samples.
+#' 
+#' @usage 
+#' correlation.distance(x, y)
+#' 
+#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param y \code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param method A character string indicating which correlation coefficient (or covariance) is to be computed. One of \code{"pearson"}, \code{"kendall"}, or \code{"spearman"}.
+#'
+#' @return An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the correlation distances between the given sets of samples.
+#'
+#' @export
+#'
+#' @examples
+#' ## generate two matrices with 50 and 100 samples
+#' x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
+#' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
+#' dist <- correlation.distance(x, y, method="spearman")
+#' 
+#' ## compare with the standard correlation function
+#' dist2 <- cor(t(x), t(y), method="spearman")
+#' plot(dist, dist2)
+correlation.distance <- function(x, y=NULL, method="spearman") {
+  # input checks
+  if (!is.matrix(x) & !is.data.frame(x)) 
+    stop(sQuote("x"), " must be a numeric matrix or data frame")
+  if (!is.null(y) & !is.matrix(y) & !is.data.frame(y)) 
+    stop(sQuote("y"), " must be NULL, a numeric matrix or a data frame")
+  if (!is.null(y) | ncol(x) != ncol(y)) 
+    stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
+  
+  # transpose if necessary
+  x <- t(x)
+  if (!is.null(y)) y <- t(y)
+  
+  # calculate and return correlation distance
+  1 - (cor(x, y, method=method)+1)/2
 }
 
 #' @title k Nearest Neighbour distances
@@ -49,106 +102,209 @@ euclidean.distance <- function (x, y) {
 #' @export
 #'
 #' @examples
+#' ## Calculate the kNN distances within a set of samples
+#' x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
+#' dist <- dist(x)
+#' knnd <- knn.distances(dist, 10)
+#' plot(density(knnd))
+#' 
+#' ## Calculate the kNN distances between two sets of samples
+#' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
+#' dist <- euclidean.distance(x, y)
+#' knnd <- knn.distances(dist, 10)
+#' plot(density(knnd))
 knn.distances <- function(dist, k) {
+  # input checks
+  if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
+    stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (!is.finite(k) | round(k) != k | length(max.range) != 1)
+    stop(sQuote("k"), " must be a whole number")
+  if (class(dist) == "dist")
+    dist <- as.matrix(dist)
+  
+  # k can't be larger than nrow(dist)-1
+  K <- min(k, nrow(dist)-1)
+  
+  # initialise matrix with NAs
+  z <- matrix(
+    NA, 
+    nrow = nrow(dist), 
+    ncol = K, 
+    dimnames=list(rownames(dist), paste0("knn", seq_len(K)))
+  )
+  
+  # fill matrix by sample
+  for (i in seq_len(nrow(z))) {
+    z[i,] <- head(sort(dist[i,-i]), K)
+  }
+  
+  # return KNN distances
+  z
+}
+
+#' @title Outlierness
+#' 
+#' @description \code{outlierness} calculates the mean distance of each sample to its \emph{k} nearest neighbours.
+#' 
+#' @usage outlierness(dist, k=10)
+#' 
+#' @param dist A numeric matrix, data frame or "\code{dist}" object.
+#' @param k The maximum number of nearest neighbours to search.
+#'
+#' @return The outlierness values for each of the samples.
+#' 
+#' @export
+#'
+#' @examples
+#' x <- matrix(rnorm(100*2, mean=0, sd=1), ncol=2)
+#' dist <- dist(x)
+#' outl <- outlierness(dist, 10)
+#' plot(x, cex=outl, pch=20)
+outlierness <- function(dist, k=10) {
+  # input check
+  if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
+    stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (!is.finite(k) | round(k) != k | length(max.range) != 1)
+      stop(sQuote("k"), " must be a whole number")
+  if (class(dist) == "dist")
+    dist <- as.matrix(dist)  
+  
+  # calculate and return each sample outlierness'
+  rowMeans(knn.distances(dist, k))
+}
+
+#' @title Outlier detection
+#' 
+#' @description \code{outlier.filter} calculates which samples are outliers by iteratively
+#' removing the samples with the highest \emph{outlierness}' and fitting a normal distribution
+#' to the remaining outlierness values. A selection of samples is made by picking the iteration
+#' at which the log likelihood is maximised.
+#'
+#' @param dist A numeric matrix, data frame or "\code{dist}" object.
+#'
+#' @return A boolean vector indicating whether samples are \emph{not} outliers.
+#' 
+#' @export
+#'
+#' @importFrom fitdistrplus fitdist
+#' 
+#' @examples
+#' ## generate uniformily distributed points, calculate their outliernesses and which points are outliers
+#' x <- matrix(runif(200*2), ncol=2)
+#' dist <- euclidean.distance(x)
+#' filt <- outlier.filter(dist)
+#' plot(x, col=filt+2, cex=outlierness(dist)+1, pch=20)
+#' 
+#' ## generate normally distributed points, calculate their outliernesses and which points are outliers
+#' x <- matrix(rnorm(200*2), ncol=2)
+#' dist <- euclidean.distance(x)
+#' filt <- outlier.filter(dist)
+#' plot(x, col=filt+2, cex=outlierness(dist)+.5, pch=20)
+outlier.filter <- function(dist) {
+  # input check
   if (!is.matrix(dist) & !is.data.frame(dist) & class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
   if (class(dist) == "dist") {
     dist <- as.matrix(dist)
   }
-  realk <- min(k, nrow(dist)-1)
-  z <- matrix(NA, nrow = nrow(dist), ncol = realk, dimnames=list(rownames(dist), NULL))
-  for (i in seq_len(nrow(z))) {
-    z[i,] <- sort(dist[i,-i])[seq_len(realk)]
-  }
-  z
-}
-
-
-knn.ix <- function(dist, k) {
-  if (!is.matrix(x) & !is.data.frame(x) & class(dist) != "dist")
-    stop(sQuote("x"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
-  if (class(dist) == "dist") {
-    dist <- as.matrix(dist)
-  }
-  realk <- min(k, nrow(dist)-1)
-  z <- matrix(NA, nrow = nrow(dist), ncol = realk, dimnames=list(rownames(dist), NULL))
-  for (i in seq_len(nrow(z))) {
-    z[i,] <- order(dist[i,])[seq(2, realk+1)]
-  }
-  z
-}
-
-#' Title
-#'
-#' @param dist 
-#' @param k 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-outlierness <- function(dist, k=10) {
-  rowMeans(knn.distances(dist, k))
-}
-
-#' Title
-#'
-#' @param counts 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-calculate.distance <- function(counts) {
-  cor <- cor(t(counts), method="spearman")
-  sim <- (cor+1)/2
-  dist <- 1 - sim
-  dist
-}
-
-#' Title
-#'
-#' @param dist 
-#' @param max.rem.pct 
-#'
-#' @return
-#' @export
-#'
-#' @importFrom fitdistrplus fitdist
-#' @examples
-calculate.outlier <- function(dist, max.rem.pct=.9) {
+  
+  # make sure fitdistrplus is installed
   requireNamespace("fitdistrplus")
-  rem <- numeric(0)
-  results <- list()
-  while (length(rem) <= max.rem.pct*(nrow(dist))+1) {
-    filt <- seq_len(nrow(dist)) %in% rem
-    dist.agg <- outlierness(dist[!filt,!filt])
-    fit <- fitdistrplus::fitdist(dist.agg, distr="norm")
-    removed <- which(!filt)[which.max(dist.agg)]
-    rem <- c(rem, removed)
-    results <- c(results, list(list(filt=filt, fit=fit)))
+  
+  # initialise data structures
+  num.pts.removed <- nrow(dist)
+  removed <- rep(NA, num.pts.removed+1)
+  logliks <- rep(NA, num.pts.removed+1)
+  ix <- seq_len(nrow(dist))
+  
+  # calculate log likelihood when no samples are removed
+  filt <- rep(T, nrow(dist))
+  outliernesses <- outlierness(dist)
+  dist.fit <- fitdistrplus::fitdist(outliernesses, distr="norm")
+  logliks[[1]] <- dist.fit$loglik
+  
+  # iteratively remove samples and calculate log likelihood of fits
+  for (i in seq_len(num.pts.removed)) {
+    if (i < num.pts.removed) {
+      removed.sample <- which(filt)[[which.max(outliernesses)]]
+      removed[[i+1]] <- removed.sample
+      filt <- !ix %in% removed
+      outliernesses <- outlierness(dist[filt,filt,drop=F])
+    } else {
+      removed[[i+1]] <- which(filt)
+    }
+    
+    # it doesn't make sense to fit a distribution to less than three values.
+    if (i < (num.pts.removed-3)) {
+      dist.fit <- fitdistrplus::fitdist(outliernesses, distr="norm")
+      logliks[[i+1]] <- dist.fit$loglik
+    } else {
+      logliks[[i+1]] <- -Inf
+    }
   }
-  logliks <- sapply(results, function(r) r$fit$loglik)
-  result <- results[[which.max(logliks)]]
-  list(is.outlier=result$filt, loglikelihoods=logliks)
+  
+  # return a vector indicating which samples are /not/ outliers
+  filt <- !ix %in% removed[seq(2, which.max(logliks))]
+  
+  # attach log likelihood information as an attribute
+  attr(filt, "loglikelihoods") <- data.frame(amount.removed=seq_along(removed)-1, sample.index=removed, log.likelihood=logliks)
+  
+  # return outlier output
+  filt
 }
 
-#' Title
+#' @title Scaling and centering of matrix-like objects
+#' 
+#' @description \code{rescale.and.center} uniformily scales a given matrix such that the returned space is centered on \code{center}, and each column was scaled equally such that the range of each column is at most \code{max.range}.
 #'
-#' @param space 
-#' @param center 
-#' @param max.range 
+#' @param x A numeric matrix or data frame.
+#' @param center The new center point of the data.
+#' @param max.range The maximum range of each column.
 #'
-#' @return
+#' @return The centered, scaled matrix. ZThe numeric centering and scalings used are returned as attributes.
 #' @export
 #'
 #' @examples
-rescale.and.center <- function(space, center=0, max.range=1) {
-  mins <- apply(space, 2, min)
-  maxs <- apply(space, 2, max)
+#' x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
+#' x.scaled <- rescale.and.center(x, center=0, max.range=1)
+#' # x.scaled has a maximum range of 1 per column, and is centered at 0.
+#' apply(x.scaled, 2, range) 
+
+rescale.and.center <- function(x, center=0, max.range=1) {
+  # input checks 
+  if (!is.matrix(x) & !is.data.frame(x)) 
+    stop(sQuote("x"), " must be a numeric matrix or data frame")
+  if (!is.finite(center))
+    stop(sQuote("center"), " must be numeric")
+  if (length(center) != 1 & length(center) != ncol(x)) 
+    stop("length of ", sQuote("center"), " must be either 1 or ncol(x)")
+  if (!is.finite(max.range))
+    stop(sQuote("max.range"), " must be numeric")
+  if (length(max.range) != 1) 
+    stop("length of ", sQuote("max.range"), " must be exactly 1")
+  
+  # calculate the minimum values of each column
+  mins <- apply(x, 2, min)
+  
+  # calculate the maximum values of each column
+  maxs <- apply(x, 2, max)
+  
+  # calculate the old center point
   old.center <- (maxs + mins) / 2
+  new.center <- old.center - center
+  
+  # calculate the scale
   scale <- max(maxs - mins)
-  t(apply(space, 1, function(x) (x-old.center+center) / scale))
+  
+  # calculate rescaled data
+  rescaled <- t(apply(x, 1, function(row) (row-new.center)/scale))
+    
+  # attach scaling information to output
+  attr(rescaled, "center") <- new.center
+  attr(rescaled, "scale") <- scale
+  
+  # return output
+  rescaled
 }
 
 #' Title
@@ -161,11 +317,11 @@ rescale.and.center <- function(space, center=0, max.range=1) {
 #' @export
 #'
 #' @examples
-reduce.dimensionality <- function(dist, ndim, scaled=T) {
+reduce.dimensionality <- function(dist, ndim, rescale=T) {
+  
   space <- cmdscale(dist, k = ndim)
-  if (scaled) {
+  if (rescale)
     space <- rescale.and.center(space)
-  }
   colnames(space) <- paste("Comp", seq_len(ncol(space)), sep="")
   space
 }
@@ -349,7 +505,7 @@ find.trajectory.aligned.genes <- function(counts, time, degrees.of.freedom=8, p.
 #' @examples
 find.modules <- function(smooth.expression, tag.genes) {
   smooth.expr <- smooth.expression[,tag.genes,drop=F]
-  dissim <- calculate.distance(t(smooth.expr))
+  dissim <- correlation.distance(smooth.expr, between.samples = F)
   hcl <- hclust(as.dist(dissim), method="average")
   
   labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid")

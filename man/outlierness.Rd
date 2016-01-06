@@ -2,16 +2,25 @@
 % Please edit documentation in R/scorpius.R
 \name{outlierness}
 \alias{outlierness}
-\title{Title}
+\title{Outlierness}
 \usage{
-outlierness(dist, k = 10)
+outlierness(dist, k=10)
 }
 \arguments{
-\item{dist}{}
+\item{dist}{A numeric matrix, data frame or "\code{dist}" object.}
 
-\item{k}{}
+\item{k}{The maximum number of nearest neighbours to search.}
+}
+\value{
+The outlierness values for each of the samples.
 }
 \description{
-Title
+\code{outlierness} calculates the mean distance of each sample to its \emph{k} nearest neighbours.
+}
+\examples{
+x <- matrix(rnorm(100*2, mean=0, sd=1), ncol=2)
+dist <- dist(x)
+outl <- outlierness(dist, 10)
+plot(x, cex=outl, pch=20)
 }
 
