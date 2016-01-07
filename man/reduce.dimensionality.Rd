@@ -20,10 +20,15 @@ A matrix containing the coordinates of each sample, represented in an \code{ndim
 \code{reduce.dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
 }
 \examples{
-x <- matrix(runif(1000*10), ncol=10)
-dist <- euclidean.distance(x)
-space <- reduce.dimensionality(dist, ndim=2, rescale = F)
-plot(space)
+## Generate an example dataset
+dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+
+## Reduce the dimensionality of this dataset
+dist <- correlation.distance(dataset$expression)
+space <- reduce.dimensionality(dist, ndim=2)
+
+## Visualise the dataset
+plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
 }
 \seealso{
 If \code{rescale} is TRUE, \code{\link{rescale.and.center}} is used to rescale and center the output space.

@@ -63,12 +63,12 @@ euclidean.distance <- function (x, y=NULL) {
 #' @export
 #'
 #' @examples
-#' ## generate two matrices with 50 and 100 samples
+#' ## Generate two matrices with 50 and 100 samples
 #' x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
 #' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
 #' dist <- correlation.distance(x, y, method="spearman")
 #' 
-#' ## compare with the standard correlation function
+#' ## Compare with the standard correlation function
 #' dist2 <- cor(t(x), t(y), method="spearman")
 #' plot(dist, dist2)
 correlation.distance <- function(x, y=NULL, method="spearman") {
@@ -92,10 +92,11 @@ correlation.distance <- function(x, y=NULL, method="spearman") {
 #' 
 #' @description \code{knn.distances} returns the distances of the \emph{k} nearest neighbours of each sample.
 #' 
-#' @usage knn.distances(dist, k)
+#' @usage knn.distances(dist, k, self.loops=F)
 #' 
 #' @param dist A numeric matrix, data frame or "\code{dist}" object.
 #' @param k The maximum number of nearest neighbours to search.
+#' @param self.loops \code{TRUE} if samples with the same index or name are allowed to be neighbours.
 #'
 #' @return A matrix containing the distances of the \emph{k} nearest neighbours of each sample.
 #' 
@@ -113,12 +114,16 @@ correlation.distance <- function(x, y=NULL, method="spearman") {
 #' dist <- euclidean.distance(x, y)
 #' knnd <- knn.distances(dist, 10)
 #' plot(density(knnd))
-knn.distances <- function(dist, k) {
+knn.distances <- function(dist, k, self.loops=F) {
   # input checks
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (nrow(dist) < 2)
+    stop(sQuote("dist"), " needs to consist of at least 2 rows")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
     stop(sQuote("k"), " must be a whole number and k >= 1")
+  if (!is.logical(self.loops) || length(self.loops) != 1)
+    stop(sQuote("self.loops"), " must be a logical value")
   if (class(dist) == "dist")
     dist <- as.matrix(dist)
   
@@ -130,13 +135,20 @@ knn.distances <- function(dist, k) {
     NA, 
     nrow = nrow(dist), 
     ncol = K, 
-    dimnames=list(rownames(dist), paste0("knn", seq_len(K)))
+    dimnames=list(rownames(dist), if (K==0) c() else paste0("knn", seq_len(K)))
   )
   
+  # use dimnames if possible
+  row.ix <- if (!is.null(rownames(dist))) rownames(dist) else seq_len(nrow(dist))
+  col.ix <- if (!is.null(colnames(dist))) colnames(dist) else seq_len(ncol(dist))
+  
   # fill matrix by sample
-  for (i in seq_len(nrow(z))) {
-    z[i,] <- head(sort(dist[i,-i]), K)
-  }
+  if (self.loops)
+    for (i in row.ix)
+      z[i,] <- head(sort(dist[i,]), K)
+  else
+    for (i in row.ix)
+      z[i,] <- head(sort(dist[i,col.ix!=i]), K)
   
   # return KNN distances
   z
@@ -156,9 +168,11 @@ knn.distances <- function(dist, k) {
 #' @export
 #'
 #' @examples
+#' ## Generate example dataset
 #' x <- matrix(rnorm(100*2, mean=0, sd=1), ncol=2)
 #' dist <- dist(x)
 #' outl <- outlierness(dist, 10)
+#' # Visualise the outlierness scores for each of the points
 #' plot(x, cex=outl, pch=20)
 outlierness <- function(dist, k=10) {
   # input check
@@ -192,17 +206,26 @@ outlierness <- function(dist, k=10) {
 #' @importFrom fitdistrplus fitdist
 #' 
 #' @examples
-#' ## generate uniformily distributed points, calculate their outliernesses and which points are outliers
-#' x <- matrix(runif(200*2), ncol=2)
-#' dist <- euclidean.distance(x)
-#' filt <- outlier.filter(dist)
-#' plot(x, col=filt+2, cex=outlierness(dist)+1, pch=20)
-#' 
-#' ## generate normally distributed points, calculate their outliernesses and which points are outliers
+#' ## Generate normally distributed points, calculate their outliernesses and which points are outliers
 #' x <- matrix(rnorm(200*2), ncol=2)
 #' dist <- euclidean.distance(x)
 #' filt <- outlier.filter(dist)
-#' plot(x, col=filt+2, cex=outlierness(dist)+.5, pch=20)
+#' # plot points using their outlierness value as size and whether or not they were outliers as colours
+#' plot(x, col=filt+2, cex=outlierness(dist)+1, pch=20)
+#' # plot the score at each iteration of the removal process
+#' likelihood.df <- attr(filt, "loglikelihood")
+#' plot(likelihood.df$amount.removed, likelihood.df$log.likelihood, type="l")
+#' 
+#' ## Generate a random expression dataset
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=200, num.groups=4)
+#' dist <- correlation.distance(dataset$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' filt <- outlier.filter(dist)
+#' # plot points using their outlierness value as size and whether or not they were outliers as colours
+#' plot(space, col=filt+2, cex=outlierness(dist)+1, pch=20)
+#' # plot the score at each iteration of the removal process
+#' likelihood.df <- attr(filt, "loglikelihood")
+#' plot(likelihood.df$amount.removed, likelihood.df$log.likelihood, type="l")
 outlier.filter <- function(dist) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
@@ -226,30 +249,28 @@ outlier.filter <- function(dist) {
   logliks[[1]] <- dist.fit$loglik
   
   # iteratively remove samples and calculate log likelihood of fits
-  for (i in seq_len(num.pts.removed)) {
-    if (i < num.pts.removed) {
-      removed.sample <- which(filt)[[which.max(outliernesses)]]
-      removed[[i+1]] <- removed.sample
-      filt <- !ix %in% removed
-      outliernesses <- outlierness(dist[filt,filt,drop=F])
-    } else {
-      removed[[i+1]] <- which(filt)
-    }
+  for (i in seq_len(num.pts.removed-3)) {
+    removed.sample <- which(filt)[[which.max(outliernesses)]]
+    removed[[i+1]] <- removed.sample
+    filt <- !ix %in% removed
+    outliernesses <- outlierness(dist[filt,filt,drop=F])
     
-    # it doesn't make sense to fit a distribution to less than three values.
-    if (i < (num.pts.removed-3)) {
-      dist.fit <- fitdistrplus::fitdist(outliernesses, distr="norm")
+    tryCatch({
+      dist.fit <- fitdistrplus::fitdist(outliernesses, distr="norm", keepdata=F)
       logliks[[i+1]] <- dist.fit$loglik
-    } else {
-      logliks[[i+1]] <- -Inf
-    }
+    }, error=function(e) {})
   }
   
+  # finish up tail of execution
+  remaining <- which(filt)[order(outliernesses, decreasing=T)]
+  removed[seq(num.pts.removed-1, num.pts.removed+1)] <- remaining
+  
   # return a vector indicating which samples are /not/ outliers
-  filt <- !ix %in% removed[seq(2, which.max(logliks))]
+  filt <- !ix %in% removed[seq(1, which.max(logliks))]
   
   # attach log likelihood information as an attribute
-  attr(filt, "loglikelihoods") <- data.frame(amount.removed=seq_along(removed)-1, sample.index=removed, log.likelihood=logliks)
+  loglik.df <- data.frame(amount.removed=seq_along(removed)-1, sample.index=removed, log.likelihood=logliks)
+  attr(filt, "loglikelihoods") <- loglik.df
   
   # return outlier output
   filt
@@ -271,9 +292,16 @@ outlier.filter <- function(dist) {
 #' @export
 #'
 #' @examples
+#' ## Generate a matrix from a normal distribution with a large standard deviation, and approximately centered at c(5, 5)
 #' x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
+#' 
+#' ## Center the dataset at c(0, 0) with a minimum of c(-.5, -.5) and a maximum of c(.5, .5)
 #' x.scaled <- rescale.and.center(x, center=0, max.range=1)
-#' # x.scaled has a maximum range of 1 per column, and is centered at 0.
+#' 
+#' ## Plot rescaled data
+#' plot(x.scaled)
+#' 
+#' ## Show ranges of each column
 #' apply(x.scaled, 2, range) 
 rescale.and.center <- function(x, center=0, max.range=1) {
   # input checks 
@@ -302,14 +330,16 @@ rescale.and.center <- function(x, center=0, max.range=1) {
   scale <- max(maxs - mins)
   
   # calculate rescaled data
-  rescaled <- t(apply(x, 1, function(row) (row-new.center)/scale))
+  for (i in seq_len(nrow(x))) {
+    x[i,] <- (x[i,] - new.center) / scale
+  }
     
   # attach scaling information to output
-  attr(rescaled, "center") <- new.center
-  attr(rescaled, "scale") <- scale
+  attr(x, "center") <- new.center
+  attr(x, "scale") <- scale
   
   # return output
-  rescaled
+  x
 }
 
 #' @title Dimensionality reduction
@@ -330,10 +360,15 @@ rescale.and.center <- function(x, center=0, max.range=1) {
 #' @export
 #'
 #' @examples
-#' x <- matrix(runif(1000*10), ncol=10)
-#' dist <- euclidean.distance(x)
-#' space <- reduce.dimensionality(dist, ndim=2, rescale = F)
-#' plot(space)
+#' ## Generate an example dataset
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' 
+#' ## Reduce the dimensionality of this dataset
+#' dist <- correlation.distance(dataset$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' 
+#' ## Visualise the dataset
+#' plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
 reduce.dimensionality <- function(dist, ndim, rescale=T) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
@@ -379,17 +414,17 @@ reduce.dimensionality <- function(dist, ndim, rescale=T) {
 #' @importFrom dplyr percent_rank
 #'
 #' @examples 
-#' ## generate example dataset and visualise it
-#' x <- seq(-1, 1, by=.002)
-#' group <- cut(x, breaks=4)
-#' y <- rowSums(poly(x, 3))*4
-#' space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
-#' space <- rescale.and.center(space)
-#' plot.dimensionality.reduction(space, colour=group)
+#' ## Generate an example dataset and visualise it
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' dist <- correlation.distance(dataset$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
 #' 
-#' ## infer trajectory and visualise
+#' ## Infer a trajectory through this space
 #' traj <- infer.trajectory(space, k=4)
-#' plot.trajectory(space, traj$final.path, colour=group)
+#' 
+#' ## Visualise the trajectory
+#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
 infer.trajectory <- function(space, k) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
@@ -419,7 +454,7 @@ infer.trajectory <- function(space, k) {
         num.pts <- ceiling(mean((twocent[2,] - twocent[1,])/unit))
         segment.pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = num.pts))
         dists <- euclidean.distance(segment.pts, space)
-        mean(knn.distances(dists, 10))
+        mean(knn.distances(dists, 10, self.loops=T))
       }
     })
   })
@@ -468,72 +503,6 @@ infer.trajectory <- function(space, k) {
   trajectory
 }
 
-#' @title Infer random trajectory through space
-#' 
-#' @description \code{infer.random.trajectory} infers a random trajectory in the given space.
-#' 
-#' @usage 
-#' infer.random.trajectory(space, k)
-#' 
-#' @param space A numeric matrix or data frame.
-#' @param k The number of clusters to cluster the data into.
-#'
-#' @return A list of the same structure as \link{\code{infer.trajectory}}
-#' 
-#' @export
-#' 
-#' @importFrom princurve principal.curve
-#' @importFrom dplyr percent_rank
-#'
-#' @examples 
-#' ## generate example dataset and visualise it
-#' x <- seq(-1, 1, by=.002)
-#' group <- cut(x, breaks=4)
-#' y <- rowSums(poly(x, 3))*4
-#' space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
-#' space <- rescale.and.center(space)
-#' plot.dimensionality.reduction(space, colour=group)
-#' 
-#' ## infer trajectory and visualise
-#' traj <- infer.random.trajectory(space, k=10)
-#' plot.trajectory(space, traj$final.path, colour=group)
-infer.random.trajectory <- function(space, k) {
-  requireNamespace("princurve")
-  requireNamespace("dplyr")
-  
-  # input checks
-  if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
-  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
-    stop(sQuote("k"), " must be a whole number and k >= 2")
-  
-  # cluster space into k clusters
-  kmeans.clust <- kmeans(space, centers = k)
-  centers <- kmeans.clust$centers
-  
-  best.ord <- sample(seq_len(k))
-  
-  # use this ordering as the initial curve
-  initial.path <- centers[best.ord,,drop=F]
-  
-  # iteratively improve this curve using principal.curve
-  fit <- princurve::principal.curve(space, start=initial.path, plot.true=F, trace=F, stretch = 0, maxit=0)
-  
-  # construct final trajectory
-  final.path <- fit$s[fit$tag,,drop=F]
-  colnames(final.path) <- paste0("Comp", seq_len(ncol(final.path)))
-  rownames(final.path) <- NULL
-  
-  # construct timeline values
-  time <- dplyr::percent_rank(order(fit$tag))
-  names(time) <- rownames(space)
-  
-  # output result
-  trajectory <- list(clustering=kmeans.clust, initial.path=initial.path, final.path=final.path, time=time)
-  class(trajectory) <- "SCORPIUS::trajectory"
-  trajectory
-}
-
 #' @title Reverse a trajectory
 #' 
 #' @description Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse.trajectory}.
@@ -548,23 +517,20 @@ infer.random.trajectory <- function(space, k) {
 #' @export
 #'
 #' @examples
-#' ## generate example dataset and visualise it
-#' x <- seq(-1, 1, by=.002)
-#' group <- cut(x, breaks=4)
-#' y <- rowSums(poly(x, 3))*4
-#' space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
-#' space <- rescale.and.center(space)
-#' plot.dimensionality.reduction(space, colour=group)
-#' 
-#' ## infer trajectory and visualise
+#' ## Generate an example dataset and infer a trajectory through it
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' dist <- correlation.distance(dataset$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.trajectory(space, traj$final.path, colour=group)
 #' 
-#' ## reverse this trajectory
+#' ## Visualise the trajectory
+#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' 
+#' ## Reverse the trajectory
 #' reverse.traj <- reverse.trajectory(traj)
-#' plot.trajectory(space, traj$final.path, colour=group)
+#' plot.trajectory(space, reverse.traj$final.path, colour=dataset$sample.info$group.name)
 #' 
-#' ## it's the same but reversed?!
+#' ## It's the same but reversed?!
 #' plot(traj$time, reverse.traj$time, type="l")
 reverse.trajectory <- function(trajectory) {
   if (class(trajectory) != "SCORPIUS::trajectory" && c("clustering", "initial.path", "final.path", "time") %in% names(trajectory)) 
@@ -575,64 +541,134 @@ reverse.trajectory <- function(trajectory) {
   trajectory
 }
 
-#' Title
+#' @title Find trajectory-aligned features
+#' 
+#' @description \code{find.trajectory.aligned.features} searches for features whose values . It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
+#' 
+#' @usage
+#' find.trajectory.aligned.features(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F)
+#' 
+#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
+#' @param p.adjust.method The correction method used by \link{\code{p.adjust}}.
+#' @param q.value.cutoff The cutoff used on the q-values.
+#' @param df The degree of freedom used by \link{\code{ns}}.
+#' @param parallel Must be \code{FALSE} (default), \code{TRUE} (will auto-detect number of cores), or a numeric value specifying the number of cores to use.
 #'
-#' @param counts 
-#' @param time 
-#' @param degrees.of.freedom 
-#' @param p.adjust.method
-#'
-#' @return
+#' @return Returns a list, containing the following items: \itemize{
+#'   \item \code{tafs}: the names or indices of all trajectory-aligned features (q-value < \code{q.value.cutoff}),
+#'   \item \code{p.values}: a data frame containing an adjusted p-value for each feature,
+#'   \item \code{smooth.x}: the input matrix \code{x} smoothed by splines.
+#' }
+#' 
 #' @export
 #' 
 #' @importFrom splines ns
 #' @importFrom pbapply pblapply
-#' @importFrom parallel mclapply
+#' @importFrom parallel mclapply detectcores
 #' @importFrom dplyr arrange
 #'
 #' @examples
-find.trajectory.aligned.genes <- function(expression, time, degrees.of.freedom=8, p.adjust.method="BH", q.value.cutoff=1e-10, mc.cores=1) {
+#' ## Generate a dataset and visualise
+#' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
+#' expression <- dataset$expression
+#' dist <- correlation.distance(expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' traj <- infer.trajectory(space, k=4)
+#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' 
+#' ## Show which genes are most trajectory aligned
+#' tafs <- find.trajectory.aligned.features(expression, traj$time)
+#' head(tafs$p.values, 10)
+#' 
+#' ## Visualise the expression of these genes in a heatmap
+#' expr.tafs <- expression[,tafs$tafs]
+#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression=dataset$sample.info$group.name)
+find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F) {
+  # input checks
+  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+    stop(sQuote("x"), " must be a numeric matrix or data frame")
+  if (!is.vector(time) || !is.numeric(time)) 
+    stop(sQuote("time"), " must be a numeric vector")
+  if (nrow(x) != length(time)) 
+    stop(sQuote("time"), " must have one value for each row in ", sQuote("x"))
+  if (!p.adjust.method %in% p.adjust.methods)
+    stop(sQuote("p.adjust.method"), " must be one of: ", paste(p.adjust.methods, collapse=", "))
+  if (!is.numeric(q.value.cutoff))
+    stop(sQuote("q.value.cutoff"), " needs to be a numerical")
+  if (!is.finite(df) || df < 1)
+    stop(sQuote("df"), " needs to be a numerical and larger than 0")
+  
+  # if 'parallel' is a number, use this as the number of cores
+  # if 'parallel' is not a number nor a logical, throw an exception
+  # if 'parallel' is TRUE, automatically detect the number of cores
+  # if 'parallel' is FALSE, use pbapply
   lapply.fun <- 
-    if (mc.cores==1) {
-      function(...) pbapply::pblapply(...)
+    if (is.numeric(parallel)) {
+      function(...) parallel::mclapply(..., mc.cores=parallel)
+    } else if (!is.logical(parallel)) {
+      stop(sQuote("parallel"), " needs to be FALSE (default), TRUE (will auto-detect number of cores), or a numeric value specifying the number of cores to use")
+    } else if (parallel) {
+      function(...) parallel::mclapply(..., mc.cores=parallel::detectCores())
     } else {
-      function(...) parallel::mclapply(..., mc.cores=mc.cores)
+      function(...) pbapply::pblapply(...)
     }
-  runs <- lapply.fun(seq_len(ncol(expression)), function(i) {
-    fit <- glm(expression[,i]~splines::ns(time, degrees.of.freedom), family=gaussian(), epsilon=1e-5)
-    fit1 <- glm(expression[,i]~1, family=gaussian(), epsilon=1e-5)
+  
+  # apply splines to time
+  splt <- splines::ns(time, df)
+  
+  # perform anova test for each gene
+  feature.results <- lapply.fun(seq_len(ncol(x)), function(i) {
+    fit <- glm(x[,i]~splt, family=gaussian(), epsilon=1e-5)
+    fit1 <- glm(x[,i]~1, family=gaussian(), epsilon=1e-5)
     test <- anova(fit1, fit, test = "F")
     pval <- test[6][2, 1]
-    
-    smooth <- predict(fit, splines::ns(time, degrees.of.freedom))
+    smooth <- predict(fit, splt)
     list(pval=pval, smooth=smooth)
   })
-  pvals <- sapply(runs, function(x) x$pval)
+  
+  # gather and adjust p-values
+  pvals <- sapply(feature.results, function(x) x$pval)
   pvals[!is.finite(pvals)] <- 1
-  qvals <- p.adjust(pvals, method=p.adjust.method, n=ncol(expression))
-  smooth.expression <- sapply(runs, function(x) x$smooth)
-  dimnames(smooth.expression) <- dimnames(expression)
+  qvals <- p.adjust(pvals, method=p.adjust.method, n=ncol(x))
   
-  breaks <- c(1, .05, .001, 1e-5, 1e-10, 1e-20, 1e-40, -Inf)
-  qval.cat <- cut(qvals, breaks=breaks)
-  levels(qval.cat) <- c("p <= 1e-40", "1e-40 < p <= 1e-20", "1e-20 < p <= 1e-10", "1e-10 < p <= 1e-5", "1e-5 < p <= 0.001", "0.001 < p <= 0.05", "p > 0.05")
+  # gather smoothed values
+  smooth.x <- sapply(feature.results, function(x) x$smooth)
+  dimnames(smooth.x) <- dimnames(x)
   
-  is.tag <- qvals < q.value.cutoff
+  # categorise q-values
+  qval.cat <- cut(
+    qvals, 
+    breaks=c(1, .05, .001, 1e-5, 1e-10, 1e-20, 1e-40, -Inf), 
+    labels=c("p <= 1e-40", "1e-40 < p <= 1e-20", "1e-20 < p <= 1e-10", "1e-10 < p <= 1e-5", "1e-5 < p <= 0.001", "0.001 < p <= 0.05", "p > 0.05")
+  )
   
-  p.values <- data.frame(gene=colnames(expression), p.value=pvals, q.value=qvals, is.tag=is.tag, category=qval.cat, stringsAsFactors = F)
+  # select final set of tafs
+  is.taf <- qvals < q.value.cutoff
+  
+  # construct output data frame and order by q.value
+  feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
+  p.values <- data.frame(feature=feature.names, p.value=pvals, q.value=qvals, is.taf=is.taf, category=qval.cat, stringsAsFactors = F)
   p.values <- dplyr::arrange(p.values, q.value)
   
-  genes <- p.values$gene[p.values$is.tag]
-  list(genes=genes, p.values=p.values, smooth.expression=smooth.expression)
+  # also return the names or indexes of the TAFs
+  features <- p.values$feature[p.values$is.taf]
+  
+  # return all output
+  list(tafs=features, p.values=p.values, smooth.x=smooth.x)
 }
 
-#' Title
+#' @title Extract modules of features
+#' 
+#' @description \code{extract.modules} uses adaptive branch pruning 
+#' 
+#' @usage 
+#' extract.modules(x)
 #'
-#' @param counts 
-#' @param tag.genes 
-#' @param time 
+#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #'
-#' @return
+#' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
+#' 
 #' @export
 #' 
 #' @importFrom dynamicTreeCut cutreeDynamic
@@ -640,25 +676,52 @@ find.trajectory.aligned.genes <- function(expression, time, degrees.of.freedom=8
 #' @importFrom dplyr bind_rows arrange
 #'
 #' @examples
-find.modules <- function(smooth.expression, tag.genes) {
-  smooth.expr <- smooth.expression[,tag.genes,drop=F]
-  dissim <- correlation.distance(t(smooth.expr))
-  hcl <- hclust(as.dist(dissim), method="average")
+#' ## Generate a dataset and visualise
+#' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
+#' expression <- dataset$expression
+#' dist <- correlation.distance(expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' traj <- infer.trajectory(space, k=4)
+#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' 
+#' ## Show which genes are most trajectory aligned
+#' tafs <- find.trajectory.aligned.features(expression, traj$time)
+#' expr.tafs <- expression[,tafs$tafs]
+#' smooth.tafs <- tafs$smooth.x[,tafs$tafs]
+#' 
+#' ## Group the genes into modules and visualise the modules in a heatmap
+#' modules <- extract.modules(smooth.tafs)
+#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression=dataset$sample.info$group.name, modules=modules)
+extract.modules <- function(x) {
+  # input checks
+  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+    stop(sQuote("x"), " must be a numeric matrix or data frame")
   
-  labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid")
-  labels2 <- WGCNA::mergeCloseModules(smooth.expr, labels, cutHeight = 0.3)$colors
-  labels2 <- match(labels2, unique(labels2))
-  # labels2 <- dynamicTreeCut::cutreeDynamic(hcl, distM=dissim, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid")
+  feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
   
-  modules <- dplyr::bind_rows(lapply(unique(labels2), function(l) {
-    ix <- which(labels2==l)
-    dimred <- reduce.dimensionality(dissim[ix, ix, drop=F], ndim=2)
-    value <- dimred[,1]
-    data.frame(gene=tag.genes[ix], index=ix, module=l, value=value, stringsAsFactors = F)
+  # calculate the correlation distance between features
+  dist <- correlation.distance(t(x))
+  
+  # hierarchically cluster the features
+  hcl <- hclust(as.dist(dist), method="average")
+  
+  # perform adaptive branch pruning 
+  labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dist, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid", verbose=0)
+  
+  # merge close modules 
+  labels <- WGCNA::mergeCloseModules(x, labels, cutHeight = 0.3, verbose=0)$colors
+  labels <- match(labels, unique(labels))
+  
+  # order features within one module according to a dimensionality reduction of the correlation distance
+  modules <- dplyr::bind_rows(lapply(unique(labels), function(l) {
+    ix <- which(labels==l)
+    dimred <- reduce.dimensionality(dist[ix, ix, drop=F], ndim=1)
+    data.frame(feature=feature.names[ix], index=ix, module=l, value=dimred[,1], stringsAsFactors = F, row.names = NULL)
   }))
-  modules <- dplyr::arrange(modules, module, value)
+  modules <- as.data.frame(dplyr::arrange(modules, module, value))
   
-  modules
+  # return output
+  modules[,c("feature", "index", "module")]
 }
 
 
@@ -673,7 +736,6 @@ find.modules <- function(smooth.expression, tag.genes) {
 #' 
 #' @import ggplot2
 #' @importFrom MASS kde2d
-#' @importFrom dplyr bind_rows
 #'
 #' @examples
 plot.dimensionality.reduction <- function(space, colour=NULL, contour=F) {
@@ -739,52 +801,72 @@ plot.trajectory.density <- function(time, progression, colour=NULL) {
 
 #' Title
 #'
-#' @param tags 
-#' @param progression.str 
+#' @param x 
 #' @param time 
+#' @param progression 
 #' @param modules 
+#' @param show.labels.row 
+#' @param show.labels.col 
+#' @param scale.features
 #'
 #' @return
 #' @export
-#' 
-#' @importFrom RColorBrewer brewer.pal
-#' @importFrom pheatmap pheatmap
 #'
 #' @examples
-plot.modules.heatmap <- function(smooth.expression, tag.genes, progression.str, time, modules) {
-  smooth.expr <- smooth.expression[,tag.genes,drop=F]
-  smooth.expr.ord <- smooth.expr[order(time), modules$index]
-  smooth.expr.ord.scaled <- t(scale(smooth.expr.ord))
-  gaps <- which(modules$module[-1] != modules$module[-length(modules$module)])
-  col.ann <- data.frame(row.names = rownames(smooth.expression), Progression=progression.str, Time=time)
-  row.ann <- data.frame(row.names = modules$gene, Module=paste0("Module ", modules$module))
+plot.trajectory.heatmap <- function(x, time, progression=NULL, modules=NULL, show.labels.row=F, show.labels.col=F, scale.features=T, narrow.breaks=T) {
+  col.ann <- data.frame(row.names = rownames(x), Time=time)
+  
+  x.part <- x[order(time),,drop=F]
+  if (scale.features) x.part <- scale(x.part)
+  x.part <- t(x.part)
   
   gg_color_hue <- function(n) {
     hues = seq(15, 375, length=n+1)
     hcl(h=hues, l=65, c=100)[1:n]
   }
-  num.modules <- length(unique(modules$module))
-  Module.colours <- setNames(RColorBrewer::brewer.pal(max(num.modules, 3), "Set2"), paste0("Module ", seq_len(num.modules)))
-  Prog.colours <- setNames(gg_color_hue(length(levels(progression.str))), levels(progression.str))
+  
   ann.col <- list(
-    Module=Module.colours,
-    Time=Prog.colours,
-    Progression=Prog.colours
+    Time=c("#ca0020", "#f4a582", "#ffffff", "#bababa", "#404040")
   )
   
+  if (!is.null(progression)) {
+    if (!is.factor(progression)) progression <- factor(progression)
+    col.ann$Progression <- progression
+    ann.col$Progression <- setNames(gg_color_hue(length(levels(progression))), levels(progression))
+  }
+  
+  if (!is.null(modules)) {
+    x.part <- x.part[modules$index,]
+    gaps_row <- which(modules$module[-1] != modules$module[-length(modules$module)])
+    cluster_rows <- F
+  } else {
+    gaps_row <- NULL
+    cluster_rows <- T
+  }
+  
+  labels_row <- if (!show.labels.row) rep("", nrow(x.part)) else NULL
+  labels_col <- if (!show.labels.col) rep("", ncol(x.part)) else NULL
+  
+  if (scale.features && narrow.breaks) {
+    break.cutoff <- quantile(abs(x.part), .9)
+    breaks <- c(min(x.part), seq(-break.cutoff, break.cutoff, length.out=99), max(x.part))
+  } else {
+    breaks <- NA
+  }
+  
   pheatmap::pheatmap(
-    smooth.expr.ord.scaled, 
-    cluster_rows=F, 
-    cluster_cols=F, 
-    gaps_row=gaps, 
-    annotation_row = row.ann, 
+    x.part, 
+    cluster_cols = F, 
+    cluster_rows = cluster_rows,
     annotation_col = col.ann, 
     annotation_colors = ann.col, 
-    breaks=c(min(smooth.expr.ord.scaled), seq(-2, 2, length.out=99), max(smooth.expr.ord.scaled)),
-    labels_row=rep("", nrow(smooth.expr.ord.scaled)),
-    labels_col=rep("", ncol(smooth.expr.ord.scaled))
+    gaps_row = gaps_row,
+    breaks = breaks,
+    labels_row = labels_row,
+    labels_col = labels_col
   )
 }
+
 
 #' Title
 #'
@@ -850,3 +932,62 @@ evaluate.space <- function(space, progression, k=5) {
   mean(progression==pred)
 }
 
+#' @title Naive dataset generation
+#' 
+#' @description \code{generate.dataset} generates an expression dataset which can be used for visualisation purposes.
+#' 
+#' @usage
+#' generate.dataset(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4)
+#'
+#' @param type The type of function used in order to generate the expression data. Must be either \code{"splines"} (default) or \code{"polynomial"} (or abbreviations thereof).
+#' @param num.samples The number of samples the dataset will contain.
+#' @param num.genes The number of genes the dataset will contain.
+#' @param num.groups The number of groups the samples will be split up in.
+#'
+#' @return A list containing the expression data and the meta data of the samples.
+#' 
+#' @export
+#'
+#' @examples
+#' ## Generate a dataset
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' 
+#' ## Reduce dimensionality and infer trajectory with SCORPIUS
+#' dist <- correlation.distance(dataset$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' traj <- infer.trajectory(space, k=4)
+#' 
+#' ## Visualise
+#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4) {
+  group.names <- paste0("Group ", seq_len(num.groups))
+  gene.names <- paste0("Gene", seq_len(num.genes))
+  sample.names <- paste0("Sample", seq_len(num.samples))
+  
+  x <- seq(-1, 1, length.out=num.samples)
+  group <- cut(x, breaks=num.groups, labels = group.names)
+  sample.info <- data.frame(name=sample.names, group.name=group)
+  
+  type <- match.arg(type, c("splines", "polynomial"))
+  
+  switch(type, polynomial={
+    y <- poly(x, 2)
+    sd <- .012 * sqrt(num.genes)
+  }, splines={
+    y <- splines::ns(x, df=3)
+    sd <- .06 * sqrt(num.genes)
+  })
+  
+  expression <- sapply(seq_len(num.genes), function(g) {
+    scale <- rnorm(ncol(y), mean=0, sd=1)
+    rowSums(sweep(y, 2, scale, "*")) + rnorm(length(x), sd=sd)
+  })
+  dimnames(expression) <- list(sample.names, gene.names)
+  undetectable <- which(expression < 0)
+  undetectable <- sample(undetectable, length(undetectable)*.5)
+  throw.back <- -.4
+  expression[expression < throw.back | seq_along(expression) %in% undetectable] <- throw.back
+  expression <- (expression - throw.back) * 4
+  
+  list(expression=expression, sample.info=sample.info)
+}

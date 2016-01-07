@@ -4,12 +4,14 @@
 \alias{knn.distances}
 \title{k Nearest Neighbour distances}
 \usage{
-knn.distances(dist, k)
+knn.distances(dist, k, self.loops=F)
 }
 \arguments{
 \item{dist}{A numeric matrix, data frame or "\code{dist}" object.}
 
 \item{k}{The maximum number of nearest neighbours to search.}
+
+\item{self.loops}{\code{TRUE} if samples with the same index or name are allowed to be neighbours.}
 }
 \value{
 A matrix containing the distances of the \emph{k} nearest neighbours of each sample.

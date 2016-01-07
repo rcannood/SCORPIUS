@@ -18,9 +18,11 @@ The outlierness values for each of the samples.
 \code{outlierness} calculates the mean distance of each sample to its \emph{k} nearest neighbours.
 }
 \examples{
+## Generate example dataset
 x <- matrix(rnorm(100*2, mean=0, sd=1), ncol=2)
 dist <- dist(x)
 outl <- outlierness(dist, 10)
+# Visualise the outlierness scores for each of the points
 plot(x, cex=outl, pch=20)
 }
 

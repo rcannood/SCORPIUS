@@ -30,16 +30,16 @@ A list containing several objects:
 }
 }
 \examples{
-## generate example dataset and visualise it
-x <- seq(-1, 1, by=.002)
-group <- cut(x, breaks=4)
-y <- rowSums(poly(x, 3))*4
-space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
-space <- rescale.and.center(space)
-plot.dimensionality.reduction(space, colour=group)
+## Generate an example dataset and visualise it
+dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+dist <- correlation.distance(dataset$expression)
+space <- reduce.dimensionality(dist, ndim=2)
+plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
 
-## infer trajectory and visualise
+## Infer a trajectory through this space
 traj <- infer.trajectory(space, k=4)
-plot.trajectory(space, traj$final.path, colour=group)
+
+## Visualise the trajectory
+plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
 }
 

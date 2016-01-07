@@ -19,16 +19,25 @@ to the remaining outlierness values. A selection of samples is made by picking t
 at which the log likelihood is maximised.
 }
 \examples{
-## generate uniformily distributed points, calculate their outliernesses and which points are outliers
-x <- matrix(runif(200*2), ncol=2)
-dist <- euclidean.distance(x)
-filt <- outlier.filter(dist)
-plot(x, col=filt+2, cex=outlierness(dist)+1, pch=20)
-
-## generate normally distributed points, calculate their outliernesses and which points are outliers
+## Generate normally distributed points, calculate their outliernesses and which points are outliers
 x <- matrix(rnorm(200*2), ncol=2)
 dist <- euclidean.distance(x)
 filt <- outlier.filter(dist)
-plot(x, col=filt+2, cex=outlierness(dist)+.5, pch=20)
+# plot points using their outlierness value as size and whether or not they were outliers as colours
+plot(x, col=filt+2, cex=outlierness(dist)+1, pch=20)
+# plot the score at each iteration of the removal process
+likelihood.df <- attr(filt, "loglikelihood")
+plot(likelihood.df$amount.removed, likelihood.df$log.likelihood, type="l")
+
+## Generate a random expression dataset
+dataset <- generate.dataset(type="poly", num.genes=500, num.samples=200, num.groups=4)
+dist <- correlation.distance(dataset$expression)
+space <- reduce.dimensionality(dist, ndim=2)
+filt <- outlier.filter(dist)
+# plot points using their outlierness value as size and whether or not they were outliers as colours
+plot(space, col=filt+2, cex=outlierness(dist)+1, pch=20)
+# plot the score at each iteration of the removal process
+likelihood.df <- attr(filt, "loglikelihood")
+plot(likelihood.df$amount.removed, likelihood.df$log.likelihood, type="l")
 }
 

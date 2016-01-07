@@ -16,23 +16,20 @@ The same trajectory, but in the other direction.
 Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse.trajectory}.
 }
 \examples{
-## generate example dataset and visualise it
-x <- seq(-1, 1, by=.002)
-group <- cut(x, breaks=4)
-y <- rowSums(poly(x, 3))*4
-space <- cbind(Comp1=x + rnorm(length(x), sd=.1), Comp2=y + rnorm(length(y), sd=.2))
-space <- rescale.and.center(space)
-plot.dimensionality.reduction(space, colour=group)
-
-## infer trajectory and visualise
+## Generate an example dataset and infer a trajectory through it
+dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+dist <- correlation.distance(dataset$expression)
+space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
-plot.trajectory(space, traj$final.path, colour=group)
 
-## reverse this trajectory
+## Visualise the trajectory
+plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+
+## Reverse the trajectory
 reverse.traj <- reverse.trajectory(traj)
-plot.trajectory(space, traj$final.path, colour=group)
+plot.trajectory(space, reverse.traj$final.path, colour=dataset$sample.info$group.name)
 
-## it's the same but reversed?!
+## It's the same but reversed?!
 plot(traj$time, reverse.traj$time, type="l")
 }
 

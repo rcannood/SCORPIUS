@@ -20,12 +20,12 @@ An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} 
 \code{correlation.distance} calculates the (pairwise) correlation distances between one or two sets of samples.
 }
 \examples{
-## generate two matrices with 50 and 100 samples
+## Generate two matrices with 50 and 100 samples
 x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
 y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
 dist <- correlation.distance(x, y, method="spearman")
 
-## compare with the standard correlation function
+## Compare with the standard correlation function
 dist2 <- cor(t(x), t(y), method="spearman")
 plot(dist, dist2)
 }
