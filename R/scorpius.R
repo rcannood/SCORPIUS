@@ -147,7 +147,7 @@ outlier.filter <- function(dist) {
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' 
 #' ## Visualise the dataset
-#' plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, colour=dataset$sample.info$group.name)
 reduce.dimensionality <- function(dist, ndim, rescale=T) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
@@ -197,13 +197,13 @@ reduce.dimensionality <- function(dist, ndim, rescale=T) {
 #' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
 #' dist <- correlation.distance(dataset$expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
-#' plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, colour=dataset$sample.info$group.name)
 #' 
 #' ## Infer a trajectory through this space
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise the trajectory
-#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 infer.trajectory <- function(space, k) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
@@ -303,11 +303,11 @@ infer.trajectory <- function(space, k) {
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise the trajectory
-#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 #' 
 #' ## Reverse the trajectory
 #' reverse.traj <- reverse.trajectory(traj)
-#' plot.trajectory(space, reverse.traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=reverse.traj$final.path, colour=dataset$sample.info$group.name)
 #' 
 #' ## It's the same but reversed?!
 #' plot(traj$time, reverse.traj$time, type="l")
@@ -354,7 +354,7 @@ reverse.trajectory <- function(trajectory) {
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 #' 
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -377,6 +377,11 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
     stop(sQuote("q.value.cutoff"), " needs to be a numerical")
   if (!is.finite(df) || df < 1)
     stop(sQuote("df"), " needs to be a numerical and larger than 0")
+  
+  requireNamespace("splines")
+  requireNamespace("pbapply")
+  requireNamespace("parallel")
+  requireNamespace("dplyr")
   
   # if 'parallel' is a number, use this as the number of cores
   # if 'parallel' is not a number nor a logical, throw an exception
@@ -461,7 +466,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 #' 
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -475,6 +480,10 @@ extract.modules <- function(x) {
   # input checks
   if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
+  
+  requireNamespace("dynamicTreeCut")
+  requireNamespace("WGCNA")
+  requireNamespace("dplyr")
   
   feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
   
@@ -503,11 +512,9 @@ extract.modules <- function(x) {
   modules[,c("feature", "index", "module")]
 }
 
-
-
-#' @title Naive dataset generation
+#' @title Generate a synthetic dataset
 #' 
-#' @description \code{generate.dataset} generates an expression dataset which can be used for visualisation purposes.
+#' @description \code{generate.dataset} generates an synthetic dataset which can be used for visualisation purposes.
 #' 
 #' @usage
 #' generate.dataset(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4)
@@ -531,18 +538,22 @@ extract.modules <- function(x) {
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise
-#' plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4) {
+  # make names for each group, gene and sample
   group.names <- paste0("Group ", seq_len(num.groups))
   gene.names <- paste0("Gene", seq_len(num.genes))
   sample.names <- paste0("Sample", seq_len(num.samples))
   
+  # match the type argument
+  type <- match.arg(type, c("splines", "polynomial"))
+  
+  # construct the sample info
   x <- seq(-1, 1, length.out=num.samples)
   group <- cut(x, breaks=num.groups, labels = group.names)
   sample.info <- data.frame(name=sample.names, group.name=group)
   
-  type <- match.arg(type, c("splines", "polynomial"))
-  
+  # apply function and determine noise sd
   switch(type, polynomial={
     y <- poly(x, 2)
     sd <- .012 * sqrt(num.genes)
@@ -551,16 +562,26 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, 
     sd <- .06 * sqrt(num.genes)
   })
   
+  # generate expression data
   expression <- sapply(seq_len(num.genes), function(g) {
     scale <- rnorm(ncol(y), mean=0, sd=1)
-    rowSums(sweep(y, 2, scale, "*")) + rnorm(length(x), sd=sd)
+    noise <- rnorm(length(x), sd=sd)
+    rowSums(sweep(y, 2, scale, "*")) + noise
   })
   dimnames(expression) <- list(sample.names, gene.names)
-  undetectable <- which(expression < 0)
-  undetectable <- sample(undetectable, length(undetectable)*.5)
-  throw.back <- -.4
-  expression[expression < throw.back | seq_along(expression) %in% undetectable] <- throw.back
-  expression <- (expression - throw.back) * 4
+  
+  # simulate genes that are not expressed
+  undetectable <- which(expression < 0) 
+  undetectable <- sample(undetectable, length(undetectable)*.5, prob = -expression[undetectable])
+  
+  # shift expression 
+  expression <- expression + .5
+  
+  # set everything below 0 or that was marked as undetectable to zero
+  expression[expression < 0 | seq_along(expression) %in% undetectable] <- 0
+  
+  # rescale to a reasonable value
+  expression <- expression / max(expression) * 20
   
   list(expression=expression, sample.info=sample.info)
 }

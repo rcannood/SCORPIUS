@@ -2,7 +2,7 @@
 % Please edit documentation in R/scorpius.R
 \name{generate.dataset}
 \alias{generate.dataset}
-\title{Naive dataset generation}
+\title{Generate a synthetic dataset}
 \usage{
 generate.dataset(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4)
 }
@@ -19,7 +19,7 @@ generate.dataset(type=c("splines", "polynomial"), num.samples=1000, num.genes=10
 A list containing the expression data and the meta data of the samples.
 }
 \description{
-\code{generate.dataset} generates an expression dataset which can be used for visualisation purposes.
+\code{generate.dataset} generates an synthetic dataset which can be used for visualisation purposes.
 }
 \examples{
 ## Generate a dataset
@@ -31,6 +31,6 @@ space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
 
 ## Visualise
-plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 }
 

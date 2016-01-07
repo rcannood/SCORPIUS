@@ -36,7 +36,7 @@ expression <- dataset$expression
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
-plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 
 ## Show which genes are most trajectory aligned
 tafs <- find.trajectory.aligned.features(expression, traj$time)

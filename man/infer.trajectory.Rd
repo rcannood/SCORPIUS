@@ -34,12 +34,12 @@ A list containing several objects:
 dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
 dist <- correlation.distance(dataset$expression)
 space <- reduce.dimensionality(dist, ndim=2)
-plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
+plot.scorpius(space, colour=dataset$sample.info$group.name)
 
 ## Infer a trajectory through this space
 traj <- infer.trajectory(space, k=4)
 
 ## Visualise the trajectory
-plot.trajectory(space, traj$final.path, colour=dataset$sample.info$group.name)
+plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
 }
 

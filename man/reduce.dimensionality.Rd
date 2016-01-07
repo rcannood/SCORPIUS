@@ -28,7 +28,7 @@ dist <- correlation.distance(dataset$expression)
 space <- reduce.dimensionality(dist, ndim=2)
 
 ## Visualise the dataset
-plot.dimensionality.reduction(space, colour=dataset$sample.info$group.name)
+plot.scorpius(space, colour=dataset$sample.info$group.name)
 }
 \seealso{
 If \code{rescale} is TRUE, \code{\link{rescale.and.center}} is used to rescale and center the output space.
