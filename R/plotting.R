@@ -45,11 +45,11 @@
 #' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path, contour=TRUE)
 draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, contour=FALSE) {
   # input checks
-  if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
+  if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
   if ((!is.null(progression.group) && !is.vector(progression.group) && !is.factor(progression.group)) || (!is.null(progression.group) && length(progression.group) != nrow(space)))
     stop(sQuote("progression.group"), " must be a vector or a factor of length nrow(space)")
-  if ((!is.null(path) && !is.matrix(path) && !is.data.frame(path)) || (!is.null(path) && !is.numeric(path)))
+  if (!is.null(path) && !is.matrix(path) && !is.data.frame(path))
     stop(sQuote("path"), " must be NULL, a numeric matrix or a data frame")
   if (!is.logical(contour))
     stop(sQuote("contour"), " must be a logical")
@@ -179,7 +179,7 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' draw.trajectory.heatmap(expr.tafs, time, progression.group=groups, modules=modules)
 draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, narrow.breaks=TRUE, ...) {
   # input checks
-  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+  if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   if (!is.vector(time) || !is.numeric(time)) 
     stop(sQuote("time"), " must be a numeric vector")

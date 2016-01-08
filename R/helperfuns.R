@@ -23,14 +23,14 @@
 #' plot(dist, dist2)
 euclidean.distance <- function (x, y=NULL) {
   # input checks
-  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+  if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   
   # if y is null, we can simply use the normal dist function
   if (is.null(y)) return(as.matrix(dist(x)))
   
   # more input checks
-  if ((!is.matrix(y) && !is.data.frame(y)) || !is.numeric(y))
+  if (!is.matrix(y) && !is.data.frame(y))
     stop(sQuote("y"), " must be a numeric matrix or data frame")
   if (ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
@@ -73,9 +73,9 @@ euclidean.distance <- function (x, y=NULL) {
 #' plot(dist, dist2)
 correlation.distance <- function(x, y=NULL, method="spearman") {
   # input checks
-  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+  if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if ((!is.null(y) && !is.matrix(y) && !is.data.frame(y)) || ((is.matrix(y) || is.data.frame(y)) && !is.numeric(y)))
+  if (!is.null(y) && !is.matrix(y) && !is.data.frame(y))
     stop(sQuote("y"), " must be NULL, a numeric matrix or a data frame")
   if (!is.null(y) && ncol(x) != ncol(y)) 
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
@@ -183,7 +183,7 @@ knn.distances <- function(dist, k, self.loops=F) {
 #' apply(x.scaled, 2, range) 
 rescale.and.center <- function(x, center=0, max.range=1) {
   # input checks 
-  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+  if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   if (!is.finite(center))
     stop(sQuote("center"), " must be numeric")

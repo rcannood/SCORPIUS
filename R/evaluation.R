@@ -93,7 +93,7 @@ evaluate.trajectory <- function(time, progression) {
 #' evaluate.space(space, dataset$sample.info$group.name)
 evaluate.space <- function(space, progression, k=5) {
   # input checks
-  if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
+  if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
   if (!is.factor(progression) && (!is.vector(progression) || !is.numeric(progression)))
     stop(sQuote("progression"), " must be a numeric vector or a factor")

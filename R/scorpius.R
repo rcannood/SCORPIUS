@@ -17,6 +17,7 @@
 #' x <- matrix(rnorm(100*2, mean=0, sd=1), ncol=2)
 #' dist <- dist(x)
 #' outl <- outlierness(dist, 10)
+#' 
 #' # Visualise the outlierness scores for each of the points
 #' plot(x, cex=outl, pch=20)
 outlierness <- function(dist, k=10) {
@@ -215,7 +216,7 @@ infer.trajectory <- function(space, k) {
   requireNamespace("GA")
   
   # input checks
-  if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
+  if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
     stop(sQuote("k"), " must be a whole number and k >= 2")
@@ -374,7 +375,7 @@ reverse.trajectory <- function(trajectory) {
 #' draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
 find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F) {
   # input checks
-  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+  if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   if (!is.vector(time) || !is.numeric(time)) 
     stop(sQuote("time"), " must be a numeric vector")
@@ -488,7 +489,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
 extract.modules <- function(x) {
   # input checks
-  if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
+  if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
   
   requireNamespace("dynamicTreeCut")
