@@ -2,18 +2,31 @@
 % Please edit documentation in R/evaluation.R
 \name{evaluate.space}
 \alias{evaluate.space}
-\title{Title}
+\title{Evaluate the dimensionality reduction}
 \usage{
-evaluate.space(space, progression, k = 5)
+evaluate.space(space, progression)
 }
 \arguments{
-\item{space}{}
+\item{space}{A numeric vector containing the inferred time points of each sample along a trajectory.}
 
-\item{progression}{}
+\item{progression}{A factor or a numeric vector which represents the progression stages of each sample.}
 
-\item{k}{}
+\item{k}{The maximum number of nearest neighbours to search.}
+}
+\value{
+The accuracy of a 5NN LOOCV using the dimensionality reduction to predict the progression stage of a sample.
 }
 \description{
-Title
+\code{evaluate.space} calculates the \emph{accuracy} of the
+dimensionality reduction by performing 5-nearest neighbour leave-one-out-cross-validation (5NN LOOCV).
+}
+\examples{
+## Generate a dataset
+dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
+dist <- correlation.distance(dataset$expression)
+space <- reduce.dimensionality(dist, ndim=2)
+
+## Evaluate the trajectory timeline
+evaluate.space(space, dataset$sample.info$group.name)
 }
 

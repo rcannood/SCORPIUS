@@ -176,7 +176,7 @@ reduce.dimensionality <- function(dist, ndim, rescale=T) {
 #' @usage 
 #' infer.trajectory(space, k)
 #' 
-#' @param space A numeric matrix or data frame.
+#' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
 #'
 #' @return A list containing several objects:
