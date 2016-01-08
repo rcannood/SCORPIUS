@@ -147,7 +147,7 @@ outlier.filter <- function(dist) {
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' 
 #' ## Visualise the dataset
-#' plot.scorpius(space, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, progression.group=dataset$sample.info$group.name)
 reduce.dimensionality <- function(dist, ndim, rescale=T) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
@@ -197,13 +197,13 @@ reduce.dimensionality <- function(dist, ndim, rescale=T) {
 #' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
 #' dist <- correlation.distance(dataset$expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
-#' plot.scorpius(space, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Infer a trajectory through this space
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise the trajectory
-#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 infer.trajectory <- function(space, k) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
@@ -303,11 +303,11 @@ infer.trajectory <- function(space, k) {
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise the trajectory
-#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Reverse the trajectory
 #' reverse.traj <- reverse.trajectory(traj)
-#' plot.scorpius(space, path=reverse.traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## It's the same but reversed?!
 #' plot(traj$time, reverse.traj$time, type="l")
@@ -344,7 +344,7 @@ reverse.trajectory <- function(trajectory) {
 #' 
 #' @importFrom splines ns
 #' @importFrom pbapply pblapply
-#' @importFrom parallel mclapply detectcores
+#' @importFrom parallel mclapply detectCores
 #' @importFrom dplyr arrange
 #'
 #' @examples
@@ -354,7 +354,7 @@ reverse.trajectory <- function(trajectory) {
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -362,7 +362,7 @@ reverse.trajectory <- function(trajectory) {
 #' 
 #' ## Visualise the expression of these genes in a heatmap
 #' expr.tafs <- expression[,tafs$tafs]
-#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression=dataset$sample.info$group.name)
+#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
 find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F) {
   # input checks
   if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
@@ -466,7 +466,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -475,7 +475,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' 
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(smooth.tafs)
-#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression=dataset$sample.info$group.name, modules=modules)
+#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
 extract.modules <- function(x) {
   # input checks
   if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
@@ -538,7 +538,7 @@ extract.modules <- function(x) {
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise
-#' plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4) {
   # make names for each group, gene and sample
   group.names <- paste0("Group ", seq_len(num.groups))

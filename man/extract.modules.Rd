@@ -22,7 +22,7 @@ expression <- dataset$expression
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
-plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 
 ## Show which genes are most trajectory aligned
 tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -31,6 +31,6 @@ smooth.tafs <- tafs$smooth.x[,tafs$tafs]
 
 ## Group the genes into modules and visualise the modules in a heatmap
 modules <- extract.modules(smooth.tafs)
-plot.trajectory.heatmap(expr.tafs, time=traj$time, progression=dataset$sample.info$group.name, modules=modules)
+plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
 }
 

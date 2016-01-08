@@ -31,6 +31,6 @@ space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
 
 ## Visualise
-plot.scorpius(space, path=traj$final.path, colour=dataset$sample.info$group.name)
+plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 }
 

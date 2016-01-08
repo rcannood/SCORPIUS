@@ -2,16 +2,30 @@
 % Please edit documentation in R/evaluation.R
 \name{evaluate.trajectory}
 \alias{evaluate.trajectory}
-\title{Title}
+\title{Evaluate the inferred timeline}
 \usage{
 evaluate.trajectory(time, progression)
 }
 \arguments{
-\item{time}{}
+\item{time}{A numeric vector containing the inferred time points of each sample along a trajectory.}
 
-\item{progression}{}
+\item{progression}{A factor or a numeric vector which represents the progression stages of each sample.}
+}
+\value{
+The consistency value for the predicted timeline.
 }
 \description{
-Title
+\code{evaluate.trajectory} calculates the \emph{consistency} of 
+the predicted time points of samples versus the known progression stages.
+}
+\examples{
+## Generate a dataset
+dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
+dist <- correlation.distance(dataset$expression)
+space <- reduce.dimensionality(dist, ndim=2)
+traj <- infer.trajectory(space, k=4)
+
+## Evaluate the trajectory timeline
+evaluate.trajectory(traj$time, dataset$sample.info$group.name)
 }
 

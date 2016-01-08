@@ -4,12 +4,12 @@
 \alias{plot.scorpius}
 \title{Visualise SCORPIUS}
 \usage{
-plot.scorpius(space, colour=NULL, path=NULL, contour=F)
+plot.scorpius(space, progression.group=NULL, path=NULL, contour=F)
 }
 \arguments{
 \item{space}{A numeric matrix or data frame containing the coordinates of samples.}
 
-\item{colour}{A vector containing the groupings of the samples (default \code{NULL}).}
+\item{progression.group}{\code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).}
 
 \item{path}{A numeric matrix or data frame containing the coordinates of the inferred path.}
 
@@ -34,17 +34,17 @@ groups <- dataset$sample.info$group.name
 plot.scorpius(space)
 
 ## Colour each sample according to its group
-plot.scorpius(space, colour=groups)
+plot.scorpius(space, progression.group=groups)
 
 ## Add contours to the plot
-plot.scorpius(space, colour=groups, contour=T)
+plot.scorpius(space, progression.group=groups, contour=T)
 
 ## Plot contours without colours
-plot.scorpius(space, contour=T)
+plot.scorpius(space, progression.group=T)
 
 ## Infer a trajectory and plot it
 traj <- infer.trajectory(space, k=4)
-plot.scorpius(space, colour=groups, path=traj$final.path)
-plot.scorpius(space, colour=groups, path=traj$final.path, contour=T)
+plot.scorpius(space, progression.group=groups, path=traj$final.path)
+plot.scorpius(space, progression.group=groups, path=traj$final.path, contour=T)
 }
 
