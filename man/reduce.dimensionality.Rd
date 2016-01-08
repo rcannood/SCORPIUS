@@ -4,7 +4,7 @@
 \alias{reduce.dimensionality}
 \title{Dimensionality reduction}
 \usage{
-reduce.dimensionality(dist, ndim, rescale=T)
+reduce.dimensionality(dist, ndim, rescale=TRUE)
 }
 \arguments{
 \item{dist}{A numeric matrix, data frame or "\code{dist}" object.}
@@ -28,9 +28,9 @@ dist <- correlation.distance(dataset$expression)
 space <- reduce.dimensionality(dist, ndim=2)
 
 ## Visualise the dataset
-plot.scorpius(space, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
 }
 \seealso{
-If \code{rescale} is TRUE, \code{\link{rescale.and.center}} is used to rescale and center the output space.
+\code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{rescale.and.center}}, \code{\link{draw.trajectory.plot}}
 }
 

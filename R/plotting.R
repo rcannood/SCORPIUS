@@ -1,16 +1,16 @@
 #' @title Visualise SCORPIUS 
 #' 
-#' @description \code{plot.scorpius} is used to plot samples after performing dimensionality reduction. 
+#' @description \code{draw.trajectory.plot} is used to plot samples after performing dimensionality reduction. 
 #' Additional arguments can be provided to colour the samples, plot the trajectory inferred by SCORPIUS,
 #' and draw a contour around the samples.
 #' 
 #' @usage
-#' plot.scorpius(space, progression.group=NULL, path=NULL, contour=F)
+#' draw.trajectory.plot(space, progression.group=NULL, path=NULL, contour=FALSE)
 #'
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param progression.group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
 #' @param path A numeric matrix or data frame containing the coordinates of the inferred path.
-#' @param contour \code{TRUE} if contours are to be drawn around the samples. This will only work with ggplot2 (≥ 2.0).
+#' @param contour \code{TRUE} if contours are to be drawn around the samples.
 #'
 #' @return A ggplot2 plot.
 #' 
@@ -28,22 +28,22 @@
 #' groups <- dataset$sample.info$group.name
 #' 
 #' ## Simply plot the samples
-#' plot.scorpius(space)
+#' draw.trajectory.plot(space)
 #' 
 #' ## Colour each sample according to its group
-#' plot.scorpius(space, progression.group=groups)
+#' draw.trajectory.plot(space, progression.group=groups)
 #' 
 #' ## Add contours to the plot
-#' plot.scorpius(space, progression.group=groups, contour=T)
+#' draw.trajectory.plot(space, progression.group=groups, contour=TRUE)
 #' 
 #' ## Plot contours without colours
-#' plot.scorpius(space, progression.group=T)
+#' draw.trajectory.plot(space, contour=TRUE)
 #' 
 #' ## Infer a trajectory and plot it
 #' traj <- infer.trajectory(space, k=4)
-#' plot.scorpius(space, progression.group=groups, path=traj$final.path)
-#' plot.scorpius(space, progression.group=groups, path=traj$final.path, contour=T)
-plot.scorpius <- function(space, progression.group=NULL, path=NULL, contour=F) {
+#' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path)
+#' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path, contour=TRUE)
+draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, contour=FALSE) {
   # input checks
   if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
@@ -55,6 +55,8 @@ plot.scorpius <- function(space, progression.group=NULL, path=NULL, contour=F) {
     stop(sQuote("contour"), " must be a logical")
   
   requireNamespace("ggplot2")
+  requireNamespace("MASS")
+  requireNamespace("reshape2")
   
   # retrieve data about the range of the plot
   min <- min(space[,1:2])
@@ -78,7 +80,7 @@ plot.scorpius <- function(space, progression.group=NULL, path=NULL, contour=F) {
   
   # if a contour is desirable, add the contour layer
   if (contour) {
-    aes_contour <- ggplot2::aes(Comp1, Comp2, z=density) 
+    aes_contour <- ggplot2::aes_string("Comp1", "Comp2", z="density") 
     if (!is.null(progression.group)) aes_contour$fill <- quote(progression.group)
     
     groupings <-
@@ -103,20 +105,20 @@ plot.scorpius <- function(space, progression.group=NULL, path=NULL, contour=F) {
     g <- g + ggplot2::stat_contour(geom="polygon", aes_contour, density.df, breaks=c(1), alpha=.2)
     
     # ## ggplot2 pre-2.0
-    # aes_contour <- ggplot2::aes(Comp1, Comp2) 
+    # aes_contour <- ggplot2::aes_string("Comp1", "Comp2") 
     # if (!is.null(progression.group)) aes_contour$fill <- quote(progression.group)
     # g <- g + ggplot2::stat_density2d(aes_contour, breaks=1, geom="polygon", space.df, alpha=.1)
   }
   
   # add the point layer
-  aes_point <- ggplot2::aes(Comp1, Comp2) 
+  aes_point <- ggplot2::aes_string("Comp1", "Comp2") 
   if (!is.null(progression.group)) 
     aes_point$colour <- quote(progression.group)
   g <- g + ggplot2::geom_point(aes_point, space.df)
   
   # if a path is desirable, add the path layer
   if (!is.null(path)) 
-    g <- g + ggplot2::geom_path(ggplot2::aes(Comp1, Comp2), data.frame(path))
+    g <- g + ggplot2::geom_path(ggplot2::aes_string("Comp1", "Comp2"), data.frame(path))
   
   # return the plot
   g
@@ -124,24 +126,24 @@ plot.scorpius <- function(space, progression.group=NULL, path=NULL, contour=F) {
 
 #' @title Draw time-series heatmap
 #' 
-#' @description \code{plot.trajectory.heatmap} draws a heatmap in which the samples 
+#' @description \code{draw.trajectory.heatmap} draws a heatmap in which the samples 
 #' are ranked according their position in an inferred trajectory. In addition, the progression groups and 
 #' feature modules can be passed along to further enhance the visualisation.
 #' 
 #' @usage
-#' plot.trajectory.heatmap(x, time, progression.group=NULL, modules=NULL, show.labels.row=F, show.labels.col=F, scale.features=T, narrow.breaks=T)
+#' draw.trajectory.heatmap(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, narrow.breaks=TRUE, ...)
 #' 
 #' @param x A numeric matrix or data frame with one row per sample and one column per feature.
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
 #' @param progression.group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
-#' @param modules \code{NULL} or a data frame as returned by \link{\code{extract.modules}}.
+#' @param modules \code{NULL} or a data frame as returned by \code{\link{extract.modules}}.
 #' @param show.labels.row \code{TRUE} if the labels of the rows are to be plotted (default \code{FALSE}).
 #' @param show.labels.col \code{TRUE} if the labels of the cols are to be plotted (default \code{FALSE}).
 #' @param scale.features \code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).
 #' @param narrow.breaks \code{TRUE} if the breaks of the heatmap is to be adjust to allow a better visualisation (default \code{TRUE}).
-#' @param ... Optional arguments to pheatmap.
+#' @param ... Optional arguments to \code{\link[pheatmap]{pheatmap}}
 #'
-#' @return The output of the \code{pheatmap} function.
+#' @return The output of the \code{\link[pheatmap]{pheatmap}} function.
 #' 
 #' @export
 #' 
@@ -163,19 +165,19 @@ plot.scorpius <- function(space, progression.group=NULL, path=NULL, contour=F) {
 #' expr.tafs <- expression[,tafs$tafs]
 #' 
 #' ## Draw a time series heatmap of the TAFs
-#' plot.trajectory.heatmap(expr.tafs, time)
+#' draw.trajectory.heatmap(expr.tafs, time)
 #' 
 #' ## Also show the progression groupings
-#' plot.trajectory.heatmap(expr.tafs, time, progression=groups)
+#' draw.trajectory.heatmap(expr.tafs, time, progression=groups)
 #' 
 #' ## Draw a heatmap of the smoothed data instead
 #' smooth.tafs <- tafs$smooth.x[,tafs$tafs]
-#' plot.trajectory.heatmap(smooth.tafs, time, progression=groups)
+#' draw.trajectory.heatmap(smooth.tafs, time, progression=groups)
 #' 
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(smooth.tafs)
-#' plot.trajectory.heatmap(expr.tafs, time, progression.group=groups, modules=modules)
-plot.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=F, show.labels.col=F, scale.features=T, narrow.breaks=T, ...) {
+#' draw.trajectory.heatmap(expr.tafs, time, progression.group=groups, modules=modules)
+draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, narrow.breaks=TRUE, ...) {
   # input checks
   if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -186,9 +188,12 @@ plot.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
   if ((!is.null(progression.group) && !is.vector(progression.group) && !is.factor(progression.group)) || (!is.null(progression.group) && length(progression.group) != nrow(x)))
     stop(sQuote("progression.group"), " must be a vector or a factor of length nrow(x)")
   
+  requireNamespace("pheatmap")
+  requireNamespace("RColorBrewer")
+  
   col.ann <- data.frame(row.names = rownames(x), Time=time)
   
-  x.part <- x[order(time),,drop=F]
+  x.part <- x[order(time),,drop=FALSE]
   if (scale.features) x.part <- scale(x.part)
   x.part <- t(x.part)
   

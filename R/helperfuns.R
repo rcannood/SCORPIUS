@@ -52,7 +52,7 @@ euclidean.distance <- function (x, y=NULL) {
 #' @description \code{correlation.distance} calculates the (pairwise) correlation distances between one or two sets of samples.
 #' 
 #' @usage 
-#' correlation.distance(x, y)
+#' correlation.distance(x, y=NULL, method="spearman")
 #' 
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param y \code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
@@ -118,14 +118,14 @@ knn.distances <- function(dist, k, self.loops=F) {
   # input checks
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
+  if (class(dist) == "dist")
+    dist <- as.matrix(dist)
   if (nrow(dist) < 2)
     stop(sQuote("dist"), " needs to consist of at least 2 rows")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
     stop(sQuote("k"), " must be a whole number and k >= 1")
   if (!is.logical(self.loops) || length(self.loops) != 1)
     stop(sQuote("self.loops"), " must be a logical value")
-  if (class(dist) == "dist")
-    dist <- as.matrix(dist)
   
   # k can't be larger than nrow(dist)-1
   K <- min(k, nrow(dist)-1)

@@ -50,6 +50,8 @@ outlierness <- function(dist, k=10) {
 #'
 #' @importFrom fitdistrplus fitdist
 #' 
+#' @seealso \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{outlierness}}
+#' 
 #' @examples
 #' ## Generate normally distributed points, calculate their outliernesses and which points are outliers
 #' x <- matrix(rnorm(200*2), ncol=2)
@@ -107,7 +109,7 @@ outlier.filter <- function(dist) {
   }
   
   # finish up tail of execution
-  remaining <- which(filt)[order(outliernesses, decreasing=T)]
+  remaining <- which(filt)[order(outliernesses, decreasing=TRUE)]
   removed[seq(num.pts.removed-1, num.pts.removed+1)] <- remaining
   
   # return a vector indicating which samples are /not/ outliers
@@ -126,7 +128,7 @@ outlier.filter <- function(dist) {
 #' @description \code{reduce.dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
 #' 
 #' @usage 
-#' reduce.dimensionality(dist, ndim, rescale=T)
+#' reduce.dimensionality(dist, ndim, rescale=TRUE)
 #' 
 #' @param dist A numeric matrix, data frame or "\code{dist}" object. 
 #' @param ndim The number of dimensions in the new space.
@@ -134,7 +136,7 @@ outlier.filter <- function(dist) {
 #'
 #' @return A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
 #' 
-#' @seealso If \code{rescale} is TRUE, \code{\link{rescale.and.center}} is used to rescale and center the output space.
+#' @seealso \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{rescale.and.center}}, \code{\link{draw.trajectory.plot}}
 #' 
 #' @export
 #'
@@ -147,8 +149,8 @@ outlier.filter <- function(dist) {
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' 
 #' ## Visualise the dataset
-#' plot.scorpius(space, progression.group=dataset$sample.info$group.name)
-reduce.dimensionality <- function(dist, ndim, rescale=T) {
+#' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
+reduce.dimensionality <- function(dist, ndim, rescale=TRUE) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
@@ -187,26 +189,30 @@ reduce.dimensionality <- function(dist, ndim, rescale=T) {
 #'   \item \code{time}: the time point of each sample along the inferred trajectory.
 #' }
 #' 
+#' @seealso \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#' 
 #' @export
 #' 
 #' @importFrom princurve principal.curve
 #' @importFrom dplyr percent_rank
+#' @importFrom GA ga
 #'
 #' @examples 
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
 #' dist <- correlation.distance(dataset$expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
-#' plot.scorpius(space, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Infer a trajectory through this space
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise the trajectory
-#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 infer.trajectory <- function(space, k) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
+  requireNamespace("GA")
   
   # input checks
   if ((!is.matrix(space) && !is.data.frame(space)) || !is.numeric(space))
@@ -233,7 +239,7 @@ infer.trajectory <- function(space, k) {
         num.pts <- ceiling(mean((twocent[2,] - twocent[1,])/unit))
         segment.pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = num.pts))
         dists <- euclidean.distance(segment.pts, space)
-        mean(knn.distances(dists, 10, self.loops=T))
+        mean(knn.distances(dists, 10, self.loops=TRUE))
       }
     })
   })
@@ -289,9 +295,11 @@ infer.trajectory <- function(space, k) {
 #' @usage 
 #' reverse.trajectory(trajectory)
 #' 
-#' @param trajectory A trajectory as returned by \code{infer.trajectory}.
+#' @param trajectory A trajectory as returned by \code{\link{infer.trajectory}}.
 #'
 #' @return The same trajectory, but in the other direction.
+#' 
+#' @seealso \code{\link{infer.trajectory}}
 #' 
 #' @export
 #'
@@ -303,11 +311,11 @@ infer.trajectory <- function(space, k) {
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise the trajectory
-#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Reverse the trajectory
 #' reverse.traj <- reverse.trajectory(traj)
-#' plot.scorpius(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## It's the same but reversed?!
 #' plot(traj$time, reverse.traj$time, type="l")
@@ -328,10 +336,10 @@ reverse.trajectory <- function(trajectory) {
 #' find.trajectory.aligned.features(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F)
 #' 
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
-#' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
-#' @param p.adjust.method The correction method used by \link{\code{p.adjust}}.
+#' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
+#' @param p.adjust.method The correction method used by \code{\link[stats]{p.adjust}}.
 #' @param q.value.cutoff The cutoff used on the q-values.
-#' @param df The degree of freedom used by \link{\code{ns}}.
+#' @param df The degree of freedom used by \code{\link[splines]{ns}}.
 #' @param parallel Must be \code{FALSE} (default), \code{TRUE} (will auto-detect number of cores), or a numeric value specifying the number of cores to use.
 #'
 #' @return Returns a list, containing the following items: \itemize{
@@ -340,12 +348,13 @@ reverse.trajectory <- function(trajectory) {
 #'   \item \code{smooth.x}: the input matrix \code{x} smoothed by splines.
 #' }
 #' 
+#' @seealso \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.heatmap}}
+#' 
 #' @export
 #' 
 #' @importFrom splines ns
 #' @importFrom pbapply pblapply
 #' @importFrom parallel mclapply detectCores
-#' @importFrom dplyr arrange
 #'
 #' @examples
 #' ## Generate a dataset and visualise
@@ -354,7 +363,7 @@ reverse.trajectory <- function(trajectory) {
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -362,7 +371,7 @@ reverse.trajectory <- function(trajectory) {
 #' 
 #' ## Visualise the expression of these genes in a heatmap
 #' expr.tafs <- expression[,tafs$tafs]
-#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
 find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F) {
   # input checks
   if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
@@ -381,7 +390,6 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
   requireNamespace("splines")
   requireNamespace("pbapply")
   requireNamespace("parallel")
-  requireNamespace("dplyr")
   
   # if 'parallel' is a number, use this as the number of cores
   # if 'parallel' is not a number nor a logical, throw an exception
@@ -433,7 +441,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
   # construct output data frame and order by q.value
   feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
   p.values <- data.frame(feature=feature.names, p.value=pvals, q.value=qvals, is.taf=is.taf, category=qval.cat, stringsAsFactors = F)
-  p.values <- dplyr::arrange(p.values, q.value)
+  p.values <- p.values[order(p.values$q.value),,drop=F]
   
   # also return the names or indexes of the TAFs
   features <- p.values$feature[p.values$is.taf]
@@ -444,7 +452,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 
 #' @title Extract modules of features
 #' 
-#' @description \code{extract.modules} uses adaptive branch pruning 
+#' @description \code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{find.trajectory.aligned.features}}.
 #' 
 #' @usage 
 #' extract.modules(x)
@@ -453,11 +461,13 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #'
 #' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
 #' 
+#' @seealso \code{\link{find.trajectory.aligned.features}}
+#' 
 #' @export
 #' 
 #' @importFrom dynamicTreeCut cutreeDynamic
 #' @importFrom WGCNA mergeCloseModules
-#' @importFrom dplyr bind_rows arrange
+#' @importFrom dplyr bind_rows
 #'
 #' @examples
 #' ## Generate a dataset and visualise
@@ -466,7 +476,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space, k=4)
-#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 #' 
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -475,7 +485,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' 
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(smooth.tafs)
-#' plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
+#' draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
 extract.modules <- function(x) {
   # input checks
   if ((!is.matrix(x) && !is.data.frame(x)) || !is.numeric(x))
@@ -506,7 +516,8 @@ extract.modules <- function(x) {
     dimred <- reduce.dimensionality(dist[ix, ix, drop=F], ndim=1)
     data.frame(feature=feature.names[ix], index=ix, module=l, value=dimred[,1], stringsAsFactors = F, row.names = NULL)
   }))
-  modules <- as.data.frame(dplyr::arrange(modules, module, value))
+  
+  modules <- as.data.frame(modules[order(modules$module, modules$value),,drop=F])
   
   # return output
   modules[,c("feature", "index", "module")]
@@ -527,6 +538,8 @@ extract.modules <- function(x) {
 #' @return A list containing the expression data and the meta data of the samples.
 #' 
 #' @export
+#' 
+#' @seealso \code{\link{correlation.distance}}, \code{\link{reduce.dimensionality}}, \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.plot}}
 #'
 #' @examples
 #' ## Generate a dataset
@@ -538,7 +551,7 @@ extract.modules <- function(x) {
 #' traj <- infer.trajectory(space, k=4)
 #' 
 #' ## Visualise
-#' plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4) {
   # make names for each group, gene and sample
   group.names <- paste0("Group ", seq_len(num.groups))
@@ -551,7 +564,7 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, 
   # construct the sample info
   x <- seq(-1, 1, length.out=num.samples)
   group <- cut(x, breaks=num.groups, labels = group.names)
-  sample.info <- data.frame(name=sample.names, group.name=group)
+  sample.info <- data.frame(row.names=sample.names, group.name=group)
   
   # apply function and determine noise sd
   switch(type, polynomial={
@@ -571,8 +584,13 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, 
   dimnames(expression) <- list(sample.names, gene.names)
   
   # simulate genes that are not expressed
+  weighted.random.sample <- function(data, weights, n){
+    key <- runif(length(data)) ^ (1 / weights)
+    data[order(key, decreasing=TRUE)][seq_len(n)]
+  }
+  
   undetectable <- which(expression < 0) 
-  undetectable <- sample(undetectable, length(undetectable)*.5, prob = -expression[undetectable])
+  undetectable <- weighted.random.sample(undetectable, -expression[undetectable], round(length(undetectable)*.5))
   
   # shift expression 
   expression <- expression + .5

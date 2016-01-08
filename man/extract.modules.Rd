@@ -13,7 +13,7 @@ extract.modules(x)
 A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
 }
 \description{
-\code{extract.modules} uses adaptive branch pruning
+\code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{find.trajectory.aligned.features}}.
 }
 \examples{
 ## Generate a dataset and visualise
@@ -22,7 +22,7 @@ expression <- dataset$expression
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
-plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 
 ## Show which genes are most trajectory aligned
 tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -31,6 +31,9 @@ smooth.tafs <- tafs$smooth.x[,tafs$tafs]
 
 ## Group the genes into modules and visualise the modules in a heatmap
 modules <- extract.modules(smooth.tafs)
-plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
+draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
+}
+\seealso{
+\code{\link{find.trajectory.aligned.features}}
 }
 

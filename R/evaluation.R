@@ -71,11 +71,11 @@ evaluate.trajectory <- function(time, progression) {
 #' dimensionality reduction by performing 5-nearest neighbour leave-one-out-cross-validation (5NN LOOCV).
 #' 
 #' @usage
-#' evaluate.space(space, progression)
+#' evaluate.space(space, progression, k=5)
 #' 
 #' @param space A numeric vector containing the inferred time points of each sample along a trajectory.
 #' @param progression A factor or a numeric vector which represents the progression stages of each sample.
-#' @param k The maximum number of nearest neighbours to search.
+#' @param k The maximum number of nearest neighbours to search (default 5).
 #'
 #' @return The accuracy of a 5NN LOOCV using the dimensionality reduction to predict the progression stage of a sample.
 #' 
@@ -99,6 +99,8 @@ evaluate.space <- function(space, progression, k=5) {
     stop(sQuote("progression"), " must be a numeric vector or a factor")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
     stop(sQuote("k"), " must be a whole number and k >= 1")
+  
+  requireNamespace("class")
   
   # if progression is a factor, convert it to an integer
   if (is.factor(progression)) progression <- as.integer(progression)

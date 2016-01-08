@@ -9,13 +9,13 @@ find.trajectory.aligned.features(x, time, p.adjust.method="BH", q.value.cutoff=1
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
-\item{time}{A numeric vector containing the inferred time points of each sample along a trajectory.}
+\item{time}{A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.}
 
-\item{p.adjust.method}{The correction method used by \link{\code{p.adjust}}.}
+\item{p.adjust.method}{The correction method used by \code{\link[stats]{p.adjust}}.}
 
 \item{q.value.cutoff}{The cutoff used on the q-values.}
 
-\item{df}{The degree of freedom used by \link{\code{ns}}.}
+\item{df}{The degree of freedom used by \code{\link[splines]{ns}}.}
 
 \item{parallel}{Must be \code{FALSE} (default), \code{TRUE} (will auto-detect number of cores), or a numeric value specifying the number of cores to use.}
 }
@@ -36,7 +36,7 @@ expression <- dataset$expression
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
-plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 
 ## Show which genes are most trajectory aligned
 tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -44,6 +44,9 @@ head(tafs$p.values, 10)
 
 ## Visualise the expression of these genes in a heatmap
 expr.tafs <- expression[,tafs$tafs]
-plot.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
+draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
+}
+\seealso{
+\code{\link{infer.trajectory}}, \code{\link{draw.trajectory.heatmap}}
 }
 

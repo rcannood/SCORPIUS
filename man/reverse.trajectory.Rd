@@ -7,7 +7,7 @@
 reverse.trajectory(trajectory)
 }
 \arguments{
-\item{trajectory}{A trajectory as returned by \code{infer.trajectory}.}
+\item{trajectory}{A trajectory as returned by \code{\link{infer.trajectory}}.}
 }
 \value{
 The same trajectory, but in the other direction.
@@ -23,13 +23,16 @@ space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space, k=4)
 
 ## Visualise the trajectory
-plot.scorpius(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
 
 ## Reverse the trajectory
 reverse.traj <- reverse.trajectory(traj)
-plot.scorpius(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
 
 ## It's the same but reversed?!
 plot(traj$time, reverse.traj$time, type="l")
+}
+\seealso{
+\code{\link{infer.trajectory}}
 }
 

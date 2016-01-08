@@ -40,4 +40,7 @@ plot(space, col=filt+2, cex=outlierness(dist)+1, pch=20)
 likelihood.df <- attr(filt, "loglikelihood")
 plot(likelihood.df$amount.removed, likelihood.df$log.likelihood, type="l")
 }
+\seealso{
+\code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{outlierness}}
+}
 
