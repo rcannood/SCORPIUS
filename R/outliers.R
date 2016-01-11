@@ -1,4 +1,3 @@
-
 #' @title Outlierness
 #'
 #' @description \code{outlierness} calculates the mean distance of each sample to its \emph{k} nearest neighbours.

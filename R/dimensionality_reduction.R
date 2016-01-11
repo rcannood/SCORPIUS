@@ -39,3 +39,69 @@ reduce.dimensionality <- function(dist, ndim, rescale=TRUE) {
   colnames(space) <- paste("Comp", seq_len(ncol(space)), sep="")
   space
 }
+
+#' @title Scaling and centering of matrix-like objects
+#'
+#' @description \code{rescale.and.center} uniformily scales a given matrix such that the returned space is centered on \code{center}, and each column was scaled equally such that the range of each column is at most \code{max.range}.
+#'
+#' @usage
+#' rescale.and.center(x, center=0, max.range=1)
+#'
+#' @param x A numeric matrix or data frame.
+#' @param center The new center point of the data.
+#' @param max.range The maximum range of each column.
+#'
+#' @return The centered, scaled matrix. ZThe numeric centering and scalings used are returned as attributes.
+#'
+#' @export
+#'
+#' @examples
+#' ## Generate a matrix from a normal distribution with a large standard deviation, and approximately centered at c(5, 5)
+#' x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
+#'
+#' ## Center the dataset at c(0, 0) with a minimum of c(-.5, -.5) and a maximum of c(.5, .5)
+#' x.scaled <- rescale.and.center(x, center=0, max.range=1)
+#'
+#' ## Plot rescaled data
+#' plot(x.scaled)
+#'
+#' ## Show ranges of each column
+#' apply(x.scaled, 2, range)
+rescale.and.center <- function(x, center=0, max.range=1) {
+  # input checks
+  if (!is.matrix(x) && !is.data.frame(x))
+    stop(sQuote("x"), " must be a numeric matrix or data frame")
+  if (!is.finite(center))
+    stop(sQuote("center"), " must be numeric")
+  if (length(center) != 1 && length(center) != ncol(x))
+    stop("length of ", sQuote("center"), " must be either 1 or ncol(x)")
+  if (!is.finite(max.range))
+    stop(sQuote("max.range"), " must be numeric")
+  if (length(max.range) != 1)
+    stop("length of ", sQuote("max.range"), " must be exactly 1")
+
+  # calculate the minimum values of each column
+  mins <- apply(x, 2, min)
+
+  # calculate the maximum values of each column
+  maxs <- apply(x, 2, max)
+
+  # calculate the old center point
+  old.center <- (maxs + mins) / 2
+  new.center <- old.center - center
+
+  # calculate the scale
+  scale <- max(maxs - mins)
+
+  # calculate rescaled data
+  for (i in seq_len(nrow(x))) {
+    x[i,] <- (x[i,] - new.center) / scale
+  }
+
+  # attach scaling information to output
+  attr(x, "center") <- new.center
+  attr(x, "scale") <- scale
+
+  # return output
+  x
+}

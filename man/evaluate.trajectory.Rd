@@ -15,7 +15,7 @@ evaluate.trajectory(time, progression)
 The consistency value for the predicted timeline.
 }
 \description{
-\code{evaluate.trajectory} calculates the \emph{consistency} of 
+\code{evaluate.trajectory} calculates the \emph{consistency} of
 the predicted time points of samples versus the known progression stages.
 }
 \examples{
