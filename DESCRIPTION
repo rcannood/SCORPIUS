@@ -3,7 +3,7 @@ Type: Package
 Title: Trajectory inference from single-cell RNA sequencing data
 Version: 1.0
 Date: 2015-12-01
-Description: Order single cells as good as possible with regard to an implicit timeline, such as cellular development or progression over time.
+Description: SCORPIUS orders single cells with regard to an implicit timeline, such as cellular development or progression over time.
 Author: Robrecht Cannoodt
 Maintainer: 'Robrecht Cannoodt' <robrecht.cannoodt@gmail.com>
 Authors@R: c(
