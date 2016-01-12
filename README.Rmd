@@ -21,11 +21,13 @@ RNA sequencing data. In comparison to similar approaches, it has three main adva
   
 * It identifies marker genes. By automatically identifying possible marker 
   genes relevant for the dynamic process under investigation, SCORPIUS speeds
-  up 
+  up knowledge discovery.
   
 * It is fully unsupervised. Prior knowledge of the relevant marker genes or 
   cellular states of individual cells is not required, and thus the conclusions drawn
   from the SCORPIUS output are unbiased.
+  
+## Installing SCORPIUS
 
 You can install the latest version from github with
 
@@ -62,6 +64,7 @@ More vignettes with more elaborate examples are also available:
 * [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
 
 ## Minimal example
+This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the `ginhoux` vignette.
 
 To start using SCORPIUS, simply write:
 ```{r libraries, message=FALSE}
@@ -72,6 +75,8 @@ library(SCORPIUS)
 The `ginhoux` dataset [See @Schlitzer2015] contains 248 cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 ```{r load ginhoux}
 data(ginhoux)
+expression <- ginhoux$expression
+group.name <- ginhoux$sample.info$group.name
 ```
 
 
@@ -79,27 +84,34 @@ With the following code, SCORPIUS reduces the dimensionality of the dataset and 
 In this plot, cells that are similar in terms of expression values will be placed closer together than cells with dissimilar expression values.
 
 ```{r reduce dimensionality}
-dist <- correlation.distance(ginhoux$expression)
-space <- reduce.dimensionality(dist)
-group.name <- ginhoux$sample.info$group.name
-draw.trajectory.plot(space, group.name, contour = T)
+dist <- correlation.distance(expression)
+
+filt <- outlier.filter(dist)
+expression <- expression[filt, ]
+group.name <- group.name[filt]
+dist <- dist[filt, filt]
+
+space <- reduce.dimensionality(dist, ndim=2)
+draw.trajectory.plot(space, group.name)
 ```
+
 
 To infer and visualise a trajectory through these cells, run:
 ```{r infer trajectory}
 traj <- infer.trajectory(space)
-draw.trajectory.plot(space, group.name, traj$final.path, contour = T)
+draw.trajectory.plot(space, group.name, traj$final.path)
 ```
 
+
 Finally, to identify and visualise candidate marker genes, execute the following code:
-```{r find tafs unparallel, eval=F}
-tafs <- find.trajectory.aligned.features(ginhoux$expression, traj$time)
+```{r find tafs sequentially, eval=F}
+tafs <- find.trajectory.aligned.features(expression, traj$time)
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```
 ```{r find tafs, echo=F, message=F}
-tafs <- find.trajectory.aligned.features(ginhoux$expression, traj$time, parallel=8)
+tafs <- find.trajectory.aligned.features(expression, traj$time, parallel=8)
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
@@ -112,3 +124,5 @@ draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 * [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
 * [Embeddr](https://github.com/kieranrcampbell/embeddr)
 
+
+## References

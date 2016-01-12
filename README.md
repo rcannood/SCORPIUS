@@ -8,9 +8,12 @@ SCORPIUS an unsupervised approach for inferring developmental chronologies from 
 
 -   It accurately reconstructs trajectories for a wide variety of dynamic cellular processes. The performance was evaluated using a new, quantitative evaluation pipeline, comparing the performance of current state-of-the-art techniques on 10 publicly available single-cell RNA sequencing datasets.
 
--   It identifies marker genes. By automatically identifying possible marker genes relevant for the dynamic process under investigation, SCORPIUS speeds up
+-   It identifies marker genes. By automatically identifying possible marker genes relevant for the dynamic process under investigation, SCORPIUS speeds up knowledge discovery.
 
 -   It is fully unsupervised. Prior knowledge of the relevant marker genes or cellular states of individual cells is not required, and thus the conclusions drawn from the SCORPIUS output are unbiased.
+
+Installing SCORPIUS
+-------------------
 
 You can install the latest version from github with
 
@@ -48,6 +51,8 @@ More vignettes with more elaborate examples are also available:
 Minimal example
 ---------------
 
+This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the `ginhoux` vignette.
+
 To start using SCORPIUS, simply write:
 
 ``` r
@@ -58,30 +63,39 @@ The `ginhoux` dataset (See Schlitzer et al. 2015) contains 248 cell progenitors 
 
 ``` r
 data(ginhoux)
+expression <- ginhoux$expression
+group.name <- ginhoux$sample.info$group.name
 ```
 
 With the following code, SCORPIUS reduces the dimensionality of the dataset and provides a visual overview of the dataset. In this plot, cells that are similar in terms of expression values will be placed closer together than cells with dissimilar expression values.
 
 ``` r
-dist <- correlation.distance(ginhoux$expression)
-space <- reduce.dimensionality(dist)
-group.name <- ginhoux$sample.info$group.name
-draw.trajectory.plot(space, group.name, contour = T)
+dist <- correlation.distance(expression)
+
+filt <- outlier.filter(dist)
+expression <- expression[filt, ]
+group.name <- group.name[filt]
+dist <- dist[filt, filt]
+
+space <- reduce.dimensionality(dist, ndim=2)
+draw.trajectory.plot(space, group.name)
 ```
 
 ![](README_files/figure-markdown_github/reduce%20dimensionality-1.png)
- To infer and visualise a trajectory through these cells, run:
+
+To infer and visualise a trajectory through these cells, run:
 
 ``` r
 traj <- infer.trajectory(space)
-draw.trajectory.plot(space, group.name, traj$final.path, contour = T)
+draw.trajectory.plot(space, group.name, traj$final.path)
 ```
 
 ![](README_files/figure-markdown_github/infer%20trajectory-1.png)
- Finally, to identify and visualise candidate marker genes, execute the following code:
+
+Finally, to identify and visualise candidate marker genes, execute the following code:
 
 ``` r
-tafs <- find.trajectory.aligned.features(ginhoux$expression, traj$time)
+tafs <- find.trajectory.aligned.features(expression, traj$time)
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
@@ -95,5 +109,8 @@ Related approaches
 -   [Monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html)
 -   [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
 -   [Embeddr](https://github.com/kieranrcampbell/embeddr)
+
+References
+----------
 
 Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015. “Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at the common DC progenitor stage in the bone marrow.” *Nature Immunology* 16 (7): 718–26. doi:[10.1038/ni.3200](http://dx.doi.org/10.1038/ni.3200).

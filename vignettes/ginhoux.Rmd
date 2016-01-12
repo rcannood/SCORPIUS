@@ -1,0 +1,70 @@
+---
+title: "Investigating dendritic cell maturation in dendritic cell progentors"
+author: "Robrecht Cannoodt"
+date: "2016-01-22"
+output: 
+  rmarkdown::html_vignette: 
+    fig_height: 6
+    fig_width: 6
+  md_document:
+    variant: markdown_github
+vignette: >
+  %\VignetteIndexEntry{Trajectory inference from simulated data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- built using 
+render("vignettes/ginhoux.Rmd", output_format = "all") 
+-->
+
+To start using SCORPIUS, simply write:
+```{r libraries, message=FALSE}
+library(SCORPIUS)
+```
+
+r
+The `ginhoux` dataset [See @Schlitzer2015] contains 248 cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
+```{r load ginhoux}
+data(ginhoux)
+expression <- ginhoux$expression
+group.name <- ginhoux$sample.info$group.name
+```
+
+
+With the following code, SCORPIUS reduces the dimensionality of the dataset and provides a visual overview of the dataset. 
+In this plot, cells that are similar in terms of expression values will be placed closer together than cells with dissimilar expression values.
+
+```{r reduce dimensionality}
+dist <- correlation.distance(expression)
+
+filt <- outlier.filter(dist)
+expression <- expression[filt, ]
+group.name <- group.name[filt]
+dist <- dist[filt, filt]
+
+space <- reduce.dimensionality(dist)
+draw.trajectory.plot(space, group.name, contour = T)
+```
+
+
+To infer and visualise a trajectory through these cells, run:
+```{r infer trajectory}
+traj <- infer.trajectory(space)
+draw.trajectory.plot(space, group.name, traj$final.path, contour = T)
+```
+
+
+Finally, to identify and visualise candidate marker genes, execute the following code:
+```{r find tafs unparallel, eval=F}
+tafs <- find.trajectory.aligned.features(expression, traj$time)
+expr.tafs <- tafs$smooth.x[,tafs$tafs]
+modules <- extract.modules(expr.tafs)
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+```
+```{r find tafs, echo=F, message=F}
+tafs <- find.trajectory.aligned.features(expression, traj$time, parallel=8)
+expr.tafs <- tafs$smooth.x[,tafs$tafs]
+modules <- extract.modules(expr.tafs)
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+```
