@@ -56,8 +56,18 @@ You can install:
 
 If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/rcannood/SCORPIUS/issues). 
 
+
+## Learning SCORPIUS
+
+To get started, read the notes below or read the [intro vignette](): `vignette("introduction", package="SCORPIUS")` (Under construction).
+
+More vignettes with more elaborate examples are also available: 
+
+* [Investigating differentiating dendritic cells](): `vignette("ginhoux", package="SCORPIUS")` (Under construction)
+* [Inferring trajectories from simulated data](https://github.com/rcannood/SCORPIUS/blob/master/vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
+
 <!--
-## Learning dplyr
+## Learning SCORPIUS
 
 To get started, read the notes below, then read the intro vignette: `vignette("introduction", package = "dplyr")`. To make the most of dplyr, I also recommend that you familiarise yourself with the principles of [tidy data](http://vita.had.co.nz/papers/tidy-data.html): this will help you get your data into a form that works well with dplyr, ggplot2 and R's many modelling functions.
 
