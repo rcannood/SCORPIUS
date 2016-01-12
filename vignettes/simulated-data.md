@@ -1,5 +1,5 @@
 <!-- built using 
-render("simulated-data.Rmd", output_format = "all") 
+render("vignettes/simulated-data.Rmd", output_format = "all") 
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data. Note that the dataset is generated in a very naive manner and is only meant to be used for demonstration purposes, not for evaluating trajectory inference methods.
 
@@ -21,13 +21,13 @@ The resulting dataset is a list containing a matrix named `expression` and a dat
 dataset$expression[1:6, 1:6]
 ```
 
-    ##             Gene1     Gene2    Gene3     Gene4    Gene5     Gene6
-    ## Sample1 10.818086  7.402591 8.395231 0.6331402 8.789352  5.411238
-    ## Sample2  0.000000  0.000000 0.000000 4.9568184 6.424807  3.862677
-    ## Sample3  8.579299  9.024972 5.344602 5.1382016 0.000000  0.000000
-    ## Sample4  7.166464  0.000000 0.000000 5.2490926 0.000000  0.000000
-    ## Sample5  0.000000  8.687730 5.229695 0.0000000 1.285563 11.593610
-    ## Sample6  0.000000 10.110820 0.000000 0.0000000 0.000000  5.568137
+    ##             Gene1    Gene2    Gene3    Gene4     Gene5     Gene6
+    ## Sample1 5.9320775 0.000000 0.000000 1.931591  8.041771  3.221728
+    ## Sample2 0.0000000 0.000000 0.000000 7.999034  5.781027  1.895666
+    ## Sample3 0.2835773 0.000000 4.882344 2.410108  7.248168  9.296099
+    ## Sample4 3.9561486 5.132754 0.000000 8.795270 10.075464  6.100947
+    ## Sample5 3.7062338 0.000000 0.000000 0.000000  8.345310  5.400626
+    ## Sample6 0.0000000 7.079570 0.000000 5.102890  0.000000 11.879792
 
 `sample.info` is a data frame with the metadata of the cells, containing only the group each cell belongs to.
 
@@ -91,8 +91,8 @@ In addition, if a property of the cells (e.g. cell type) is known, it can be use
 In this case, the underlying groups of each cell were also given:
 
 ``` r
-group <- dataset$sample.info$group.name
-draw.trajectory.plot(space, progression.group = group)
+group.name <- dataset$sample.info$group.name
+draw.trajectory.plot(space, progression.group = group.name)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-8-1.png)
@@ -105,20 +105,29 @@ The main goal of SCORPIUS is to infer a trajectory through the cells, and orden 
 SCORPIUS infers a trajectory through several intermediate steps, which are all executed as follows:
 
 ``` r
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 ```
 
 The result is a list containing the final trajectory `final.path` and the inferred timeline for each sample `time`.
 
-The trajectoryy can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
+The trajectory can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
 
 ``` r
-draw.trajectory.plot(space, progression.group = group, path = traj$final.path)
+draw.trajectory.plot(space, progression.group = group.name, path = traj$final.path)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
-Finding genes of interest
--------------------------
+Finding candidate marker genes
+------------------------------
 
-Coming soon...
+Finally, to identify and visualise candidate marker genes, execute the following code:
+
+``` r
+tafs <- find.trajectory.aligned.features(dataset$expression, traj$time)
+expr.tafs <- tafs$smooth.x[,tafs$tafs]
+modules <- extract.modules(expr.tafs)
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+```
+
+![](simulated-data_files/figure-markdown_github/find%20tafs-1.png)

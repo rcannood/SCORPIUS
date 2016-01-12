@@ -15,7 +15,7 @@ vignette: >
 ---
 
 <!-- built using 
-render("simulated-data.Rmd", output_format = "all") 
+render("vignettes/simulated-data.Rmd", output_format = "all") 
 -->
 
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data.
@@ -23,7 +23,7 @@ Note that the dataset is generated in a very naive manner and is only meant to b
 
 ## Simulate expression data
 Expression values for 384 cells and 500 genes is generated as follows.
-```{r}
+```{r message=FALSE}
 library(SCORPIUS)
 dataset <- generate.dataset(type="poly", num.genes=500, num.samples=384, num.groups=4)
 ```
@@ -79,8 +79,8 @@ In addition, if a property of the cells (e.g. cell type) is known, it can be use
 
 In this case, the underlying groups of each cell were also given:
 ```{r}
-group <- dataset$sample.info$group.name
-draw.trajectory.plot(space, progression.group = group)
+group.name <- dataset$sample.info$group.name
+draw.trajectory.plot(space, progression.group = group.name)
 ```
 
 
@@ -89,18 +89,30 @@ The main goal of SCORPIUS is to infer a trajectory through the cells, and orden 
 
 SCORPIUS infers a trajectory through several intermediate steps, which are all executed as follows:
 ```{r}
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 ```
 
 
 The result is a list containing the final trajectory `final.path` and the inferred timeline for each sample `time`.
 
-The trajectoryy can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
+The trajectory can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
 ```{r}
-draw.trajectory.plot(space, progression.group = group, path = traj$final.path)
+draw.trajectory.plot(space, progression.group = group.name, path = traj$final.path)
 ```
 
 
-## Finding genes of interest
+## Finding candidate marker genes
 
-Coming soon...
+Finally, to identify and visualise candidate marker genes, execute the following code:
+```{r find tafs unparallel, eval=F}
+tafs <- find.trajectory.aligned.features(dataset$expression, traj$time)
+expr.tafs <- tafs$smooth.x[,tafs$tafs]
+modules <- extract.modules(expr.tafs)
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+```
+```{r find tafs, echo=F, message=F, warning=F}
+tafs <- find.trajectory.aligned.features(dataset$expression, traj$time, parallel=8)
+expr.tafs <- tafs$smooth.x[,tafs$tafs]
+modules <- extract.modules(expr.tafs)
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+```

@@ -42,144 +42,58 @@ To get started, read the notes below or read the ~~[intro vignette](): `vignette
 
 More vignettes with more elaborate examples are also available:
 
--   ~~[Investigating differentiating dendritic cells](): `vignette("ginhoux", package="SCORPIUS")`~~ (Under construction)
--   [Inferring trajectories from simulated data](https://github.com/rcannood/SCORPIUS/blob/master/vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
+-   ~~[Investigating differentiating dendritic cell progenitors](): `vignette("ginhoux", package="SCORPIUS")`~~ (Under construction)
+-   [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
 
-<!--
-## Learning SCORPIUS
+Minimal example
+---------------
 
-To get started, read the notes below, then read the intro vignette: `vignette("introduction", package = "dplyr")`. To make the most of dplyr, I also recommend that you familiarise yourself with the principles of [tidy data](http://vita.had.co.nz/papers/tidy-data.html): this will help you get your data into a form that works well with dplyr, ggplot2 and R's many modelling functions.
+To start using SCORPIUS, simply write:
 
-If you need more, help I recommend the following (paid) resources:
-
-* [dplyr](https://www.datacamp.com/courses/dplyr) on datacamp, by Garrett
-  Grolemund. Learn the basics of dplyr at your own pace in this interactive 
-  online course.
-  
-* [Introduction to Data Science with R](http://shop.oreilly.com/product/0636920034834.do): 
-  How to Manipulate, Visualize, and Model Data with the R Language, by Garrett
-  Grolemund. This O'Reilly video series will teach you the basics needed to be
-  an effective analyst in R.
-
-## Key data structures
-
-The key object in dplyr is a _tbl_, a representation of a tabular data structure.
-Currently `dplyr` supports:
-
-* data frames
-* [data tables](https://github.com/Rdatatable/data.table/wiki)
-* [SQLite](http://sqlite.org/)
-* [PostgreSQL](http://www.postgresql.org/)/[Redshift](http://aws.amazon.com/redshift/)
-* [MySQL](http://www.mysql.com/)/[MariaDB](https://mariadb.com/)
-* [Bigquery](https://developers.google.com/bigquery/)
-* [MonetDB](http://www.monetdb.org/)
-* data cubes with arrays (partial implementation)
-
-You can create them as follows:
-
-```R
-{r, message = FALSE}
-library(dplyr) # for functions
-library(nycflights13) # for data
-flights
-
-# Caches data in local SQLite db
-flights_db1 <- tbl(nycflights13_sqlite(), "flights")
-
-# Caches data in local postgres db
-flights_db2 <- tbl(nycflights13_postgres(), "flights")
+``` r
+library(SCORPIUS)
 ```
 
-Each tbl also comes in a grouped variant which allows you to easily perform operations "by group":
+The `ginhoux` dataset (See Schlitzer et al. 2015) contains 248 cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 
-```R
-{r}
-carriers_df  <- flights %>% group_by(carrier)
-carriers_db1 <- flights_db1 %>% group_by(carrier)
-carriers_db2 <- flights_db2 %>% group_by(carrier)
+``` r
+data(ginhoux)
 ```
 
-## Single table verbs
+With the following code, SCORPIUS reduces the dimensionality of the dataset and provides a visual overview of the dataset. In this plot, cells that are similar in terms of expression values will be placed closer together than cells with dissimilar expression values.
 
-`dplyr` implements the following verbs useful for data manipulation:
-
-* `select()`: focus on a subset of variables
-* `filter()`: focus on a subset of rows
-* `mutate()`: add new columns
-* `summarise()`: reduce each group to a smaller number of summary statistics
-* `arrange()`: re-order the rows
-
-They all work as similarly as possible across the range of data sources. The main difference is performance:
-
-```R
-{r}
-system.time(carriers_df %>% summarise(delay = mean(arr_delay)))
-system.time(carriers_db1 %>% summarise(delay = mean(arr_delay)) %>% collect())
-system.time(carriers_db2 %>% summarise(delay = mean(arr_delay)) %>% collect())
+``` r
+dist <- correlation.distance(ginhoux$expression)
+space <- reduce.dimensionality(dist)
+group.name <- ginhoux$sample.info$group.name
+draw.trajectory.plot(space, group.name, contour = T)
 ```
 
-Data frame methods are much much faster than the plyr equivalent. The database methods are slower, but can work with data that don't fit in memory.
+![](README_files/figure-markdown_github/reduce%20dimensionality-1.png)
+ To infer and visualise a trajectory through these cells, run:
 
-```R
-{r}
-system.time(plyr::ddply(flights, "carrier", plyr::summarise,
-  delay = mean(arr_delay, na.rm = TRUE)))
+``` r
+traj <- infer.trajectory(space)
+draw.trajectory.plot(space, group.name, traj$final.path, contour = T)
 ```
 
-### `do()`
+![](README_files/figure-markdown_github/infer%20trajectory-1.png)
+ Finally, to identify and visualise candidate marker genes, execute the following code:
 
-As well as the specialised operations described above, `dplyr` also provides the generic `do()` function which applies any R function to each group of the data.
-
-Let's take the batting database from the built-in Lahman database. We'll group it by year, and then fit a model to explore the relationship between their number of at bats and runs:
-
-```R
-{r}
-by_year <- lahman_df() %>% 
-  tbl("Batting") %>%
-  group_by(yearID)
-by_year %>% 
-  do(mod = lm(R ~ AB, data = .))
+``` r
+tafs <- find.trajectory.aligned.features(ginhoux$expression, traj$time)
+expr.tafs <- tafs$smooth.x[,tafs$tafs]
+modules <- extract.modules(expr.tafs)
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```
 
-Note that if you are fitting lots of linear models, it's a good idea to use `biglm` because it creates model objects that are considerably smaller:
+![](README_files/figure-markdown_github/find%20tafs-1.png)
 
-```R
-{r}
-by_year %>% 
-  do(mod = lm(R ~ AB, data = .)) %>%
-  object.size() %>%
-  print(unit = "MB")
+Related approaches
+------------------
 
-by_year %>% 
-  do(mod = biglm::biglm(R ~ AB, data = .)) %>%
-  object.size() %>%
-  print(unit = "MB")
-```
+-   [Monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html)
+-   [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
+-   [Embeddr](https://github.com/kieranrcampbell/embeddr)
 
-## Multiple table verbs
-
-As well as verbs that work on a single tbl, there are also a set of useful verbs that work with two tbls at a time: joins and set operations.
-
-dplyr implements the four most useful joins from SQL:
-
-* `inner_join(x, y)`: matching x + y
-* `left_join(x, y)`: all x + matching y
-* `semi_join(x, y)`: all x with match in y
-* `anti_join(x, y)`: all x without match in y
-
-And provides methods for:
-
-* `intersect(x, y)`: all rows in both x and y
-* `union(x, y)`: rows in either x or y
-* `setdiff(x, y)`: rows in x, but not y
-
-## Plyr compatibility
-
-You'll need to be a little careful if you load both plyr and dplyr at the same time. I'd recommend loading plyr first, then dplyr, so that the faster dplyr functions come first in the search path. By and large, any function provided by both dplyr and plyr works in a similar way, although dplyr functions tend to be faster and more general.
-
-## Related approaches
-
-* [Blaze](http://blaze.pydata.org)
-* [|Stat](http://oldwww.acm.org/perlman/stat/)
-* [Pig](http://dx.doi.org/10.1145/1376616.1376726)
--->
+Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015. “Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at the common DC progenitor stage in the bone marrow.” *Nature Immunology* 16 (7): 718–26. doi:[10.1038/ni.3200](http://dx.doi.org/10.1038/ni.3200).

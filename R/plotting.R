@@ -104,6 +104,9 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
       df
     })))
 
+    if (!is.null(progression.group) && is.factor(progression.group))
+      density.df$progression.group <- factor(density.df$progression.group, levels = levels(progression.group))
+
     g <- g + ggplot2::stat_contour(geom="polygon", aes_contour, density.df, breaks=c(1), alpha=.2)
 
     # ## ggplot2 pre-2.0
