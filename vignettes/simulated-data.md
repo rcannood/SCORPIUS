@@ -1,3 +1,6 @@
+<!-- built using 
+render("simulated-data.Rmd", output_format = "all") 
+-->
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data. Note that the dataset is generated in a very naive manner and is only meant to be used for demonstration purposes, not for evaluating trajectory inference methods.
 
 Simulate expression data
@@ -18,13 +21,13 @@ The resulting dataset is a list containing a matrix named `expression` and a dat
 dataset$expression[1:6, 1:6]
 ```
 
-    ##            Gene1    Gene2    Gene3     Gene4    Gene5    Gene6
-    ## Sample1 6.338001 0.000000 0.000000  6.581824 6.004360 7.979807
-    ## Sample2 6.456548 9.020625 4.319991 14.940396 0.000000 6.929310
-    ## Sample3 0.000000 5.423540 0.000000 11.368641 0.000000 5.216253
-    ## Sample4 4.186124 5.573305 6.973294  6.780560 0.000000 8.615020
-    ## Sample5 0.000000 8.687410 2.674768  6.408940 0.000000 7.198177
-    ## Sample6 7.674663 7.573649 0.000000  1.870343 4.185525 7.938746
+    ##            Gene1    Gene2    Gene3     Gene4     Gene5    Gene6
+    ## Sample1 1.177482 0.000000 8.369938  3.198941  9.533305 4.754622
+    ## Sample2 6.099312 0.000000 9.635797  5.251118  5.632712 5.571352
+    ## Sample3 0.000000 5.771299 4.991685  8.092176  5.281727 8.220894
+    ## Sample4 0.000000 3.530891 7.490812  4.176563  2.213085 6.726484
+    ## Sample5 0.000000 0.000000 6.880374  6.221958  0.000000 5.976617
+    ## Sample6 2.545596 3.495439 9.126022 11.032961 12.759797 5.760015
 
 `sample.info` is a data frame with the metadata of the cells, containing only the group each cell belongs to.
 
@@ -66,7 +69,8 @@ plot(density(dist))
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-5-1.png)
- The reduced space is constructed as follows:
+
+The reduced space is constructed as follows:
 
 ``` r
 space <- reduce.dimensionality(dist, ndim=3)
@@ -79,7 +83,8 @@ draw.trajectory.plot(space)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-7-1.png)
- Looking at this plot, it seems that the cells in this dataset are involved in a dynamic process.
+
+Looking at this plot, it seems that the cells in this dataset are involved in a dynamic process.
 
 In addition, if a property of the cells (e.g. cell type) is known, it can be used to colour the plot using the `progression.group` parameter.
 

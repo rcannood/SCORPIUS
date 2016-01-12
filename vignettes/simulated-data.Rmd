@@ -53,21 +53,25 @@ The distance matrix is calculated as follows:
 dist <- correlation.distance(dataset$expression)
 ```
 
+
 `dist` is a 384-by-384 matrix, with values ranging from 0 to 1.
 ```{r}
 dim(dist)
 plot(density(dist))
 ```
 
+
 The reduced space is constructed as follows:
 ```{r}
 space <- reduce.dimensionality(dist, ndim=3)
 ```
 
+
 The new space is a 384-by-3 matrix, and can be visualised as follows:
 ```{r}
 draw.trajectory.plot(space)
 ```
+
 
 Looking at this plot, it seems that the cells in this dataset are involved in a dynamic process. 
 
@@ -87,6 +91,7 @@ SCORPIUS infers a trajectory through several intermediate steps, which are all e
 ```{r}
 traj <- infer.trajectory(space, k=4)
 ```
+
 
 The result is a list containing the final trajectory `final.path` and the inferred timeline for each sample `time`.
 
