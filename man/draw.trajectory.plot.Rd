@@ -19,7 +19,7 @@ draw.trajectory.plot(space, progression.group=NULL, path=NULL, contour=FALSE)
 A ggplot2 plot.
 }
 \description{
-\code{draw.trajectory.plot} is used to plot samples after performing dimensionality reduction. 
+\code{draw.trajectory.plot} is used to plot samples after performing dimensionality reduction.
 Additional arguments can be provided to colour the samples, plot the trajectory inferred by SCORPIUS,
 and draw a contour around the samples.
 }

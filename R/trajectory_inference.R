@@ -43,7 +43,7 @@
 #'
 #' ## Visualise the trajectory
 #' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
-infer.trajectory <- function(space, k) {
+infer.trajectory <- function(space, k=4) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
   requireNamespace("GA")

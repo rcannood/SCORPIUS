@@ -16,6 +16,18 @@ This dataset contains the expression values of 15752 genes for 248 dendritic cel
 Each cell is in one of three maturation stages: MDP, CDP or PreDC. The levels of the factor in \code{sample.info}
 are ordered according to the maturation process.
 }
+\examples{
+## Load dataset from Schlitzer et al., 2015
+data("ginhoux")
+
+## Reduce dimensionality and infer trajectory with SCORPIUS
+dist <- correlation.distance(ginhoux$expression)
+space <- reduce.dimensionality(dist, ndim=2)
+traj <- infer.trajectory(space, k=4)
+
+## Visualise
+draw.trajectory.plot(space, path=traj$final.path, progression.group=ginhoux$sample.info$group.name)
+}
 \references{
 Schlitzer A, Sivakamasundari V, Chen J, Sumatoh HR et al. Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
 }

@@ -9,9 +9,9 @@ Maintainer: 'Robrecht Cannoodt' <robrecht.cannoodt@gmail.com>
 Authors@R: c(
     person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre"))
   )
-Depends:
+Depends: 
     R (>= 3.0.0)
-Imports:
+Imports: 
     class,
     dplyr,
     dynamicTreeCut,
@@ -32,3 +32,6 @@ URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

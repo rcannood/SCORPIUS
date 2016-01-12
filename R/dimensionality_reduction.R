@@ -25,7 +25,7 @@
 #'
 #' ## Visualise the dataset
 #' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
-reduce.dimensionality <- function(dist, ndim, rescale=TRUE) {
+reduce.dimensionality <- function(dist, ndim=3, rescale=TRUE) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")

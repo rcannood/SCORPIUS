@@ -92,4 +92,16 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=1000, 
 #' @source \url{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
 #'
 #' @docType data
+#'
+#' @examples
+#' ## Load dataset from Schlitzer et al., 2015
+#' data("ginhoux")
+#'
+#' ## Reduce dimensionality and infer trajectory with SCORPIUS
+#' dist <- correlation.distance(ginhoux$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' traj <- infer.trajectory(space, k=4)
+#'
+#' ## Visualise
+#' draw.trajectory.plot(space, path=traj$final.path, progression.group=ginhoux$sample.info$group.name)
 "ginhoux"

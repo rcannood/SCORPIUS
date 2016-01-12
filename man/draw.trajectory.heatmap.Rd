@@ -29,8 +29,8 @@ draw.trajectory.heatmap(x, time, progression.group=NULL, modules=NULL, show.labe
 The output of the \code{\link[pheatmap]{pheatmap}} function.
 }
 \description{
-\code{draw.trajectory.heatmap} draws a heatmap in which the samples 
-are ranked according their position in an inferred trajectory. In addition, the progression groups and 
+\code{draw.trajectory.heatmap} draws a heatmap in which the samples
+are ranked according their position in an inferred trajectory. In addition, the progression groups and
 feature modules can be passed along to further enhance the visualisation.
 }
 \examples{
