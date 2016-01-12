@@ -21,14 +21,16 @@ knitr::opts_chunk$set(
 SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell
 RNA sequencing data. In comparison to similar approaches, it has three main advantages:
 
-* SCORPIUS accurately reconstructs trajectories for a wide variety of dynamic 
-  cellular processes. The performance of SCORPIUS was evaluated using a new, quantitative 
+* It accurately reconstructs trajectories for a wide variety of dynamic 
+  cellular processes. The performance was evaluated using a new, quantitative 
   evaluation pipeline, comparing the performance of current state-of-the-art techniques
   on 10 publicly available single-cell RNA sequencing datasets. 
   
-* SCORPIUS identifies marker genes. 
+* It identifies marker genes. By automatically identifying possible marker 
+  genes relevant for the dynamic process under investigation, SCORPIUS speeds
+  up 
   
-* SCORPIUS is fully unsupervised. Prior knowledge of the relevant marker genes or 
+* It is fully unsupervised. Prior knowledge of the relevant marker genes or 
   cellular states of individual cells is not required, and thus the conclusions drawn
   from the SCORPIUS output are unbiased.
 
@@ -59,11 +61,11 @@ If you encounter a clear bug, please file a minimal reproducible example on [git
 
 ## Learning SCORPIUS
 
-To get started, read the notes below or read the [intro vignette](): `vignette("introduction", package="SCORPIUS")` (Under construction).
+To get started, read the notes below or read the ~~[intro vignette](): `vignette("introduction", package="SCORPIUS")`~~ (Under construction).
 
 More vignettes with more elaborate examples are also available: 
 
-* [Investigating differentiating dendritic cells](): `vignette("ginhoux", package="SCORPIUS")` (Under construction)
+* ~~[Investigating differentiating dendritic cells](): `vignette("ginhoux", package="SCORPIUS")`~~ (Under construction)
 * [Inferring trajectories from simulated data](https://github.com/rcannood/SCORPIUS/blob/master/vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
 
 <!--
