@@ -1,17 +1,17 @@
 Package: SCORPIUS
 Type: Package
-Title: Trajectory inference from single-cell RNA sequencing data
+Title: Inferring Developmental Chronologies from Single-Cell RNA Sequencing Data
 Version: 1.0
 Date: 2015-12-01
 Description: SCORPIUS orders single cells with regard to an implicit timeline, such as cellular development or progression over time.
 Author: Robrecht Cannoodt
-Maintainer: 'Robrecht Cannoodt' <robrecht.cannoodt@gmail.com>
+Maintainer: Robrecht Cannoodt <robrecht.cannoodt@gmail.com>
 Authors@R: c(
     person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre"))
   )
-Depends: 
+Depends:
     R (>= 3.0.0)
-Imports: 
+Imports:
     class,
     dplyr,
     dynamicTreeCut,
@@ -32,6 +32,7 @@ URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
 RoxygenNote: 5.0.1
-Suggests: knitr,
+Suggests:
+    knitr,
     rmarkdown
 VignetteBuilder: knitr

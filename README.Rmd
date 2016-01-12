@@ -1,20 +1,40 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-SCORPIUS
-========
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# SCORPIUS
 
 [![Build Status](https://travis-ci.org/rcannood/SCORPIUS.png?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
 
-SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell RNA sequencing data. In comparison to similar approaches, it has three main advantages:
+SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell
+RNA sequencing data. In comparison to similar approaches, it has three main advantages:
 
--   SCORPIUS accurately reconstructs trajectories for a wide variety of dynamic cellular processes. The performance of SCORPIUS was evaluated using a new, quantitative evaluation pipeline, comparing the performance of current state-of-the-art techniques on 10 publicly available single-cell RNA sequencing datasets.
-
--   SCORPIUS identifies marker genes.
-
--   SCORPIUS is fully unsupervised. Prior knowledge of the relevant marker genes or cellular states of individual cells is not required, and thus the conclusions drawn from the SCORPIUS output are unbiased.
+* SCORPIUS accurately reconstructs trajectories for a wide variety of dynamic 
+  cellular processes. The performance of SCORPIUS was evaluated using a new, quantitative 
+  evaluation pipeline, comparing the performance of current state-of-the-art techniques
+  on 10 publicly available single-cell RNA sequencing datasets. 
+  
+* SCORPIUS identifies marker genes. 
+  
+* SCORPIUS is fully unsupervised. Prior knowledge of the relevant marker genes or 
+  cellular states of individual cells is not required, and thus the conclusions drawn
+  from the SCORPIUS output are unbiased.
 
 You can install the latest version from github with
 
-``` r
+```R
 devtools::install_github("rcannood/SCORPIUS")
 ```
 
@@ -33,7 +53,8 @@ You can install:
     devtools::install_github("rcannood/SCORPIUS")
     ```
 -->
-If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/rcannood/SCORPIUS/issues).
+
+If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/rcannood/SCORPIUS/issues). 
 
 <!--
 ## Learning dplyr
