@@ -4,13 +4,13 @@ SCORPIUS
 
 [![Build Status](https://travis-ci.org/rcannood/SCORPIUS.png?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
 
-SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell RNA sequencing data. In comparison to similar approaches, it has three main advantages:
+**SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell RNA sequencing data.** In comparison to similar approaches, it has three main advantages:
 
--   It accurately reconstructs trajectories for a wide variety of dynamic cellular processes. The performance was evaluated using a new, quantitative evaluation pipeline, comparing the performance of current state-of-the-art techniques on 10 publicly available single-cell RNA sequencing datasets.
+-   **It accurately reconstructs trajectories for a wide variety of dynamic cellular processes.** The performance was evaluated using a new, quantitative evaluation pipeline, comparing the performance of current state-of-the-art techniques on 10 publicly available single-cell RNA sequencing datasets.
 
--   It identifies marker genes. By automatically identifying possible marker genes relevant for the dynamic process under investigation, SCORPIUS speeds up knowledge discovery.
+-   **It automatically identifies marker genes, speeding up knowledge discovery.**
 
--   It is fully unsupervised. Prior knowledge of the relevant marker genes or cellular states of individual cells is not required, and thus the conclusions drawn from the SCORPIUS output are unbiased.
+-   **It is fully unsupervised.** Prior knowledge of the relevant marker genes or cellular states of individual cells is not required.
 
 Installing SCORPIUS
 -------------------
