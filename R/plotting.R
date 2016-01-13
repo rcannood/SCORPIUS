@@ -40,7 +40,7 @@
 #' draw.trajectory.plot(space, contour=TRUE)
 #'
 #' ## Infer a trajectory and plot it
-#' traj <- infer.trajectory(space, k=4)
+#' traj <- infer.trajectory(space)
 #' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path)
 #' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path, contour=TRUE)
 draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, contour=FALSE) {
@@ -64,7 +64,8 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
   diff <- (max - min)/2
 
   # construct data frame
-  space.df <- data.frame(space, check.rows = F, check.names = F, stringsAsFactors = F)
+  space.df <- data.frame(space[,1:2], check.rows = F, check.names = F, stringsAsFactors = F)
+  colnames(space.df) <- c("Comp1", "Comp2")
 
   # if the grouping colours are specified, add these to the data frame
   if (!is.null(progression.group))
@@ -97,10 +98,10 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 
     density.df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN=function(group.name) {
       group.ix <- groupings[[group.name]]
-      kde.out <- MASS::kde2d(space[group.ix,1], space[group.ix,2], lims=c(min-diff, max+diff, min-diff, max+diff))
+      kde.out <- MASS::kde2d(space.df[group.ix,1], space.df[group.ix,2], lims=c(min-diff, max+diff, min-diff, max+diff))
       z.melt <- reshape2::melt(kde.out$z)
       df <- data.frame(group.name, kde.out$x[z.melt$Var1], kde.out$y[z.melt$Var2], z.melt$value, stringsAsFactors = F)
-      colnames(df) <- c("progression.group", colnames(space)[1:2], "density")
+      colnames(df) <- c("progression.group", "Comp1", "Comp2", "density")
       df
     })))
 
@@ -136,7 +137,17 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' feature modules can be passed along to further enhance the visualisation.
 #'
 #' @usage
-#' draw.trajectory.heatmap(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, narrow.breaks=TRUE, ...)
+#' draw.trajectory.heatmap(
+#'   x,
+#'   time,
+#'   progression.group=NULL,
+#'   modules=NULL,
+#'   show.labels.row=FALSE,
+#'   show.labels.col=FALSE,
+#'   scale.features=TRUE,
+#'   narrow.breaks=TRUE,
+#'   ...
+#' )
 #'
 #' @param x A numeric matrix or data frame with one row per sample and one column per feature.
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
@@ -162,7 +173,7 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' groups <- dataset$sample.info$group.name
-#' traj <- infer.trajectory(space, k=4)
+#' traj <- infer.trajectory(space)
 #' time <- traj$time
 #'
 #' ## Find the genes are most trajectory aligned

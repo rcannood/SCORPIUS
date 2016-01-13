@@ -39,11 +39,11 @@
 #' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
 #'
 #' ## Infer a trajectory through this space
-#' traj <- infer.trajectory(space, k=4)
+#' traj <- infer.trajectory(space)
 #'
 #' ## Visualise the trajectory
 #' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
-infer.trajectory <- function(space, k=4) {
+infer.trajectory <- function(space, k = 4) {
   requireNamespace("princurve")
   requireNamespace("dplyr")
   requireNamespace("GA")
@@ -140,16 +140,17 @@ infer.trajectory <- function(space, k=4) {
 #' @examples
 #' ## Generate an example dataset and infer a trajectory through it
 #' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' group.name <- dataset$sample.info$group.name
 #' dist <- correlation.distance(dataset$expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space, k=4)
+#' traj <- infer.trajectory(space)
 #'
 #' ## Visualise the trajectory
-#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, group.name, path=traj$final.path)
 #'
 #' ## Reverse the trajectory
 #' reverse.traj <- reverse.trajectory(traj)
-#' draw.trajectory.plot(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, group.name, path=reverse.traj$final.path)
 #'
 #' ## It's the same but reversed?!
 #' plot(traj$time, reverse.traj$time, type="l")
@@ -167,7 +168,15 @@ reverse.trajectory <- function(trajectory) {
 #' @description \code{find.trajectory.aligned.features} searches for features whose values . It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
 #'
 #' @usage
-#' find.trajectory.aligned.features(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F)
+#' find.trajectory.aligned.features(
+#'   x,
+#'   time,
+#'   p.adjust.method = "BH",
+#'   q.value.cutoff = 1e-10,
+#'   df = 8,
+#'   parallel = F,
+#'   verbose = T
+#' )
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
@@ -175,6 +184,7 @@ reverse.trajectory <- function(trajectory) {
 #' @param q.value.cutoff The cutoff used on the q-values.
 #' @param df The degree of freedom used by \code{\link[splines]{ns}}.
 #' @param parallel Must be \code{FALSE} (default), \code{TRUE} (will auto-detect number of cores), or a numeric value specifying the number of cores to use.
+#' @param verbose Print progress if \code{parallel} is \code{FALSE} and \code{verbose} is \code{TRUE}.
 #'
 #' @return Returns a list, containing the following items: \itemize{
 #'   \item \code{tafs}: the names or indices of all trajectory-aligned features (q-value < \code{q.value.cutoff}),
@@ -194,10 +204,11 @@ reverse.trajectory <- function(trajectory) {
 #' ## Generate a dataset and visualise
 #' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
 #' expression <- dataset$expression
+#' group.name <- dataset$sample.info$group.name
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space, k=4)
-#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' traj <- infer.trajectory(space)
+#' draw.trajectory.plot(space, group.name, path=traj$final.path)
 #'
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -205,8 +216,8 @@ reverse.trajectory <- function(trajectory) {
 #'
 #' ## Visualise the expression of these genes in a heatmap
 #' expr.tafs <- expression[,tafs$tafs]
-#' draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name)
-find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F) {
+#' draw.trajectory.heatmap(expr.tafs, traj$time, group.name)
+find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F, verbose=T) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -234,10 +245,14 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
       function(...) parallel::mclapply(..., mc.cores=parallel)
     } else if (!is.logical(parallel)) {
       stop(sQuote("parallel"), " needs to be FALSE (default), TRUE (will auto-detect number of cores), or a numeric value specifying the number of cores to use")
+    } else if (!is.logical(verbose)) {
+      stop(sQuote("verbose"), " needs to be logical")
     } else if (parallel) {
       function(...) parallel::mclapply(..., mc.cores=parallel::detectCores())
-    } else {
+    } else if (verbose) {
       function(...) pbapply::pblapply(...)
+    } else {
+      function(...) lapply(...)
     }
 
   # apply splines to time
@@ -307,10 +322,12 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' ## Generate a dataset and visualise
 #' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
 #' expression <- dataset$expression
+#' group.name <- dataset$sample.info$group.name
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space, k=4)
-#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' traj <- infer.trajectory(space)
+#' time <- traj$time
+#' draw.trajectory.plot(space, path=traj$final.path, group.name)
 #'
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -319,7 +336,8 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(smooth.tafs)
-#' draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
+#' draw.trajectory.heatmap(expr.tafs, time, group.name, modules)
+#' draw.trajectory.heatmap(smooth.tafs, time, group.name, modules)
 extract.modules <- function(x) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))

@@ -5,7 +5,9 @@ output:
 bibliography: library.bib
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- github markdown built using 
+render("README.Rmd", output_format = "md_document")
+-->
 
 # SCORPIUS
 
@@ -53,15 +55,7 @@ If you encounter a clear bug, please file a minimal reproducible example on [git
 
 ## Learning SCORPIUS
 
-To get started, read the notes below or read the ~~[intro vignette](): `vignette("introduction", package="SCORPIUS")`~~ (Under construction).
-
-More vignettes with more elaborate examples are also available: 
-
-* ~~[Investigating differentiating dendritic cell progenitors](): `vignette("ginhoux", package="SCORPIUS")`~~ (Under construction)
-* [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
-
-## Minimal example
-This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the `ginhoux` vignette.
+This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the vignette listed below.
 
 To start using SCORPIUS, simply write:
 ```{r libraries, message=FALSE}
@@ -69,7 +63,7 @@ library(SCORPIUS)
 ```
 
 
-The `ginhoux` dataset [See @Schlitzer2015] contains 248 cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
+The `ginhoux` dataset [See @Schlitzer2015] contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 ```{r load ginhoux}
 data(ginhoux)
 expression <- ginhoux$expression
@@ -83,11 +77,13 @@ In this plot, cells that are similar in terms of expression values will be place
 ```{r reduce dimensionality}
 dist <- correlation.distance(expression)
 
+# filter outliers
 filt <- outlier.filter(dist)
 expression <- expression[filt, ]
 group.name <- group.name[filt]
 dist <- dist[filt, filt]
 
+# reduce dimensionality
 space <- reduce.dimensionality(dist, ndim=2)
 draw.trajectory.plot(space, group.name)
 ```
@@ -101,19 +97,19 @@ draw.trajectory.plot(space, group.name, traj$final.path)
 
 
 Finally, to identify and visualise candidate marker genes, execute the following code:
-```{r find tafs sequentially, eval=F}
+```{r find tafs, message=F}
 tafs <- find.trajectory.aligned.features(expression, traj$time)
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```
-```{r find tafs, echo=F, message=F}
-tafs <- find.trajectory.aligned.features(expression, traj$time, parallel=8)
-expr.tafs <- tafs$smooth.x[,tafs$tafs]
-modules <- extract.modules(expr.tafs)
-draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
-```
 
+## Learning SCORPIUS, part 2
+
+More vignettes with more elaborate examples are also available: 
+
+* [Investigating differentiating dendritic cell progenitors](vignettes/ginhoux.md): `vignette("ginhoux", package="SCORPIUS")`
+* [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
 
 ## Related approaches
 

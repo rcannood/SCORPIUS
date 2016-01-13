@@ -23,7 +23,7 @@ the predicted time points of samples versus the known progression stages.
 dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
 dist <- correlation.distance(dataset$expression)
 space <- reduce.dimensionality(dist, ndim=2)
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 
 ## Evaluate the trajectory timeline
 evaluate.trajectory(traj$time, dataset$sample.info$group.name)

@@ -19,10 +19,12 @@ A data frame containing meta-data for the features in \code{x}, namely the order
 ## Generate a dataset and visualise
 dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
 expression <- dataset$expression
+group.name <- dataset$sample.info$group.name
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
-traj <- infer.trajectory(space, k=4)
-draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+traj <- infer.trajectory(space)
+time <- traj$time
+draw.trajectory.plot(space, path=traj$final.path, group.name)
 
 ## Show which genes are most trajectory aligned
 tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -31,7 +33,8 @@ smooth.tafs <- tafs$smooth.x[,tafs$tafs]
 
 ## Group the genes into modules and visualise the modules in a heatmap
 modules <- extract.modules(smooth.tafs)
-draw.trajectory.heatmap(expr.tafs, time=traj$time, progression.group=dataset$sample.info$group.name, modules=modules)
+draw.trajectory.heatmap(expr.tafs, time, group.name, modules)
+draw.trajectory.heatmap(smooth.tafs, time, group.name, modules)
 }
 \seealso{
 \code{\link{find.trajectory.aligned.features}}

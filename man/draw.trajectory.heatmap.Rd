@@ -4,7 +4,17 @@
 \alias{draw.trajectory.heatmap}
 \title{Draw time-series heatmap}
 \usage{
-draw.trajectory.heatmap(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, narrow.breaks=TRUE, ...)
+draw.trajectory.heatmap(
+  x,
+  time,
+  progression.group=NULL,
+  modules=NULL,
+  show.labels.row=FALSE,
+  show.labels.col=FALSE,
+  scale.features=TRUE,
+  narrow.breaks=TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with one row per sample and one column per feature.}
@@ -40,7 +50,7 @@ expression <- dataset$expression
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 groups <- dataset$sample.info$group.name
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 time <- traj$time
 
 ## Find the genes are most trajectory aligned

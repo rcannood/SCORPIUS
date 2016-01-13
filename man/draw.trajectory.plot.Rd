@@ -43,7 +43,7 @@ draw.trajectory.plot(space, progression.group=groups, contour=TRUE)
 draw.trajectory.plot(space, contour=TRUE)
 
 ## Infer a trajectory and plot it
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 draw.trajectory.plot(space, progression.group=groups, path=traj$final.path)
 draw.trajectory.plot(space, progression.group=groups, path=traj$final.path, contour=TRUE)
 }

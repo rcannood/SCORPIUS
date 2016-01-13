@@ -14,12 +14,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<!-- built using 
-render("vignettes/simulated-data.Rmd", output_format = "all") 
+<!-- github markdown built using 
+render("vignettes/simulated-data.Rmd", output_format = "md_document")
 -->
+
+```{r, echo=F}
+set.seed(4)
+```
 
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data.
 Note that the dataset is generated in a very naive manner and is only meant to be used for demonstration purposes, not for evaluating trajectory inference methods.
+
 
 ## Simulate expression data
 Expression values for 384 cells and 500 genes is generated as follows.
@@ -42,6 +47,7 @@ head(dataset$sample.info)
 
 In order to infer a trajectory through this data, SCORPIUS first reduces the dimensionality of the dataset.
 
+
 ## Reduce dimensionality of the dataset
 SCORPIUS uses classical Torgerson multi-dimensional scaling to reduce the dataset to three dimensions.
 In short, this technique attempts to place the cells in a space such that the distance between any
@@ -50,9 +56,10 @@ two points in that space approximates the original distance between the two cell
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. 
 The distance matrix is calculated as follows:
 ```{r}
-dist <- correlation.distance(dataset$expression)
+expression <- dataset$expression
+group.name <- dataset$sample.info$group.name
+dist <- correlation.distance(expression)
 ```
-
 
 `dist` is a 384-by-384 matrix, with values ranging from 0 to 1.
 ```{r}
@@ -63,7 +70,7 @@ plot(density(dist))
 
 The reduced space is constructed as follows:
 ```{r}
-space <- reduce.dimensionality(dist, ndim=3)
+space <- reduce.dimensionality(dist)
 ```
 
 
@@ -79,7 +86,6 @@ In addition, if a property of the cells (e.g. cell type) is known, it can be use
 
 In this case, the underlying groups of each cell were also given:
 ```{r}
-group.name <- dataset$sample.info$group.name
 draw.trajectory.plot(space, progression.group = group.name)
 ```
 
@@ -102,17 +108,29 @@ draw.trajectory.plot(space, progression.group = group.name, path = traj$final.pa
 
 
 ## Finding candidate marker genes
+We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, 
+as such genes might be good candidate marker genes for the dynamic process that is being investigated.
 
-Finally, to identify and visualise candidate marker genes, execute the following code:
-```{r find tafs unparallel, eval=F}
-tafs <- find.trajectory.aligned.features(dataset$expression, traj$time)
-expr.tafs <- tafs$smooth.x[,tafs$tafs]
-modules <- extract.modules(expr.tafs)
-draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+```{r find tafs}
+tafs <- find.trajectory.aligned.features(expression, traj$time, verbose=F)
 ```
-```{r find tafs, echo=F, message=F, warning=F}
-tafs <- find.trajectory.aligned.features(dataset$expression, traj$time, parallel=8)
+
+Again, the output is a list containing several values:
+
+* `tafs`: The names of genes which are marked as trajectory aligned.
+
+* `p.values`: A data frame containing all the genes and corresponding q-values.
+
+* `smooth.x`: The smoothed expression data used in findingn the TAFs.
+
+To visualise the expression of the selected TAFs, use the `draw.trajectory.heatmap` function.
+```{r visualise tafs}
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name)
+```
+
+Finally, the TAFs can also be grouped into modules as follows: 
+```{r moduled tafs}
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```

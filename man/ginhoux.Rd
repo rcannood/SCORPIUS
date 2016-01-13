@@ -22,8 +22,8 @@ data("ginhoux")
 
 ## Reduce dimensionality and infer trajectory with SCORPIUS
 dist <- correlation.distance(ginhoux$expression)
-space <- reduce.dimensionality(dist, ndim=2)
-traj <- infer.trajectory(space, k=4)
+space <- reduce.dimensionality(dist)
+traj <- infer.trajectory(space)
 
 ## Visualise
 draw.trajectory.plot(space, path=traj$final.path, progression.group=ginhoux$sample.info$group.name)

@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^library\.bib$
+^README.*$
+^SCORPIUS\.Rproj$
+^\.travis\.yml$
+^vignettes/.*\.md$

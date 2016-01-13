@@ -18,16 +18,17 @@ Since the direction of the trajectory is not specified, the ordering of a trajec
 \examples{
 ## Generate an example dataset and infer a trajectory through it
 dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+group.name <- dataset$sample.info$group.name
 dist <- correlation.distance(dataset$expression)
 space <- reduce.dimensionality(dist, ndim=2)
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 
 ## Visualise the trajectory
-draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, group.name, path=traj$final.path)
 
 ## Reverse the trajectory
 reverse.traj <- reverse.trajectory(traj)
-draw.trajectory.plot(space, path=reverse.traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, group.name, path=reverse.traj$final.path)
 
 ## It's the same but reversed?!
 plot(traj$time, reverse.traj$time, type="l")

@@ -19,19 +19,6 @@
 #'
 #' ## Visualise the outlierness scores for each of the points
 #' plot(x, cex=outl, pch=20)
-#'
-#' ## Use Ginhoux dataset
-#' library(ggplot2)
-#' data(ginhoux)
-#'
-#' ## Calculate inter-sample distances and outlierness'
-#' dist <- correlation.distance(ginhoux$expression)
-#' outl <- outlierness(dist)
-#'
-#' ## Reduce dimensionality to be able to visualise the points
-#' space <- reduce.dimensionality(dist, 2)
-#' ginhoux.data <- data.frame(space, outl, ginhoux$sample.info)
-#' ggplot() + geom_point(aes(Comp1, Comp2, size=outl, colour=group.name), ginhoux.data)
 outlierness <- function(dist, k=10) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")

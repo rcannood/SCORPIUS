@@ -4,7 +4,12 @@
 \alias{generate.dataset}
 \title{Generate a synthetic dataset}
 \usage{
-generate.dataset(type=c("splines", "polynomial"), num.samples=1000, num.genes=100, num.groups=4)
+generate.dataset(
+  type=c("splines", "polynomial"),
+  num.samples=400,
+  num.genes=500,
+  num.groups=4
+)
 }
 \arguments{
 \item{type}{The type of function used in order to generate the expression data. Must be either \code{"splines"} (default) or \code{"polynomial"} (or abbreviations thereof).}
@@ -28,7 +33,7 @@ dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.gr
 ## Reduce dimensionality and infer trajectory with SCORPIUS
 dist <- correlation.distance(dataset$expression)
 space <- reduce.dimensionality(dist, ndim=2)
-traj <- infer.trajectory(space, k=4)
+traj <- infer.trajectory(space)
 
 ## Visualise
 draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)

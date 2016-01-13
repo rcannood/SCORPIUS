@@ -56,7 +56,8 @@ reduce.dimensionality <- function(dist, ndim=3, rescale=TRUE) {
 #' @export
 #'
 #' @examples
-#' ## Generate a matrix from a normal distribution with a large standard deviation, and approximately centered at c(5, 5)
+#' ## Generate a matrix from a normal distribution
+#' ## with a large standard deviation, centered at c(5, 5)
 #' x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
 #'
 #' ## Center the dataset at c(0, 0) with a minimum of c(-.5, -.5) and a maximum of c(.5, .5)

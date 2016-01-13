@@ -20,7 +20,8 @@ The centered, scaled matrix. ZThe numeric centering and scalings used are return
 \code{rescale.and.center} uniformily scales a given matrix such that the returned space is centered on \code{center}, and each column was scaled equally such that the range of each column is at most \code{max.range}.
 }
 \examples{
-## Generate a matrix from a normal distribution with a large standard deviation, and approximately centered at c(5, 5)
+## Generate a matrix from a normal distribution
+## with a large standard deviation, centered at c(5, 5)
 x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
 
 ## Center the dataset at c(0, 0) with a minimum of c(-.5, -.5) and a maximum of c(.5, .5)

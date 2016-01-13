@@ -1,5 +1,5 @@
-<!-- built using 
-render("vignettes/simulated-data.Rmd", output_format = "all") 
+<!-- github markdown built using 
+render("vignettes/simulated-data.Rmd", output_format = "md_document")
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data. Note that the dataset is generated in a very naive manner and is only meant to be used for demonstration purposes, not for evaluating trajectory inference methods.
 
@@ -21,13 +21,13 @@ The resulting dataset is a list containing a matrix named `expression` and a dat
 dataset$expression[1:6, 1:6]
 ```
 
-    ##             Gene1    Gene2    Gene3    Gene4     Gene5     Gene6
-    ## Sample1 5.9320775 0.000000 0.000000 1.931591  8.041771  3.221728
-    ## Sample2 0.0000000 0.000000 0.000000 7.999034  5.781027  1.895666
-    ## Sample3 0.2835773 0.000000 4.882344 2.410108  7.248168  9.296099
-    ## Sample4 3.9561486 5.132754 0.000000 8.795270 10.075464  6.100947
-    ## Sample5 3.7062338 0.000000 0.000000 0.000000  8.345310  5.400626
-    ## Sample6 0.0000000 7.079570 0.000000 5.102890  0.000000 11.879792
+    ##             Gene1    Gene2    Gene3    Gene4    Gene5    Gene6
+    ## Sample1 7.0888310 0.000000 0.000000 2.038639 0.000000 5.131362
+    ## Sample2 6.2477708 0.000000 0.915955 0.000000 6.420908 5.834446
+    ## Sample3 9.2618226 3.943155 0.000000 2.077188 6.481860 6.450960
+    ## Sample4 6.5399238 4.318685 0.000000 5.943639 1.025464 4.386607
+    ## Sample5 0.8599413 7.037318 0.000000 4.289563 0.000000 2.973694
+    ## Sample6 3.9560420 0.000000 6.246375 0.000000 4.308269 4.198609
 
 `sample.info` is a data frame with the metadata of the cells, containing only the group each cell belongs to.
 
@@ -53,7 +53,9 @@ SCORPIUS uses classical Torgerson multi-dimensional scaling to reduce the datase
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. The distance matrix is calculated as follows:
 
 ``` r
-dist <- correlation.distance(dataset$expression)
+expression <- dataset$expression
+group.name <- dataset$sample.info$group.name
+dist <- correlation.distance(expression)
 ```
 
 `dist` is a 384-by-384 matrix, with values ranging from 0 to 1.
@@ -68,12 +70,12 @@ dim(dist)
 plot(density(dist))
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 The reduced space is constructed as follows:
 
 ``` r
-space <- reduce.dimensionality(dist, ndim=3)
+space <- reduce.dimensionality(dist)
 ```
 
 The new space is a 384-by-3 matrix, and can be visualised as follows:
@@ -82,7 +84,7 @@ The new space is a 384-by-3 matrix, and can be visualised as follows:
 draw.trajectory.plot(space)
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 Looking at this plot, it seems that the cells in this dataset are involved in a dynamic process.
 
@@ -91,11 +93,10 @@ In addition, if a property of the cells (e.g. cell type) is known, it can be use
 In this case, the underlying groups of each cell were also given:
 
 ``` r
-group.name <- dataset$sample.info$group.name
 draw.trajectory.plot(space, progression.group = group.name)
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Inferring a trajectory through the cells
 ----------------------------------------
@@ -116,18 +117,38 @@ The trajectory can be visualised with respect to the samples by passing it to `d
 draw.trajectory.plot(space, progression.group = group.name, path = traj$final.path)
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 Finding candidate marker genes
 ------------------------------
 
-Finally, to identify and visualise candidate marker genes, execute the following code:
+We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, as such genes might be good candidate marker genes for the dynamic process that is being investigated.
 
 ``` r
-tafs <- find.trajectory.aligned.features(dataset$expression, traj$time)
+tafs <- find.trajectory.aligned.features(expression, traj$time, verbose=F)
+```
+
+Again, the output is a list containing several values:
+
+-   `tafs`: The names of genes which are marked as trajectory aligned.
+
+-   `p.values`: A data frame containing all the genes and corresponding q-values.
+
+-   `smooth.x`: The smoothed expression data used in findingn the TAFs.
+
+To visualise the expression of the selected TAFs, use the `draw.trajectory.heatmap` function.
+
+``` r
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
+draw.trajectory.heatmap(expr.tafs, traj$time, group.name)
+```
+
+![](simulated-data_files/figure-markdown_github/visualise%20tafs-1.png)
+ Finally, the TAFs can also be grouped into modules as follows:
+
+``` r
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```
 
-![](simulated-data_files/figure-markdown_github/find%20tafs-1.png)
+![](simulated-data_files/figure-markdown_github/moduled%20tafs-1.png)
