@@ -55,7 +55,11 @@ If you encounter a clear bug, please file a minimal reproducible example on [git
 
 ## Learning SCORPIUS
 
-This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the vignette listed below.
+```{r, echo=F}
+set.seed(4)
+```
+
+This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the vignettes listed below.
 
 To start using SCORPIUS, simply write:
 ```{r libraries, message=FALSE}
@@ -98,15 +102,16 @@ draw.trajectory.plot(space, group.name, traj$final.path)
 
 Finally, to identify and visualise candidate marker genes, execute the following code:
 ```{r find tafs, message=F}
-tafs <- find.trajectory.aligned.features(expression, traj$time)
+tafs <- find.trajectory.aligned.features(expression, traj$time, verbose=F)
 expr.tafs <- tafs$smooth.x[,tafs$tafs]
 modules <- extract.modules(expr.tafs)
 draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```
 
+
 ## Learning SCORPIUS, part 2
 
-More vignettes with more elaborate examples are also available: 
+Vignettes with more elaborate examples are available: 
 
 * [Investigating differentiating dendritic cell progenitors](vignettes/ginhoux.md): `vignette("ginhoux", package="SCORPIUS")`
 * [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
