@@ -43,6 +43,14 @@ If you encounter a clear bug, please file a minimal reproducible example on [git
 Learning SCORPIUS
 -----------------
 
+To get started, read the introductory example below, or read one of the vignettes containing more elaborate examples:
+
+-   [Investigating differentiating dendritic cell progenitors](vignettes/ginhoux.md): `vignette("ginhoux", package="SCORPIUS")`
+-   [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
+
+Introductory example
+--------------------
+
 This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the vignettes listed below.
 
 To start using SCORPIUS, simply write:
@@ -96,14 +104,6 @@ draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
 ```
 
 ![](README_files/figure-markdown_github/find%20tafs-1.png)
-
-Learning SCORPIUS, part 2
--------------------------
-
-Vignettes with more elaborate examples are available:
-
--   [Investigating differentiating dendritic cell progenitors](vignettes/ginhoux.md): `vignette("ginhoux", package="SCORPIUS")`
--   [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
 
 Related approaches
 ------------------
