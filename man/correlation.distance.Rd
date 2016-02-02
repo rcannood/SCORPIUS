@@ -12,6 +12,8 @@ correlation.distance(x, y=NULL, method="spearman")
 \item{y}{\code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).}
 
 \item{method}{A character string indicating which correlation coefficient (or covariance) is to be computed. One of \code{"pearson"}, \code{"kendall"}, or \code{"spearman"}.}
+
+\item{use}{See \code{\link[stats]{cor}}.}
 }
 \value{
 An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the correlation distances between the given sets of samples.

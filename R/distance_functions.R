@@ -57,6 +57,7 @@ euclidean.distance <- function (x, y=NULL) {
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param y \code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param method A character string indicating which correlation coefficient (or covariance) is to be computed. One of \code{"pearson"}, \code{"kendall"}, or \code{"spearman"}.
+#' @param use See \code{\link[stats]{cor}}.
 #'
 #' @return An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the correlation distances between the given sets of samples.
 #'
@@ -71,7 +72,7 @@ euclidean.distance <- function (x, y=NULL) {
 #' ## Compare with the standard correlation function
 #' dist2 <- cor(t(x), t(y), method="spearman")
 #' plot(dist, dist2)
-correlation.distance <- function(x, y=NULL, method="spearman") {
+correlation.distance <- function(x, y=NULL, method="spearman", use = "everything") {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -79,13 +80,17 @@ correlation.distance <- function(x, y=NULL, method="spearman") {
     stop(sQuote("y"), " must be NULL, a numeric matrix or a data frame")
   if (!is.null(y) && ncol(x) != ncol(y))
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
+  na.method <- pmatch(use, c("all.obs", "complete.obs", "pairwise.complete.obs", "everything", "na.or.complete"))
+  if (is.na(na.method))
+    stop("invalid 'use' argument")
+  method <- match.arg(method)
 
   # transpose if necessary
   x <- t(x)
   if (!is.null(y)) y <- t(y)
 
   # calculate and return correlation distance
-  1 - (cor(x, y, method=method)+1)/2
+  1 - (cor(x, y, method=method, use = use)+1)/2
 }
 
 #' @title k Nearest Neighbour distances
@@ -115,6 +120,36 @@ correlation.distance <- function(x, y=NULL, method="spearman") {
 #' knnd <- knn.distances(dist, 10)
 #' plot(density(knnd))
 knn.distances <- function(dist, k, self.loops=F) {
+  knn(dist, k, self.loops = self.loops)$distances
+}
+
+#' @title k Nearest Neighbour indices and distances
+#'
+#' @description \code{knn} returns the indices and distances of the \emph{k} nearest neighbours of each sample.
+#'
+#' @usage knn(dist, k, self.loops=F)
+#'
+#' @param dist A numeric matrix, data frame or "\code{dist}" object.
+#' @param k The maximum number of nearest neighbours to search.
+#' @param self.loops \code{TRUE} if samples with the same index or name are allowed to be neighbours.
+#'
+#' @return A list containing two matrices \code{indices} and \code{distances}
+#'
+#' @export
+#'
+#' @examples
+#' ## Calculate the kNN distances within a set of samples
+#' x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
+#' dist <- dist(x)
+#' knnd <- knn(dist, 10)
+#' plot(density(knnd$distances))
+#'
+#' ## Calculate the kNN distances between two sets of samples
+#' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
+#' dist <- euclidean.distance(x, y)
+#' knnd <- knn(dist, 10)
+#' plot(density(knnd$distances))
+knn <- function(dist, k, self.loops=F) {
   # input checks
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
@@ -130,8 +165,8 @@ knn.distances <- function(dist, k, self.loops=F) {
   # k can't be larger than nrow(dist)-1
   K <- min(k, nrow(dist)-1)
 
-  # initialise matrix with NAs
-  z <- matrix(
+  # initialise matrices with NAs
+  indices <- knndist <- matrix(
     NA,
     nrow = nrow(dist),
     ncol = K,
@@ -143,14 +178,23 @@ knn.distances <- function(dist, k, self.loops=F) {
   col.ix <- if (!is.null(colnames(dist))) colnames(dist) else seq_len(ncol(dist))
 
   # fill matrix by sample
-  if (self.loops)
-    for (i in row.ix)
-      z[i,] <- head(sort(dist[i,]), K)
-  else
-    for (i in row.ix)
-      z[i,] <- head(sort(dist[i,col.ix!=i]), K)
+  if (self.loops) {
+    for (i in row.ix) {
+      indices[i,] <- head(order(dist[i,]), K)
+      knndist[i,] <- dist[i,indices[i,]]
+    }
+  } else {
+    diag(dist) <- 0 # just to make sure
+    for (i in row.ix) {
+      indices[i,] <- head(order(dist[i,]), K+1)[-1]
+      knndist[i,] <- dist[i,indices[i,]]
+    }
+  }
 
   # return KNN distances
-  z
+  list(
+    indices = indices,
+    distances = knndist
+  )
 }
 

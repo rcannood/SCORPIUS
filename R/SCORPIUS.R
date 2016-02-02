@@ -7,7 +7,7 @@
 #' \code{\link{outlierness}} \code{\link{outlier.filter}}
 #'
 #' @section Distance functions:
-#' \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{knn.distances}}
+#' \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{knn}}
 #'
 #' @section Dimensionality Reduction functions:
 #' \code{\link{reduce.dimensionality}}, \code{\link{rescale.and.center}}

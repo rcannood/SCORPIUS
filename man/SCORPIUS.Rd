@@ -16,7 +16,7 @@ such as cellular development or progression over time.
 
 \section{Distance functions}{
 
-\code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{knn.distances}}
+\code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{knn}}
 }
 
 \section{Dimensionality Reduction functions}{

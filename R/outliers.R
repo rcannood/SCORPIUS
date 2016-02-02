@@ -122,3 +122,30 @@ outlier.filter <- function(dist) {
   # return outlier output
   filt
 }
+
+#' @title Unsupervised feature importance
+#'
+#' @param dist A numeric matrix, data frame or "\code{dist}" object.
+#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param k The maximum number of nearest neighbours to search.
+#'
+#' @return R2 values of how well KNN predictions of \code{x} match the original values in \code{x}.
+#' @export
+#'
+#' @examples
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=200, num.groups=4)
+#' dist <- correlation.distance(dataset$expression)
+#' R2 <- calculate.R2(dist, dataset$expression)
+#' plot(density(R2))
+calculate.R2 <- function(dist, x, k = ceiling(nrow(x)/10)) {
+  knn.out <- knn(dist, k = k)
+  knn.pred <- apply(x, 2, function(y) rowMeans(matrix(y[knn.out$indices], ncol = ncol(knn.out$indices))))
+  residuals <- x - knn.pred
+  PRESS <- colSums(residuals^2)
+  R2 <- sapply(seq_len(ncol(x)), function(i) {
+    y <- x[,i]
+    1 - PRESS[[i]] / sum((y - mean(y))^2)
+  })
+  R2[is.na(R2)] <- 0
+  R2
+}
