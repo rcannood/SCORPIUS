@@ -70,6 +70,7 @@ infer.trajectory <- function(space, k = 4) {
         twocent <- centers[c(i,j),]
         unit <- twocent[2,] - twocent[1,]
         unit <- unit / sqrt(sum(unit^2)) * .01
+        unit[unit == 0] <- 1
         num.pts <- ceiling(mean((twocent[2,] - twocent[1,])/unit))
         segment.pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = num.pts))
         dists <- euclidean.distance(segment.pts, space)
@@ -373,4 +374,20 @@ extract.modules <- function(x) {
 
   # return output
   modules[,c("feature", "index", "module")]
+}
+
+#' Calculate the importance of a gene
+#'
+#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
+#' @param ... parameters passed to randomForest
+#'
+#' @return
+#' @export
+#'
+#' @examples
+gene.importances <- function(x, time, ...) {
+  rf <- randomForest::randomForest(x, time, ...)
+  df <- dplyr::arrange(data.frame(gene = colnames(x), importance = rf$importance[,1]), desc(importance))
+  df
 }
