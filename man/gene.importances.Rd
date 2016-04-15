@@ -2,7 +2,7 @@
 % Please edit documentation in R/trajectory_inference.R
 \name{gene.importances}
 \alias{gene.importances}
-\title{Calculate the importance of a gene}
+\title{Calculate the importance of a feature}
 \usage{
 gene.importances(x, time, ...)
 }
@@ -13,7 +13,19 @@ gene.importances(x, time, ...)
 
 \item{...}{parameters passed to randomForest}
 }
+\value{
+a data frame containing the importance of each feature for the given time line
+}
 \description{
-Calculate the importance of a gene
+Calculate the importance of a feature
+}
+\examples{
+dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
+expression <- dataset$expression
+group.name <- dataset$sample.info$group.name
+dist <- correlation.distance(expression)
+space <- reduce.dimensionality(dist, ndim=2)
+traj <- infer.trajectory(space)
+gene.importances(expression, traj$time)
 }
 

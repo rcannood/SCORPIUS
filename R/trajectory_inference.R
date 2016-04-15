@@ -376,18 +376,27 @@ extract.modules <- function(x) {
   modules[,c("feature", "index", "module")]
 }
 
-#' Calculate the importance of a gene
+#' Calculate the importance of a feature
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
 #' @param ... parameters passed to randomForest
 #'
-#' @return
+#' @return a data frame containing the importance of each feature for the given time line
+#'
+#' @importFrom randomForest randomForest
 #' @export
 #'
 #' @examples
+#' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
+#' expression <- dataset$expression
+#' group.name <- dataset$sample.info$group.name
+#' dist <- correlation.distance(expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' traj <- infer.trajectory(space)
+#' gene.importances(expression, traj$time)
 gene.importances <- function(x, time, ...) {
   rf <- randomForest::randomForest(x, time, ...)
-  df <- dplyr::arrange(data.frame(gene = colnames(x), importance = rf$importance[,1]), desc(importance))
-  df
+  df <- data.frame(gene = colnames(x), importance = rf$importance[,1])
+  df[order(df$importance),]
 }

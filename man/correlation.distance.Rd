@@ -4,7 +4,8 @@
 \alias{correlation.distance}
 \title{Correlation distance}
 \usage{
-correlation.distance(x, y=NULL, method="spearman")
+correlation.distance(x, y = NULL, method = c("spearman", "pearson",
+  "kendall"), use = "everything")
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}

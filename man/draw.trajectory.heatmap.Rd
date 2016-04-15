@@ -9,10 +9,11 @@ draw.trajectory.heatmap(
   time,
   progression.group=NULL,
   modules=NULL,
-  show.labels.row=FALSE,
-  show.labels.col=FALSE,
-  scale.features=TRUE,
-  narrow.breaks=TRUE,
+  show.labels.row = FALSE,
+  show.labels.col = FALSE,
+  scale.features = TRUE,
+  set.min.to.min = TRUE,
+  narrow.breaks = TRUE,
   ...
 )
 }

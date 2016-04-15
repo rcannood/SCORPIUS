@@ -142,10 +142,11 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #'   time,
 #'   progression.group=NULL,
 #'   modules=NULL,
-#'   show.labels.row=FALSE,
-#'   show.labels.col=FALSE,
-#'   scale.features=TRUE,
-#'   narrow.breaks=TRUE,
+#'   show.labels.row = FALSE,
+#'   show.labels.col = FALSE,
+#'   scale.features = TRUE,
+#'   set.min.to.min = TRUE,
+#'   narrow.breaks = TRUE,
 #'   ...
 #' )
 #'
@@ -194,7 +195,7 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(smooth.tafs)
 #' draw.trajectory.heatmap(expr.tafs, time, progression.group=groups, modules=modules)
-draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, set.min.to.min = FALSE, narrow.breaks=TRUE, ...) {
+draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, set.min.to.min = TRUE, narrow.breaks=TRUE, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")

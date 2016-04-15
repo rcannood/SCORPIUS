@@ -51,9 +51,6 @@ euclidean.distance <- function (x, y=NULL) {
 #'
 #' @description \code{correlation.distance} calculates the (pairwise) correlation distances between one or two sets of samples.
 #'
-#' @usage
-#' correlation.distance(x, y=NULL, method="spearman")
-#'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param y \code{NULL} (default) or a numeric matrix or data frame with \emph{N} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param method A character string indicating which correlation coefficient (or covariance) is to be computed. One of \code{"pearson"}, \code{"kendall"}, or \code{"spearman"}.
@@ -72,7 +69,7 @@ euclidean.distance <- function (x, y=NULL) {
 #' ## Compare with the standard correlation function
 #' dist2 <- cor(t(x), t(y), method="spearman")
 #' plot(dist, dist2)
-correlation.distance <- function(x, y=NULL, method="spearman", use = "everything") {
+correlation.distance <- function(x, y = NULL, method = c("spearman", "pearson", "kendall"), use = "everything") {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
