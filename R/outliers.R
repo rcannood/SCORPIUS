@@ -125,6 +125,8 @@ outlier.filter <- function(dist) {
 
 #' @title Unsupervised feature importance
 #'
+#' @description Calculates an unsupervised feature importance for each of the columns in \code{x}.
+#'
 #' @param dist A numeric matrix, data frame or "\code{dist}" object.
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param k The maximum number of nearest neighbours to search.

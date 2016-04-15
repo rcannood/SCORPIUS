@@ -17,7 +17,7 @@ gene.importances(x, time, ...)
 a data frame containing the importance of each feature for the given time line
 }
 \description{
-Calculate the importance of a feature
+Calculates the feature importance of each column in \code{x} in trying to predict the time ordering.
 }
 \examples{
 dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)

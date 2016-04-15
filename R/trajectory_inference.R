@@ -376,7 +376,9 @@ extract.modules <- function(x) {
   modules[,c("feature", "index", "module")]
 }
 
-#' Calculate the importance of a feature
+#' @title Calculate the importance of a feature
+#'
+#' @description Calculates the feature importance of each column in \code{x} in trying to predict the time ordering.
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.

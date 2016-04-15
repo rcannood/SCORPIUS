@@ -16,6 +16,9 @@ calculate.R2(dist, x, k = ceiling(nrow(x)/10))
 \value{
 R2 values of how well KNN predictions of \code{x} match the original values in \code{x}.
 }
+\description{
+Calculates an unsupervised feature importance for each of the columns in \code{x}.
+}
 \examples{
 dataset <- generate.dataset(type="poly", num.genes=500, num.samples=200, num.groups=4)
 dist <- correlation.distance(dataset$expression)
