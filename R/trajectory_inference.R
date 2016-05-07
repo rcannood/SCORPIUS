@@ -400,5 +400,5 @@ extract.modules <- function(x) {
 gene.importances <- function(x, time, ...) {
   rf <- randomForest::randomForest(x, time, ...)
   df <- data.frame(gene = colnames(x), importance = rf$importance[,1])
-  df[order(df$importance),]
+  df[order(df$importance, decreasing = T),]
 }
