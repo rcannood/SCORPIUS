@@ -128,14 +128,14 @@ rescale.and.center <- function(x, center=0, max.range=1) {
 #'
 #' ## Show ranges of each column
 #' apply(x.scaled, 2, range)
-quantile.scale <- function(x) {
+quant.scale <- function(x) {
   gene.min <- apply(x, 2, quantile, .05, na.rm = T)
   gene.max <- apply(x, 2, quantile, .95, na.rm = T)
 
   center <- gene.min
   scale <- gene.max - gene.min
 
-  apply.quantile.scale(x, center, scale)
+  apply.quant.scale(x, center, scale)
 }
 
 #' Applying a quantile scale
@@ -146,7 +146,7 @@ quantile.scale <- function(x) {
 #'
 #' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
 #' @export
-apply.quantile.scale <- function(x, center, scale) {
+apply.quant.scale <- function(x, center, scale) {
   y <- t(apply(x, 1, function(x) (x - gene.min) / scale))
   y[y > 1] <- 1
   y[y < 0] <- 0
