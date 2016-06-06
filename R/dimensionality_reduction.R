@@ -51,7 +51,7 @@ reduce.dimensionality <- function(dist, ndim=3, rescale=TRUE) {
 #' @param center The new center point of the data.
 #' @param max.range The maximum range of each column.
 #'
-#' @return The centered, scaled matrix. ZThe numeric centering and scalings used are returned as attributes.
+#' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
 #'
 #' @export
 #'
@@ -105,4 +105,52 @@ rescale.and.center <- function(x, center=0, max.range=1) {
 
   # return output
   x
+}
+
+#' Calculating and applying a quantile scale
+#'
+#' @param x A numeric matrix or data frame.
+#'
+#' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
+#'
+#' @export
+#'
+#' @examples
+#' ## Generate a matrix from a normal distribution
+#' ## with a large standard deviation, centered at c(5, 5)
+#' x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
+#'
+#' ## Center the dataset at c(0, 0) with a minimum of c(-.5, -.5) and a maximum of c(.5, .5)
+#' x.scaled <- quantile.scale(x)
+#'
+#' ## Plot rescaled data
+#' plot(x.scaled)
+#'
+#' ## Show ranges of each column
+#' apply(x.scaled, 2, range)
+quantile.scale <- function(x) {
+  gene.min <- apply(x, 2, quantile, .05, na.rm = T)
+  gene.max <- apply(x, 2, quantile, .95, na.rm = T)
+
+  center <- gene.min
+  scale <- gene.max - gene.min
+
+  apply.quantile.scale(x, center, scale)
+}
+
+#' Applying a quantile scale
+#'
+#' @param x A numeric matrix or data frame.
+#' @param center A centering vector for each column
+#' @param scale A scaling vector for each column
+#'
+#' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
+#' @export
+apply.quantile.scale <- function(x, center, scale) {
+  y <- t(apply(x, 1, function(x) (x - gene.min) / scale))
+  y[y > 1] <- 1
+  y[y < 0] <- 0
+  attr(y, "center") <- center
+  attr(y, "scale") <- scale
+  y
 }
