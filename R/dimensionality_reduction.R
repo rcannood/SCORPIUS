@@ -147,7 +147,7 @@ quant.scale <- function(x) {
 #' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
 #' @export
 apply.quant.scale <- function(x, center, scale) {
-  y <- t(apply(x, 1, function(x) (x - gene.min) / scale))
+  y <- t(apply(x, 1, function(x) (x - center) / scale))
   y[y > 1] <- 1
   y[y < 0] <- 0
   attr(y, "center") <- center
