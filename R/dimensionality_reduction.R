@@ -121,7 +121,7 @@ rescale.and.center <- function(x, center=0, max.range=1) {
 #' x <- matrix(rnorm(200*2, sd = 10, mean = 5), ncol=2)
 #'
 #' ## Center the dataset at c(0, 0) with a minimum of c(-.5, -.5) and a maximum of c(.5, .5)
-#' x.scaled <- quantile.scale(x)
+#' x.scaled <- quant.scale(x)
 #'
 #' ## Plot rescaled data
 #' plot(x.scaled)
