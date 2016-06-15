@@ -12,8 +12,6 @@ draw.trajectory.heatmap(
   show.labels.row = FALSE,
   show.labels.col = FALSE,
   scale.features = TRUE,
-  set.min.to.min = TRUE,
-  narrow.breaks = TRUE,
   ...
 )
 }
@@ -31,10 +29,6 @@ draw.trajectory.heatmap(
 \item{show.labels.col}{\code{TRUE} if the labels of the cols are to be plotted (default \code{FALSE}).}
 
 \item{scale.features}{\code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).}
-
-\item{set.min.to.min}{When \code{scale.features} and \code{set.min.to.min} are both \code{TRUE}, zero values in x are displayed with the most negative break value.}
-
-\item{narrow.breaks}{\code{TRUE} if the breaks of the heatmap is to be adjust to allow a better visualisation (default \code{TRUE}).}
 
 \item{...}{Optional arguments to \code{\link[pheatmap]{pheatmap}}}
 }

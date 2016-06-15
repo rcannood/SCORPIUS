@@ -4,10 +4,12 @@
 \alias{quant.scale}
 \title{Calculating and applying a quantile scale}
 \usage{
-quant.scale(x)
+quant.scale(x, outlier.cutoff = 0.05)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame.}
+
+\item{outlier.cutoff}{The quantile cutoff for outliers (default 0.05).}
 }
 \value{
 The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.

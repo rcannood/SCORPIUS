@@ -164,9 +164,10 @@ reverse.trajectory <- function(trajectory) {
   trajectory
 }
 
-#' @title Find trajectory-aligned features
+#' @title [DEPRECATED] Find trajectory-aligned features
 #'
-#' @description \code{find.trajectory.aligned.features} searches for features whose values . It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
+#' @description \code{find.trajectory.aligned.features} searches for features whose values are smooth with respect to the model. It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
+#' This function is deprecated and will be removed from SCORPIUS soon! Use \code{\link{gene.importances}} instead!
 #'
 #' @usage
 #' find.trajectory.aligned.features(
@@ -315,8 +316,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #'
 #' @export
 #'
-#' @importFrom dynamicTreeCut cutreeDynamic
-#' @importFrom WGCNA mergeCloseModules
+#' @importFrom mclust Mclust
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
@@ -344,24 +344,20 @@ extract.modules <- function(x) {
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
 
-  requireNamespace("dynamicTreeCut")
-  requireNamespace("WGCNA")
+  requireNamespace("mclust")
   requireNamespace("dplyr")
 
   feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
 
-  # calculate the correlation distance between features
-  dist <- correlation.distance(t(x))
+  # sigh.. mclust doesn't do well with requireNamespace
+  mclustBIC <- mclust::mclustBIC
+
+  # cluster with mclust
+  labels <- mclust::Mclust(t(x))$classification
 
   # hierarchically cluster the features
+  dist <- correlation.distance(t(x))
   hcl <- hclust(as.dist(dist), method="average")
-
-  # perform adaptive branch pruning
-  labels <- dynamicTreeCut::cutreeDynamic(hcl, distM=dist, cutHeight = 0.8, deepSplit=1, pamRespectsDendro = F, method="hybrid", verbose=0)
-
-  # merge close modules
-  labels <- WGCNA::mergeCloseModules(x, labels, cutHeight = 0.3, verbose=0)$colors
-  labels <- match(labels, unique(labels))
 
   # order features within one module according to a dimensionality reduction of the correlation distance
   modules <- dplyr::bind_rows(lapply(unique(labels), function(l) {

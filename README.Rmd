@@ -62,7 +62,7 @@ To get started, read the introductory example below, or read one of the vignette
 ## Introductory example
 
 ```{r, echo=F}
-set.seed(4)
+set.seed(6)
 ```
 
 This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the vignettes listed below.
@@ -94,7 +94,7 @@ group.name <- group.name[filt]
 dist <- dist[filt, filt]
 
 # reduce dimensionality
-space <- reduce.dimensionality(dist, ndim=2)
+space <- reduce.dimensionality(dist)
 draw.trajectory.plot(space, group.name)
 ```
 
@@ -106,14 +106,24 @@ draw.trajectory.plot(space, group.name, traj$final.path)
 ```
 
 
-Finally, to identify and visualise candidate marker genes, execute the following code:
+To identify and visualise candidate marker genes, execute the following code:
 ```{r find tafs, message=F}
-tafs <- find.trajectory.aligned.features(expression, traj$time, verbose=F)
-expr.tafs <- tafs$smooth.x[,tafs$tafs]
-modules <- extract.modules(expr.tafs)
-draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+gimp <- gene.importances(expression, traj$time)
+gene.sel <- gimp$gene[1:50]
+expr.sel <- quant.scale(expression[,gene.sel])
+modules <- extract.modules(expr.sel)
+
+# data is already quantile scaled
+draw.trajectory.heatmap(expr.sel, traj$time, group.name, modules, scale.features = F)
 ```
 
+By executing the trajectory inference step once more, on the scaled expression data of the selected genes
+(keep the number of genes limited!), the trajectory can be further refined.
+```{r rerun inference, message=F}
+traj.sel <- infer.trajectory(expr.sel)
+
+draw.trajectory.heatmap(expr.sel, traj.sel$time, group.name, modules, scale.features = F)
+```
 
 ## Related approaches
 

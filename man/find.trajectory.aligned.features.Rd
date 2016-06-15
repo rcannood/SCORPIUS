@@ -2,7 +2,7 @@
 % Please edit documentation in R/trajectory_inference.R
 \name{find.trajectory.aligned.features}
 \alias{find.trajectory.aligned.features}
-\title{Find trajectory-aligned features}
+\title{[DEPRECATED] Find trajectory-aligned features}
 \usage{
 find.trajectory.aligned.features(
   x,
@@ -37,7 +37,8 @@ Returns a list, containing the following items: \itemize{
 }
 }
 \description{
-\code{find.trajectory.aligned.features} searches for features whose values . It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
+\code{find.trajectory.aligned.features} searches for features whose values are smooth with respect to the model. It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
+This function is deprecated and will be removed from SCORPIUS soon! Use \code{\link{gene.importances}} instead!
 }
 \examples{
 ## Generate a dataset and visualise

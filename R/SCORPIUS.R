@@ -13,7 +13,7 @@
 #' \code{\link{reduce.dimensionality}}, \code{\link{rescale.and.center}}
 #'
 #' @section Trajectory Inference functions:
-#' \code{\link{infer.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{find.trajectory.aligned.features}}, \code{\link{extract.modules}}
+#' \code{\link{infer.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{gene.importances}}, \code{\link{extract.modules}}
 #'
 #' @section Visualisation functions:
 #' \code{\link{draw.trajectory.plot}}, \code{\link{draw.trajectory.heatmap}}

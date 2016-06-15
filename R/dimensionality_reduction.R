@@ -110,6 +110,7 @@ rescale.and.center <- function(x, center=0, max.range=1) {
 #' Calculating and applying a quantile scale
 #'
 #' @param x A numeric matrix or data frame.
+#' @param outlier.cutoff The quantile cutoff for outliers (default 0.05).
 #'
 #' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
 #'
@@ -128,9 +129,9 @@ rescale.and.center <- function(x, center=0, max.range=1) {
 #'
 #' ## Show ranges of each column
 #' apply(x.scaled, 2, range)
-quant.scale <- function(x) {
-  gene.min <- apply(x, 2, quantile, .05, na.rm = T)
-  gene.max <- apply(x, 2, quantile, .95, na.rm = T)
+quant.scale <- function(x, outlier.cutoff = .05) {
+  gene.min <- apply(x, 2, quantile, outlier.cutoff, na.rm = T)
+  gene.max <- apply(x, 2, quantile, 1 - outlier.cutoff, na.rm = T)
 
   center <- gene.min
   scale <- gene.max - gene.min

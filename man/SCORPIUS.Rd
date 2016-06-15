@@ -26,7 +26,7 @@ such as cellular development or progression over time.
 
 \section{Trajectory Inference functions}{
 
-\code{\link{infer.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{find.trajectory.aligned.features}}, \code{\link{extract.modules}}
+\code{\link{infer.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{gene.importances}}, \code{\link{extract.modules}}
 }
 
 \section{Visualisation functions}{

@@ -145,8 +145,6 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #'   show.labels.row = FALSE,
 #'   show.labels.col = FALSE,
 #'   scale.features = TRUE,
-#'   set.min.to.min = TRUE,
-#'   narrow.breaks = TRUE,
 #'   ...
 #' )
 #'
@@ -157,8 +155,6 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' @param show.labels.row \code{TRUE} if the labels of the rows are to be plotted (default \code{FALSE}).
 #' @param show.labels.col \code{TRUE} if the labels of the cols are to be plotted (default \code{FALSE}).
 #' @param scale.features \code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).
-#' @param set.min.to.min When \code{scale.features} and \code{set.min.to.min} are both \code{TRUE}, zero values in x are displayed with the most negative break value.
-#' @param narrow.breaks \code{TRUE} if the breaks of the heatmap is to be adjust to allow a better visualisation (default \code{TRUE}).
 #' @param ... Optional arguments to \code{\link[pheatmap]{pheatmap}}
 #'
 #' @return The output of the \code{\link[pheatmap]{pheatmap}} function.
@@ -195,7 +191,7 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(smooth.tafs)
 #' draw.trajectory.heatmap(expr.tafs, time, progression.group=groups, modules=modules)
-draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, set.min.to.min = TRUE, narrow.breaks=TRUE, ...) {
+draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -212,11 +208,8 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
   col.ann <- data.frame(row.names = rownames(x), Time=time)
 
   x.part <- x[order(time),,drop=FALSE]
-  if (set.min.to.min) {
-    zeroed <- x.part == min(x.part)
-  }
   if (scale.features) {
-    x.part <- scale(x.part)
+    x.part <- quant.scale(x.part)
   }
   x.part <- t(x.part)
 
@@ -245,24 +238,6 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
   labels_row <- if (!show.labels.row) rep("", nrow(x.part)) else NULL
   labels_col <- if (!show.labels.col) rep("", ncol(x.part)) else NULL
 
-  if (narrow.breaks) {
-    if (scale.features) {
-      break.cutoff.max <- quantile(abs(x.part), .9)
-      break.cutoff.min <- -break.cutoff.max
-    } else {
-      break.cutoff.min <- quantile(x.part[x.part!=min(x.part)], .1)
-      break.cutoff.max <- quantile(x.part[x.part!=max(x.part)], .9)
-    }
-    breaks <- c(min(x.part)-0.01*abs(min(x.part)), seq(break.cutoff.min, break.cutoff.max, length.out=99), max(x.part)+0.01*abs(max(x.part)))
-  } else {
-    breaks <- NA
-  }
-  if (set.min.to.min) {
-    x.part <- t(x.part)
-    x.part[zeroed] <- min(breaks)
-    x.part <- t(x.part)
-  }
-
   if (!is.null(modules)) {
     x.part <- x.part[modules$index,]
     gaps_row <- which(modules$module[-1] != modules$module[-length(modules$module)])
@@ -279,7 +254,6 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
     annotation_col = col.ann,
     annotation_colors = ann.col,
     gaps_row = gaps_row,
-    breaks = breaks,
     labels_row = labels_row,
     labels_col = labels_col,
     ...
