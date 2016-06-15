@@ -27,6 +27,7 @@ Imports:
     reshape2,
     splines,
     WGCNA,
+    mclust,
     randomForest
 License: GPL-3
 URL: http://github.com/rcannood/SCORPIUS
