@@ -151,12 +151,12 @@ SCORPIUS infers a trajectory through several intermediate steps, which are all e
 traj <- infer.trajectory(space)
 ```
 
-The result is a list containing the final trajectory `final.path` and the inferred timeline for each sample `time`.
+The result is a list containing the final trajectory `path` and the inferred timeline for each sample `time`.
 
 The trajectory can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
 
 ``` r
-draw.trajectory.plot(space, progression.group = group.name, path = traj$final.path)
+draw.trajectory.plot(space, progression.group = group.name, path = path$path)
 ```
 
 ![](ginhoux_files/figure-markdown_github/unnamed-chunk-14-1.png)

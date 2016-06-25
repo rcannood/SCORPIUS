@@ -102,7 +102,7 @@ draw.trajectory.plot(space, group.name)
 To infer and visualise a trajectory through these cells, run:
 ```{r infer trajectory}
 traj <- infer.trajectory(space)
-draw.trajectory.plot(space, group.name, traj$final.path)
+draw.trajectory.plot(space, group.name, traj$path)
 ```
 
 

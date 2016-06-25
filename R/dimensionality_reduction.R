@@ -25,7 +25,7 @@
 #'
 #' ## Visualise the dataset
 #' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
-reduce.dimensionality <- function(dist, ndim=3, rescale=TRUE) {
+reduce.dimensionality <- function(dist, ndim = 3, rescale = TRUE) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
@@ -68,7 +68,7 @@ reduce.dimensionality <- function(dist, ndim=3, rescale=TRUE) {
 #'
 #' ## Show ranges of each column
 #' apply(x.scaled, 2, range)
-rescale.and.center <- function(x, center=0, max.range=1) {
+rescale.and.center <- function(x, center = 0, max.range = 1) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")

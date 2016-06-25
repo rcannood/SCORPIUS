@@ -31,7 +31,7 @@
 #' traj <- infer.trajectory(space)
 #'
 #' ## Visualise
-#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
 generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, num.genes=500, num.groups=4) {
   # make names for each group, gene and sample
   group.names <- paste0("Group ", seq_len(num.groups))
@@ -108,5 +108,5 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
 #' traj <- infer.trajectory(space)
 #'
 #' ## Visualise
-#' draw.trajectory.plot(space, path=traj$final.path, progression.group=ginhoux$sample.info$group.name)
+#' draw.trajectory.plot(space, path=traj$path, progression.group=ginhoux$sample.info$group.name)
 "ginhoux"

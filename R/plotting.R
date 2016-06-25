@@ -41,8 +41,8 @@
 #'
 #' ## Infer a trajectory and plot it
 #' traj <- infer.trajectory(space)
-#' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path)
-#' draw.trajectory.plot(space, progression.group=groups, path=traj$final.path, contour=TRUE)
+#' draw.trajectory.plot(space, progression.group=groups, path=traj$path)
+#' draw.trajectory.plot(space, progression.group=groups, path=traj$path, contour=TRUE)
 draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, contour=FALSE) {
   # input checks
   if (!is.matrix(space) && !is.data.frame(space))

@@ -24,11 +24,11 @@ space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space)
 
 ## Visualise the trajectory
-draw.trajectory.plot(space, group.name, path=traj$final.path)
+draw.trajectory.plot(space, group.name, path=traj$path)
 
 ## Reverse the trajectory
 reverse.traj <- reverse.trajectory(traj)
-draw.trajectory.plot(space, group.name, path=reverse.traj$final.path)
+draw.trajectory.plot(space, group.name, path=reverse.traj$path)
 
 ## It's the same but reversed?!
 plot(traj$time, reverse.traj$time, type="l")

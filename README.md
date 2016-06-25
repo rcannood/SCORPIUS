@@ -89,7 +89,7 @@ To infer and visualise a trajectory through these cells, run:
 
 ``` r
 traj <- infer.trajectory(space)
-draw.trajectory.plot(space, group.name, traj$final.path)
+draw.trajectory.plot(space, group.name, traj$path)
 ```
 
 ![](README_files/figure-markdown_github/infer%20trajectory-1.png)

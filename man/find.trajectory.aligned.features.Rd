@@ -48,7 +48,7 @@ group.name <- dataset$sample.info$group.name
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space)
-draw.trajectory.plot(space, group.name, path=traj$final.path)
+draw.trajectory.plot(space, group.name, path=traj$path)
 
 ## Show which genes are most trajectory aligned
 tafs <- find.trajectory.aligned.features(expression, traj$time)

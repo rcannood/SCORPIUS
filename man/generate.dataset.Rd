@@ -36,7 +36,7 @@ space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space)
 
 ## Visualise
-draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
 }
 \seealso{
 \code{\link{correlation.distance}}, \code{\link{reduce.dimensionality}}, \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.plot}}

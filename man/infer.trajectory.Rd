@@ -14,9 +14,7 @@ infer.trajectory(space, k)
 \value{
 A list containing several objects:
 \itemize{
-  \item \code{clustering}: the initial \emph{k}-means clustering.
-  \item \code{initial.path}: the initial shortest path through the different cluster centers.
-  \item \code{final.path}: the final trajectory obtained by principal curves.
+  \item \code{path}: the trajectory obtained by principal curves.
   \item \code{time}: the time point of each sample along the inferred trajectory.
 }
 }
@@ -40,7 +38,7 @@ draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
 traj <- infer.trajectory(space)
 
 ## Visualise the trajectory
-draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
+draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
 }
 \seealso{
 \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}

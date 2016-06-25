@@ -1,51 +1,36 @@
-
-#' @title Infer linear trajectory through space
+#' @title Infer an initial trajectory through space
 #'
-#' @description \code{infer.trajectory} infers a trajectory through samples in a given space in a four-step process:
-#' \enumerate{
-#'   \item Perform \emph{k}-means clustering
-#'   \item Calculate distance matrix between cluster centers using a custom distance function
-#'   \item Find the shortest path connecting all cluster centers using the custom distance matrix
-#'   \item Iteratively fit a curve to the given data using principal curves
-#' }
+#' @description \code{infer.initial.trajectory} infers an initial trajectory for
+#' \code{\link{infer.trajectory}} by clustering the points and calculating
+#' the shortest path through cluster centers. The shortest path takes into account
+#' the euclidean distance between cluster centers, and the density between those two
+#' points.
 #'
 #' @usage
-#' infer.trajectory(space, k)
+#' infer.initial.trajectory(space, k)
 #'
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
 #'
-#' @return A list containing several objects:
-#' \itemize{
-#'   \item \code{clustering}: the initial \emph{k}-means clustering.
-#'   \item \code{initial.path}: the initial shortest path through the different cluster centers.
-#'   \item \code{final.path}: the final trajectory obtained by principal curves.
-#'   \item \code{time}: the time point of each sample along the inferred trajectory.
-#' }
-#'
-#' @seealso \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#' @return the initial trajectory obtained by this method
 #'
 #' @export
 #'
-#' @importFrom princurve principal.curve
-#' @importFrom dplyr percent_rank
 #' @importFrom GA ga
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
-#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' dataset <- generate.dataset(type = "poly", num.genes = 500, num.samples = 1000, num.groups = 4)
 #' dist <- correlation.distance(dataset$expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
+#' space <- reduce.dimensionality(dist, ndim = 2)
+#' draw.trajectory.plot(space, progression.group = dataset$sample.info$group.name)
 #'
 #' ## Infer a trajectory through this space
-#' traj <- infer.trajectory(space)
+#' init.traj <- infer.initial.trajectory(space, k = 4)
 #'
 #' ## Visualise the trajectory
-#' draw.trajectory.plot(space, path=traj$final.path, progression.group=dataset$sample.info$group.name)
-infer.trajectory <- function(space, k = 4) {
-  requireNamespace("princurve")
-  requireNamespace("dplyr")
+#' draw.trajectory.plot(space, path = init.traj, progression.group = dataset$sample.info$group.name)
+infer.initial.trajectory <- function(space, k) {
   requireNamespace("GA")
 
   # input checks
@@ -103,22 +88,83 @@ infer.trajectory <- function(space, k = 4) {
   }
 
   # use this ordering as the initial curve
-  initial.path <- centers[best.ord,,drop=F]
+  init.traj <- centers[best.ord,,drop=F]
+
+  init.traj
+}
+
+
+#' @title Infer linear trajectory through space
+#'
+#' @description \code{infer.trajectory} infers a trajectory through samples in a given space in a four-step process:
+#' \enumerate{
+#'   \item Perform \emph{k}-means clustering
+#'   \item Calculate distance matrix between cluster centers using a custom distance function
+#'   \item Find the shortest path connecting all cluster centers using the custom distance matrix
+#'   \item Iteratively fit a curve to the given data using principal curves
+#' }
+#'
+#' @usage
+#' infer.trajectory(space, k)
+#'
+#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param k The number of clusters to cluster the data into.
+#'
+#' @return A list containing several objects:
+#' \itemize{
+#'   \item \code{path}: the trajectory obtained by principal curves.
+#'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#' }
+#'
+#' @seealso \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#'
+#' @export
+#'
+#' @importFrom princurve principal.curve
+#'
+#' @examples
+#' ## Generate an example dataset and visualise it
+#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' dist <- correlation.distance(dataset$expression)
+#' space <- reduce.dimensionality(dist, ndim=2)
+#' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
+#'
+#' ## Infer a trajectory through this space
+#' traj <- infer.trajectory(space)
+#'
+#' ## Visualise the trajectory
+#' draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
+infer.trajectory <- function(space, k = 4) {
+  requireNamespace("princurve")
+
+  # input checks
+  if (!is.matrix(space) && !is.data.frame(space))
+    stop(sQuote("space"), " must be a numeric matrix or data frame")
+
+  if (!is.null(k)) {
+    # use a clustering and shortest path based approach to define an intiial trajectory
+    init.traj <- infer.initial.trajectory(space, k)
+  } else {
+    init.traj <- NULL
+  }
 
   # iteratively improve this curve using principal.curve
-  fit <- princurve::principal.curve(space, start=initial.path, plot.true=F, trace=F, stretch = 0)
+  fit <- princurve::principal.curve(space, start = init.traj, plot.true = F, trace = F, stretch = 0)
 
   # construct final trajectory
-  final.path <- fit$s[fit$tag,,drop=F]
-  colnames(final.path) <- paste0("Comp", seq_len(ncol(final.path)))
-  rownames(final.path) <- NULL
+  path <- fit$s[fit$tag,,drop=F]
+  dimnames(path) <- list(NULL, paste0("Comp", seq_len(ncol(path))))
 
   # construct timeline values
-  time <- dplyr::percent_rank(order(fit$tag))
+  time <- fit$lambda
+  time <- (time - min(time)) / (max(time) - min(time))
   names(time) <- rownames(space)
 
   # output result
-  trajectory <- list(clustering=kmeans.clust, initial.path=initial.path, final.path=final.path, time=time)
+  trajectory <- list(
+    path = path,
+    time = time
+  )
   class(trajectory) <- "SCORPIUS::trajectory"
   trajectory
 }
@@ -147,20 +193,19 @@ infer.trajectory <- function(space, k = 4) {
 #' traj <- infer.trajectory(space)
 #'
 #' ## Visualise the trajectory
-#' draw.trajectory.plot(space, group.name, path=traj$final.path)
+#' draw.trajectory.plot(space, group.name, path=traj$path)
 #'
 #' ## Reverse the trajectory
 #' reverse.traj <- reverse.trajectory(traj)
-#' draw.trajectory.plot(space, group.name, path=reverse.traj$final.path)
+#' draw.trajectory.plot(space, group.name, path=reverse.traj$path)
 #'
 #' ## It's the same but reversed?!
 #' plot(traj$time, reverse.traj$time, type="l")
 reverse.trajectory <- function(trajectory) {
-  if (class(trajectory) != "SCORPIUS::trajectory" && c("clustering", "initial.path", "final.path", "time") %in% names(trajectory))
+  if (class(trajectory) != "SCORPIUS::trajectory" && c("path", "time") %in% names(trajectory))
     stop(sQuote("trajectory"), " needs to be an object returned by infer.trajectory")
   trajectory$time <- 1-trajectory$time
-  trajectory$final.path <- trajectory$final.path[rev(seq_len(nrow(trajectory$final.path))),,drop=F]
-  trajectory$initial.path <- trajectory$initial.path[rev(seq_len(nrow(trajectory$initial.path))),,drop=F]
+  trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=F]
   trajectory
 }
 
@@ -210,7 +255,7 @@ reverse.trajectory <- function(trajectory) {
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space)
-#' draw.trajectory.plot(space, group.name, path=traj$final.path)
+#' draw.trajectory.plot(space, group.name, path=traj$path)
 #'
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
@@ -328,7 +373,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space)
 #' time <- traj$time
-#' draw.trajectory.plot(space, path=traj$final.path, group.name)
+#' draw.trajectory.plot(space, path=traj$path, group.name)
 #'
 #' ## Show which genes are most trajectory aligned
 #' tafs <- find.trajectory.aligned.features(expression, traj$time)
