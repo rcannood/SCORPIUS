@@ -135,6 +135,7 @@ quant.scale <- function(x, outlier.cutoff = .05) {
 
   center <- gene.min
   scale <- gene.max - gene.min
+  scale[scale == 0] <- 1
 
   apply.quant.scale(x, center, scale)
 }
