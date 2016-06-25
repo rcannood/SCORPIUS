@@ -14,7 +14,6 @@ Depends:
 Imports:
     class,
     dplyr,
-    dynamicTreeCut,
     fitdistrplus,
     GA,
     ggplot2 (>= 2.0),
@@ -26,7 +25,6 @@ Imports:
     RColorBrewer,
     reshape2,
     splines,
-    WGCNA,
     mclust,
     randomForest
 License: GPL-3

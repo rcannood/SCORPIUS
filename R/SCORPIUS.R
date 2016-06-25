@@ -10,10 +10,10 @@
 #' \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{knn}}
 #'
 #' @section Dimensionality Reduction functions:
-#' \code{\link{reduce.dimensionality}}, \code{\link{rescale.and.center}}
+#' \code{\link{reduce.dimensionality}}, \code{\link{rescale.and.center}}, \code{\link{quant.scale}}
 #'
 #' @section Trajectory Inference functions:
-#' \code{\link{infer.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{gene.importances}}, \code{\link{extract.modules}}
+#' \code{\link{infer.trajectory}}, \code{\link{infer.initial.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{gene.importances}}, \code{\link{extract.modules}}
 #'
 #' @section Visualisation functions:
 #' \code{\link{draw.trajectory.plot}}, \code{\link{draw.trajectory.heatmap}}
