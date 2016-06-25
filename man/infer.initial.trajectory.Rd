@@ -29,7 +29,7 @@ space <- reduce.dimensionality(dist, ndim = 2)
 draw.trajectory.plot(space, progression.group = dataset$sample.info$group.name)
 
 ## Infer a trajectory through this space
-init.traj <- infer.initial.trajectory(space)
+init.traj <- infer.initial.trajectory(space, k = 4)
 
 ## Visualise the trajectory
 draw.trajectory.plot(space, path = init.traj, progression.group = dataset$sample.info$group.name)

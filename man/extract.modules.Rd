@@ -13,7 +13,7 @@ extract.modules(x)
 A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
 }
 \description{
-\code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{find.trajectory.aligned.features}}.
+\code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{gene.importances}}.
 }
 \examples{
 ## Generate a dataset and visualise
@@ -26,17 +26,16 @@ traj <- infer.trajectory(space)
 time <- traj$time
 draw.trajectory.plot(space, path=traj$path, group.name)
 
-## Show which genes are most trajectory aligned
-tafs <- find.trajectory.aligned.features(expression, traj$time)
-expr.tafs <- expression[,tafs$tafs]
-smooth.tafs <- tafs$smooth.x[,tafs$tafs]
+## Select most important genes
+gimp <- gene.importances(expression, traj$time)
+gene.sel <- gimp[1:50,]
+expr.sel <- expression[,gene.sel$gene]
 
 ## Group the genes into modules and visualise the modules in a heatmap
-modules <- extract.modules(smooth.tafs)
-draw.trajectory.heatmap(expr.tafs, time, group.name, modules)
-draw.trajectory.heatmap(smooth.tafs, time, group.name, modules)
+modules <- extract.modules(quant.scale(expr.sel))
+draw.trajectory.heatmap(expr.sel, time, group.name, modules)
 }
 \seealso{
-\code{\link{find.trajectory.aligned.features}}
+\code{\link{gene.importances}}
 }
 

@@ -209,146 +209,9 @@ reverse.trajectory <- function(trajectory) {
   trajectory
 }
 
-#' @title [DEPRECATED] Find trajectory-aligned features
-#'
-#' @description \code{find.trajectory.aligned.features} searches for features whose values are smooth with respect to the model. It evaluates how well splines are able model the values of a given feature over the timeline of a trajectory.
-#' This function is deprecated and will be removed from SCORPIUS soon! Use \code{\link{gene.importances}} instead!
-#'
-#' @usage
-#' find.trajectory.aligned.features(
-#'   x,
-#'   time,
-#'   p.adjust.method = "BH",
-#'   q.value.cutoff = 1e-10,
-#'   df = 8,
-#'   parallel = F,
-#'   verbose = T
-#' )
-#'
-#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
-#' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
-#' @param p.adjust.method The correction method used by \code{\link[stats]{p.adjust}}.
-#' @param q.value.cutoff The cutoff used on the q-values.
-#' @param df The degree of freedom used by \code{\link[splines]{ns}}.
-#' @param parallel Must be \code{FALSE} (default), \code{TRUE} (will auto-detect number of cores), or a numeric value specifying the number of cores to use.
-#' @param verbose Print progress if \code{parallel} is \code{FALSE} and \code{verbose} is \code{TRUE}.
-#'
-#' @return Returns a list, containing the following items: \itemize{
-#'   \item \code{tafs}: the names or indices of all trajectory-aligned features (q-value < \code{q.value.cutoff}),
-#'   \item \code{p.values}: a data frame containing an adjusted p-value for each feature,
-#'   \item \code{smooth.x}: the input matrix \code{x} smoothed by splines.
-#' }
-#'
-#' @seealso \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.heatmap}}
-#'
-#' @export
-#'
-#' @importFrom splines ns
-#' @importFrom pbapply pblapply
-#' @importFrom parallel mclapply detectCores
-#'
-#' @examples
-#' ## Generate a dataset and visualise
-#' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
-#' expression <- dataset$expression
-#' group.name <- dataset$sample.info$group.name
-#' dist <- correlation.distance(expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space)
-#' draw.trajectory.plot(space, group.name, path=traj$path)
-#'
-#' ## Show which genes are most trajectory aligned
-#' tafs <- find.trajectory.aligned.features(expression, traj$time)
-#' head(tafs$p.values, 10)
-#'
-#' ## Visualise the expression of these genes in a heatmap
-#' expr.tafs <- expression[,tafs$tafs]
-#' draw.trajectory.heatmap(expr.tafs, traj$time, group.name)
-find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.value.cutoff=1e-10, df=8, parallel=F, verbose=T) {
-  # input checks
-  if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if (!is.vector(time) || !is.numeric(time))
-    stop(sQuote("time"), " must be a numeric vector")
-  if (nrow(x) != length(time))
-    stop(sQuote("time"), " must have one value for each row in ", sQuote("x"))
-  if (!p.adjust.method %in% p.adjust.methods)
-    stop(sQuote("p.adjust.method"), " must be one of: ", paste(p.adjust.methods, collapse=", "))
-  if (!is.numeric(q.value.cutoff))
-    stop(sQuote("q.value.cutoff"), " needs to be a numerical")
-  if (!is.finite(df) || df < 1)
-    stop(sQuote("df"), " needs to be a numerical and larger than 0")
-
-  requireNamespace("splines")
-  requireNamespace("pbapply")
-  requireNamespace("parallel")
-
-  # if 'parallel' is a number, use this as the number of cores
-  # if 'parallel' is not a number nor a logical, throw an exception
-  # if 'parallel' is TRUE, automatically detect the number of cores
-  # if 'parallel' is FALSE, use pbapply
-  lapply.fun <-
-    if (is.numeric(parallel)) {
-      function(...) parallel::mclapply(..., mc.cores=parallel)
-    } else if (!is.logical(parallel)) {
-      stop(sQuote("parallel"), " needs to be FALSE (default), TRUE (will auto-detect number of cores), or a numeric value specifying the number of cores to use")
-    } else if (!is.logical(verbose)) {
-      stop(sQuote("verbose"), " needs to be logical")
-    } else if (parallel) {
-      function(...) parallel::mclapply(..., mc.cores=parallel::detectCores())
-    } else if (verbose) {
-      function(...) pbapply::pblapply(...)
-    } else {
-      function(...) lapply(...)
-    }
-
-  # apply splines to time
-  splt <- splines::ns(time, df)
-
-  # perform anova test for each gene
-  feature.results <- lapply.fun(seq_len(ncol(x)), function(i) {
-    fit <- glm(x[,i]~splt, family=gaussian(), epsilon=1e-5)
-    fit1 <- glm(x[,i]~1, family=gaussian(), epsilon=1e-5)
-    test <- anova(fit1, fit, test = "F")
-    pval <- test[6][2, 1]
-    smooth <- predict(fit, splt)
-    list(pval=pval, smooth=smooth)
-  })
-
-  # gather and adjust p-values
-  pvals <- sapply(feature.results, function(x) x$pval)
-  pvals[!is.finite(pvals)] <- 1
-  qvals <- p.adjust(pvals, method=p.adjust.method, n=ncol(x))
-
-  # gather smoothed values
-  smooth.x <- sapply(feature.results, function(x) x$smooth)
-  dimnames(smooth.x) <- dimnames(x)
-
-  # categorise q-values
-  qval.cat <- cut(
-    qvals,
-    breaks=c(1, .05, .001, 1e-5, 1e-10, 1e-20, 1e-40, -Inf),
-    labels=c("p <= 1e-40", "1e-40 < p <= 1e-20", "1e-20 < p <= 1e-10", "1e-10 < p <= 1e-5", "1e-5 < p <= 0.001", "0.001 < p <= 0.05", "p > 0.05")
-  )
-
-  # select final set of tafs
-  is.taf <- qvals < q.value.cutoff
-
-  # construct output data frame and order by q.value
-  feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
-  p.values <- data.frame(feature=feature.names, p.value=pvals, q.value=qvals, is.taf=is.taf, category=qval.cat, stringsAsFactors = F)
-  p.values <- p.values[order(p.values$q.value),,drop=F]
-
-  # also return the names or indexes of the TAFs
-  features <- p.values$feature[p.values$is.taf]
-
-  # return all output
-  list(tafs=features, p.values=p.values, smooth.x=smooth.x)
-}
-
 #' @title Extract modules of features
 #'
-#' @description \code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{find.trajectory.aligned.features}}.
+#' @description \code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{gene.importances}}.
 #'
 #' @usage
 #' extract.modules(x)
@@ -357,7 +220,7 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #'
 #' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
 #'
-#' @seealso \code{\link{find.trajectory.aligned.features}}
+#' @seealso \code{\link{gene.importances}}
 #'
 #' @export
 #'
@@ -375,15 +238,14 @@ find.trajectory.aligned.features <- function(x, time, p.adjust.method="BH", q.va
 #' time <- traj$time
 #' draw.trajectory.plot(space, path=traj$path, group.name)
 #'
-#' ## Show which genes are most trajectory aligned
-#' tafs <- find.trajectory.aligned.features(expression, traj$time)
-#' expr.tafs <- expression[,tafs$tafs]
-#' smooth.tafs <- tafs$smooth.x[,tafs$tafs]
+#' ## Select most important genes
+#' gimp <- gene.importances(expression, traj$time)
+#' gene.sel <- gimp[1:50,]
+#' expr.sel <- expression[,gene.sel$gene]
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
-#' modules <- extract.modules(smooth.tafs)
-#' draw.trajectory.heatmap(expr.tafs, time, group.name, modules)
-#' draw.trajectory.heatmap(smooth.tafs, time, group.name, modules)
+#' modules <- extract.modules(quant.scale(expr.sel))
+#' draw.trajectory.heatmap(expr.sel, time, group.name, modules)
 extract.modules <- function(x) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))

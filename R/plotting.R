@@ -174,23 +174,20 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' traj <- infer.trajectory(space)
 #' time <- traj$time
 #'
-#' ## Find the genes are most trajectory aligned
-#' tafs <- find.trajectory.aligned.features(expression, time)
-#' expr.tafs <- expression[,tafs$tafs]
+#' ## Select most important genes
+#' gimp <- gene.importances(expression, traj$time)
+#' gene.sel <- gimp[1:50,]
+#' expr.sel <- expression[,gene.sel$gene]
 #'
-#' ## Draw a time series heatmap of the TAFs
-#' draw.trajectory.heatmap(expr.tafs, time)
+#' ## Draw a time series heatmap
+#' draw.trajectory.heatmap(expr.sel, time)
 #'
 #' ## Also show the progression groupings
-#' draw.trajectory.heatmap(expr.tafs, time, progression=groups)
-#'
-#' ## Draw a heatmap of the smoothed data instead
-#' smooth.tafs <- tafs$smooth.x[,tafs$tafs]
-#' draw.trajectory.heatmap(smooth.tafs, time, progression=groups)
+#' draw.trajectory.heatmap(expr.sel, time, progression=groups)
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
-#' modules <- extract.modules(smooth.tafs)
-#' draw.trajectory.heatmap(expr.tafs, time, progression.group=groups, modules=modules)
+#' modules <- extract.modules(quant.scale(expr.sel))
+#' draw.trajectory.heatmap(expr.sel, time, progression.group=groups, modules=modules)
 draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NULL, show.labels.row=FALSE, show.labels.col=FALSE, scale.features=TRUE, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))

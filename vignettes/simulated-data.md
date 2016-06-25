@@ -1,5 +1,5 @@
 <!-- github markdown built using 
-render("vignettes/simulated-data.Rmd", output_format = "md_document")
+rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "md_document")
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data. Note that the dataset is generated in a very naive manner and is only meant to be used for demonstration purposes, not for evaluating trajectory inference methods.
 
@@ -109,12 +109,12 @@ SCORPIUS infers a trajectory through several intermediate steps, which are all e
 traj <- infer.trajectory(space)
 ```
 
-The result is a list containing the final trajectory `path.path` and the inferred timeline for each sample `time`.
+The result is a list containing the final trajectory `path` and the inferred timeline for each sample `time`.
 
 The trajectory can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
 
 ``` r
-draw.trajectory.plot(space, progression.group = group.name, path = path.path)
+draw.trajectory.plot(space, progression.group = group.name, path = traj$path)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-11-1.png)
@@ -125,30 +125,24 @@ Finding candidate marker genes
 We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, as such genes might be good candidate marker genes for the dynamic process that is being investigated.
 
 ``` r
-tafs <- find.trajectory.aligned.features(expression, traj$time, verbose=F)
+gimp <- gene.importances(expression, traj$time)
+gene.sel <- gimp[1:50,]
+expr.sel <- expression[,gene.sel$gene]
 ```
 
-Again, the output is a list containing several values:
-
--   `tafs`: The names of genes which are marked as trajectory aligned.
-
--   `p.values`: A data frame containing all the genes and corresponding q-values.
-
--   `smooth.x`: The smoothed expression data used in findingn the TAFs.
-
-To visualise the expression of the selected TAFs, use the `draw.trajectory.heatmap` function.
+To visualise the expression of the selected genes, use the `draw.trajectory.heatmap` function.
 
 ``` r
-expr.tafs <- tafs$smooth.x[,tafs$tafs]
-draw.trajectory.heatmap(expr.tafs, traj$time, group.name)
+draw.trajectory.heatmap(expr.sel, traj$time, group.name)
 ```
 
 ![](simulated-data_files/figure-markdown_github/visualise%20tafs-1.png)
- Finally, the TAFs can also be grouped into modules as follows:
+
+Finally, these genes can also be grouped into modules as follows:
 
 ``` r
-modules <- extract.modules(expr.tafs)
-draw.trajectory.heatmap(expr.tafs, traj$time, group.name, modules)
+modules <- extract.modules(quant.scale(expr.sel))
+draw.trajectory.heatmap(expr.sel, traj$time, group.name, modules)
 ```
 
 ![](simulated-data_files/figure-markdown_github/moduled%20tafs-1.png)
