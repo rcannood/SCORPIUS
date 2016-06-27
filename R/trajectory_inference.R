@@ -31,8 +31,6 @@
 #' ## Visualise the trajectory
 #' draw.trajectory.plot(space, path = init.traj, progression.group = dataset$sample.info$group.name)
 infer.initial.trajectory <- function(space, k) {
-  requireNamespace("GA")
-
   # input checks
   if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
@@ -53,39 +51,46 @@ infer.initial.trajectory <- function(space, k) {
         0
       } else {
         twocent <- centers[c(i,j),]
-        unit <- twocent[2,] - twocent[1,]
-        unit <- unit / sqrt(sum(unit^2)) * .01
-        unit[unit == 0] <- 1
-        num.pts <- ceiling(mean((twocent[2,] - twocent[1,])/unit))
-        segment.pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = num.pts))
+        segment.pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
         dists <- euclidean.distance(segment.pts, space)
         mean(knn.distances(dists, 10, self.loops=TRUE))
       }
     })
   })
 
+  requireNamespace("TSP")
   # combine both distance matrices
   cluster.distances <- eucl.dist * density.dist
 
-  # define a fitness function for an ordering of the cluster centers according to the cluster.distances such that the path length will be minimised.
-  fitness <- function(ord, dist=cluster.distances) {
-    -sum(mapply(ord[-1], ord[-length(ord)], FUN=function(i, j) dist[[i, j]]))
-  }
+  # find the shortest path through all clusters
+  tsp <- TSP::insert_dummy(TSP::TSP(cluster.distances))
+  tour <- as.vector(TSP::solve_TSP(tsp))
+  tour2 <- c(tour, tour)
+  start <- min(which(tour2 == k+1))
+  stop <- max(which(tour2 == k+1))
+  best.ord <- tour2[(start+1):(stop-1)]
 
-  # if k <= 7, it's easier to just check all permutations of seq_len(k),
-  # else a genetic algorithm is used.
-  if (k <= 7) {
-    permutations <- function( x, prefix = c() ) {
-      if(length(x) == 0 ) return(prefix)
-      do.call(rbind, sapply(1:length(x), FUN = function(idx) permutations( x[-idx], c( prefix, x[idx])), simplify = FALSE))
-    }
-    ords <- permutations(seq_len(k))
-    fitnesses <- apply(ords, 1, fitness)
-    best.ord <- ords[which.max(fitnesses),]
-  } else {
-    ga.fit <- GA::ga(type="permutation", fitness=fitness, min=1, max=nrow(centers), monitor=function(...) { })
-    best.ord <- ga.fit@solution[1,]
-  }
+
+  # requireNamespace("GA")
+  # # define a fitness function for an ordering of the cluster centers according to the cluster.distances such that the path length will be minimised.
+  # fitness <- function(ord, dist=cluster.distances) {
+  #   -sum(mapply(ord[-1], ord[-length(ord)], FUN=function(i, j) dist[[i, j]]))
+  # }
+  #
+  # # if k <= 7, it's easier to just check all permutations of seq_len(k),
+  # # else a genetic algorithm is used.
+  # if (k <= 7) {
+  #   permutations <- function( x, prefix = c() ) {
+  #     if(length(x) == 0 ) return(prefix)
+  #     do.call(rbind, sapply(1:length(x), FUN = function(idx) permutations( x[-idx], c( prefix, x[idx])), simplify = FALSE))
+  #   }
+  #   ords <- permutations(seq_len(k))
+  #   fitnesses <- apply(ords, 1, fitness)
+  #   best.ord <- ords[which.max(fitnesses),]
+  # } else {
+  #   ga.fit <- GA::ga(type="permutation", fitness=fitness, min=1, max=nrow(centers), monitor=function(...) { })
+  #   best.ord <- ga.fit@solution[1,]
+  # }
 
   # use this ordering as the initial curve
   init.traj <- centers[best.ord,,drop=F]
