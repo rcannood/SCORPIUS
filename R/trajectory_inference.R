@@ -16,7 +16,7 @@
 #'
 #' @export
 #'
-#' @importFrom GA ga
+#' @importFrom TSP TSP insert_dummy solve_TSP
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
