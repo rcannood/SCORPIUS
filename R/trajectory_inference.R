@@ -174,6 +174,50 @@ infer.trajectory <- function(space, k = 4) {
   trajectory
 }
 
+#' @title Average orderings of multiple trajectories
+#'
+#' @description \code{infer.consensus.trajectory} infers multiple
+#' trajectories with the \code{\link{infer.trajectory}} method, and aligns
+#' and averages the orderings.
+#'
+#' @usage
+#' infer.consensus.trajectory(space, number = 10, ...)
+#'
+#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param number The number of trajectories to infer
+#' @param ... Parameters for \code{\link{infer.trajectory}}
+#'
+#' @return A list containing several objects:
+#' \itemize{
+#'   \item \code{path}: NULL
+#'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#' }
+#'
+#' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#'
+#' @export
+infer.consensus.trajectory <- function(space, number = 10, ...) {
+  times <- sapply(seq_len(number), function(zzz) {
+    infer.trajectory(space)$time
+  })
+
+  for (i in seq_len(number)) {
+    if (cor(times[,1], times[,i]) < 0) {
+      times[,i] <- 1 - times[,i]
+    }
+  }
+
+  time <- rowMeans(times)
+
+  # output result
+  trajectory <- list(
+    path = NULL,
+    time = time
+  )
+  class(trajectory) <- "SCORPIUS::trajectory"
+  trajectory
+}
+
 #' @title Reverse a trajectory
 #'
 #' @description Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse.trajectory}.

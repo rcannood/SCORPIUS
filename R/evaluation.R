@@ -82,6 +82,7 @@ evaluate.trajectory <- function(time, progression) {
 #' @export
 #'
 #' @importFrom class knn
+#' @importFrom dplyr count
 #'
 #' @examples
 #' ## Generate a dataset
@@ -106,10 +107,13 @@ evaluate.dim.red <- function(space, progression, k=5) {
   if (is.factor(progression)) progression <- as.integer(progression)
 
   # perform 5NN LOOCV
-  pred <- sapply(seq_len(nrow(space)), function(i) {
-    as.integer(class::knn(space[-i,,drop=F], space[i,,drop=F], progression[-i], k=k))
-  })
+  knn.out <- SCORPIUS::knn(as.matrix(dist(space)), k = k)
 
-  # calculate accuracy of predictions and return
-  mean(progression==pred)
+  multi.mode <- sapply(seq_along(progression), function(i) {
+    z <- progression[knn.out$indices[i,]]
+    cdf <- dplyr::count(data.frame(z), z)
+    modes <- cdf$z[cdf$n == max(cdf$n)]
+    progression[[i]] %in% modes
+  })
+  mean.multimode <- mean(multi.mode)
 }
