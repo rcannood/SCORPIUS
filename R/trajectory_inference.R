@@ -174,6 +174,43 @@ infer.trajectory <- function(space, k = 4) {
   trajectory
 }
 
+#' @title Infer a guided trajectory
+#'
+#' @description \code{infer.guided.trajectory} infers multiple
+#' trajectories and uses the original space with the combined trajectory orderings
+#' to infer a guided trajectory.
+#'
+#' @usage
+#' infer.guided.trajectory(space, number = 10, ...)
+#'
+#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param number The number of trajectories to infer
+#' @param ... Parameters for \code{\link{infer.trajectory}}
+#'
+#' @return A list containing several objects:
+#' \itemize{
+#'   \item \code{path}: NULL
+#'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#' }
+#'
+#' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#'
+#' @export
+infer.guided.trajectory <- function(space, number = 10, ...) {
+  times <- sapply(seq_len(number), function(zzz) {
+    infer.trajectory(space)$time
+  })
+
+  for (i in seq_len(number)) {
+    if (cor(times[,1], times[,i]) < 0) {
+      times[,i] <- 1 - times[,i]
+    }
+  }
+
+  space.times <- cbind(space, times)
+  SCORPIUS::infer.trajectory(space.times)
+}
+
 #' @title Average orderings of multiple trajectories
 #'
 #' @description \code{infer.consensus.trajectory} infers multiple
@@ -208,10 +245,11 @@ infer.consensus.trajectory <- function(space, number = 10, ...) {
   }
 
   time <- rowMeans(times)
+  path <- space[order(time),,drop=F]
 
   # output result
   trajectory <- list(
-    path = NULL,
+    path = path,
     time = time
   )
   class(trajectory) <- "SCORPIUS::trajectory"
