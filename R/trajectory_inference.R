@@ -198,7 +198,7 @@ infer.trajectory <- function(space, k = 4) {
 #' @export
 infer.guided.trajectory <- function(space, number = 10, ...) {
   times <- sapply(seq_len(number), function(zzz) {
-    infer.trajectory(space)$time
+    infer.trajectory(space, ...)$time
   })
 
   for (i in seq_len(number)) {
@@ -235,7 +235,7 @@ infer.guided.trajectory <- function(space, number = 10, ...) {
 #' @export
 infer.consensus.trajectory <- function(space, number = 10, ...) {
   times <- sapply(seq_len(number), function(zzz) {
-    infer.trajectory(space)$time
+    infer.trajectory(space, ...)$time
   })
 
   for (i in seq_len(number)) {
