@@ -8,6 +8,8 @@ extract.modules(x)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
+
+\item{...}{Extra parameters passed to Mclust}
 }
 \value{
 A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.

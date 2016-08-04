@@ -115,5 +115,6 @@ evaluate.dim.red <- function(space, progression, k=5) {
     modes <- cdf$z[cdf$n == max(cdf$n)]
     progression[[i]] %in% modes
   })
-  mean.multimode <- mean(multi.mode)
+
+  mean(multi.mode)
 }

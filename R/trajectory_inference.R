@@ -304,6 +304,7 @@ reverse.trajectory <- function(trajectory) {
 #' extract.modules(x)
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param ... Extra parameters passed to Mclust
 #'
 #' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
 #'
@@ -333,7 +334,7 @@ reverse.trajectory <- function(trajectory) {
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract.modules(quant.scale(expr.sel))
 #' draw.trajectory.heatmap(expr.sel, time, group.name, modules)
-extract.modules <- function(x) {
+extract.modules <- function(x, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -347,7 +348,7 @@ extract.modules <- function(x) {
   mclustBIC <- mclust::mclustBIC
 
   # cluster with mclust
-  labels <- mclust::Mclust(t(x))$classification
+  labels <- mclust::Mclust(t(x), ...)$classification
 
   # hierarchically cluster the features
   dist <- correlation.distance(t(x))
@@ -372,11 +373,15 @@ extract.modules <- function(x) {
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
-#' @param ... parameters passed to randomForest
+#' @param num.permutations The number of permutations to test against for calculating the p-values (default: 10).
+#' @param ntree The number of trees to grow (default: 10000).
+#' @param mtry The number of variables randomly samples at each split (default: 1\% of features).
+#' @param ... Extra parameters passed to randomForest.
 #'
 #' @return a data frame containing the importance of each feature for the given time line
 #'
 #' @importFrom randomForest randomForest
+#' @importFrom pbapply pblapply
 #' @export
 #'
 #' @examples
@@ -387,8 +392,16 @@ extract.modules <- function(x) {
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space)
 #' gene.importances(expression, traj$time)
-gene.importances <- function(x, time, ...) {
-  rf <- randomForest::randomForest(x, time, ...)
-  df <- data.frame(gene = colnames(x), importance = rf$importance[,1])
-  df[order(df$importance, decreasing = T),]
+gene.importances <- function(x, time, num.permutations = 10, ntree = 10000, mtry = ncol(x) * .01, ...) {
+  importance <- randomForest::randomForest(x, time, ntree = ntree, mtry = mtry)$importance[,1]
+  if (num.permutations > 0) {
+    perms <- unlist(pbapply::pblapply(seq_len(num.permutations), function(i) {
+      randomForest::randomForest(x, sample(time), ntree = ntree, mtry = mtry)$importance[,1]
+    }))
+    pvalue <- sapply(importance, function(x) mean(x < perms))
+  } else {
+    pvalue <- rep(NA, length(importance))
+  }
+  df <- data.frame(gene = colnames(x), importance, pvalue)
+  df[order(df$importance, decreasing = T), , drop = F]
 }

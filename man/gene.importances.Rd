@@ -4,14 +4,21 @@
 \alias{gene.importances}
 \title{Calculate the importance of a feature}
 \usage{
-gene.importances(x, time, ...)
+gene.importances(x, time, num.permutations = 10, ntree = 10000,
+  mtry = ncol(x) * 0.01, ...)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
 \item{time}{A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.}
 
-\item{...}{parameters passed to randomForest}
+\item{num.permutations}{The number of permutations to test against for calculating the p-values (default: 10).}
+
+\item{ntree}{The number of trees to grow (default: 10000).}
+
+\item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
+
+\item{...}{Extra parameters passed to randomForest.}
 }
 \value{
 a data frame containing the importance of each feature for the given time line
