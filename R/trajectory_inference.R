@@ -327,7 +327,7 @@ reverse.trajectory <- function(trajectory) {
 #' draw.trajectory.plot(space, path=traj$path, group.name)
 #'
 #' ## Select most important genes
-#' gimp <- gene.importances(expression, traj$time)
+#' gimp <- gene.importances(expression, traj$time, num.permutations = 0)
 #' gene.sel <- gimp[1:50,]
 #' expr.sel <- expression[,gene.sel$gene]
 #'
@@ -391,7 +391,7 @@ extract.modules <- function(x, ...) {
 #' dist <- correlation.distance(expression)
 #' space <- reduce.dimensionality(dist, ndim=2)
 #' traj <- infer.trajectory(space)
-#' gene.importances(expression, traj$time)
+#' gene.importances(expression, traj$time, num.permutations = 0)
 gene.importances <- function(x, time, num.permutations = 10, ntree = 10000, mtry = ncol(x) * .01, ...) {
   importance <- randomForest::randomForest(x, time, ntree = ntree, mtry = mtry)$importance[,1]
   if (num.permutations > 0) {

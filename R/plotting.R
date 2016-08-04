@@ -175,7 +175,7 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #' time <- traj$time
 #'
 #' ## Select most important genes
-#' gimp <- gene.importances(expression, traj$time)
+#' gimp <- gene.importances(expression, traj$time, num.permutations = 0)
 #' gene.sel <- gimp[1:50,]
 #' expr.sel <- expression[,gene.sel$gene]
 #'

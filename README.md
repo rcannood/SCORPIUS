@@ -97,7 +97,7 @@ draw.trajectory.plot(space, group.name, traj$path)
 To identify and visualise candidate marker genes, execute the following code:
 
 ``` r
-gimp <- gene.importances(expression, traj$time)
+gimp <- gene.importances(expression, traj$time, num.permutations = 0)
 gene.sel <- gimp$gene[1:50]
 expr.sel <- quant.scale(expression[,gene.sel])
 modules <- extract.modules(expr.sel)

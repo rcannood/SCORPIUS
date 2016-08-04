@@ -167,7 +167,7 @@ Finding candidate marker genes
 We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, as such genes might be good candidate marker genes for dendritic cell maturation.
 
 ``` r
-gimp <- gene.importances(expression, traj$time)
+gimp <- gene.importances(expression, traj$time, num.permutations = 0)
 gene.sel <- gimp[1:50,]
 expr.sel <- expression[,gene.sel$gene]
 ```

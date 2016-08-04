@@ -33,6 +33,6 @@ group.name <- dataset$sample.info$group.name
 dist <- correlation.distance(expression)
 space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space)
-gene.importances(expression, traj$time)
+gene.importances(expression, traj$time, num.permutations = 0)
 }
 
