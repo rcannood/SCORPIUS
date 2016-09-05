@@ -217,7 +217,7 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
 
   gg_color_hue <- function(n) {
     hues = seq(15, 375, length=n+1)
-    grDrvices::hcl(h=hues, l=65, c=100)[1:n]
+    grDevices::hcl(h=hues, l=65, c=100)[1:n]
   }
 
   ann.col <- list(

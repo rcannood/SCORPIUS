@@ -313,7 +313,7 @@ reverse.trajectory <- function(trajectory) {
 #' @description \code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{gene.importances}}.
 #'
 #' @usage
-#' extract.modules(x)
+#' extract.modules(x, ...)
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param ... Extra parameters passed to Mclust
