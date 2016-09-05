@@ -15,6 +15,8 @@
 #'
 #' @export
 #'
+#' @importFrom stats cmdscale
+#'
 #' @examples
 #' ## Generate an example dataset
 #' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
@@ -26,6 +28,8 @@
 #' ## Visualise the dataset
 #' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
 reduce.dimensionality <- function(dist, ndim = 3, rescale = TRUE) {
+  requireNamespace("stats")
+
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
@@ -34,7 +38,7 @@ reduce.dimensionality <- function(dist, ndim = 3, rescale = TRUE) {
   if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(dist))
     stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(dist)-1")
 
-  space <- cmdscale(dist, k = ndim)
+  space <- stats::cmdscale(dist, k = ndim)
   if (rescale) space <- rescale.and.center(space)
   colnames(space) <- paste("Comp", seq_len(ncol(space)), sep="")
   space
@@ -116,6 +120,8 @@ rescale.and.center <- function(x, center = 0, max.range = 1) {
 #'
 #' @export
 #'
+#' @importFrom stats quantile
+#'
 #' @examples
 #' ## Generate a matrix from a normal distribution
 #' ## with a large standard deviation, centered at c(5, 5)
@@ -130,8 +136,10 @@ rescale.and.center <- function(x, center = 0, max.range = 1) {
 #' ## Show ranges of each column
 #' apply(x.scaled, 2, range)
 quant.scale <- function(x, outlier.cutoff = .05) {
-  gene.min <- apply(x, 2, quantile, outlier.cutoff, na.rm = T)
-  gene.max <- apply(x, 2, quantile, 1 - outlier.cutoff, na.rm = T)
+  requireNamespace("stats")
+
+  gene.min <- apply(x, 2, stats::quantile, outlier.cutoff, na.rm = T)
+  gene.max <- apply(x, 2, stats::quantile, 1 - outlier.cutoff, na.rm = T)
 
   center <- gene.min
   scale <- gene.max - gene.min

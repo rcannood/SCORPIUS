@@ -10,6 +10,8 @@
 #'
 #' @return An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the Euclidean distances between the given sets of samples.
 #'
+#' @importFrom stats dist
+#'
 #' @export
 #'
 #' @examples
@@ -22,12 +24,14 @@
 #' dist2 <- as.matrix(dist(rbind(x, y)))[1:50, 51:150]
 #' plot(dist, dist2)
 euclidean.distance <- function (x, y=NULL) {
+  requireNamespace("stats")
+
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
 
   # if y is null, we can simply use the normal dist function
-  if (is.null(y)) return(as.matrix(dist(x)))
+  if (is.null(y)) return(as.matrix(stats::dist(x)))
 
   # more input checks
   if (!is.matrix(y) && !is.data.frame(y))
@@ -58,6 +62,8 @@ euclidean.distance <- function (x, y=NULL) {
 #'
 #' @return An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the correlation distances between the given sets of samples.
 #'
+#' @importFrom stats cor
+#'
 #' @export
 #'
 #' @examples
@@ -70,6 +76,8 @@ euclidean.distance <- function (x, y=NULL) {
 #' dist2 <- cor(t(x), t(y), method="spearman")
 #' plot(dist, dist2)
 correlation.distance <- function(x, y = NULL, method = c("spearman", "pearson", "kendall"), use = "everything") {
+  requireNamespace("stats")
+
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -87,7 +95,7 @@ correlation.distance <- function(x, y = NULL, method = c("spearman", "pearson", 
   if (!is.null(y)) y <- t(y)
 
   # calculate and return correlation distance
-  1 - (cor(x, y, method=method, use = use)+1)/2
+  1 - (stats::cor(x, y, method=method, use = use)+1)/2
 }
 
 #' @title k Nearest Neighbour distances
@@ -134,6 +142,8 @@ knn.distances <- function(dist, k, self.loops=F) {
 #'
 #' @export
 #'
+#' @importFrom utils head
+#'
 #' @examples
 #' ## Calculate the kNN distances within a set of samples
 #' x <- matrix(rnorm(50*10, mean=0, sd=1), ncol=10)
@@ -147,6 +157,8 @@ knn.distances <- function(dist, k, self.loops=F) {
 #' knnd <- knn(dist, 10)
 #' plot(density(knnd$distances))
 knn <- function(dist, k, self.loops=F) {
+  requireNamespace("utils")
+
   # input checks
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
@@ -177,7 +189,7 @@ knn <- function(dist, k, self.loops=F) {
   # fill matrix by sample
   if (self.loops) {
     for (i in row.ix) {
-      indices[i,] <- head(order(dist[i,]), K)
+      indices[i,] <- utils::head(order(dist[i,]), K)
       knndist[i,] <- dist[i,indices[i,]]
     }
   } else {

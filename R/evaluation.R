@@ -11,6 +11,8 @@
 #'
 #' @return The consistency value for the predicted timeline.
 #'
+#' @importFrom stats runif
+#'
 #' @export
 #'
 #' @examples
@@ -23,6 +25,8 @@
 #' ## Evaluate the trajectory timeline
 #' evaluate.trajectory(traj$time, dataset$sample.info$group.name)
 evaluate.trajectory <- function(time, progression) {
+  requireNamespace("stats")
+
   # input checks
   if (!is.vector(time) || !is.numeric(time))
     stop(sQuote("time"), " must be a numeric vector")
@@ -37,7 +41,7 @@ evaluate.trajectory <- function(time, progression) {
   min.diff <- min(diff[diff != 0])
 
   ## Add small values to the time points. If there are time points with same values, samples will now be ordered randomly.
-  noises <- runif(length(time), 0, 0.01) * min.diff
+  noises <- stats::runif(length(time), 0, 0.01) * min.diff
   noised.time <- time + noises
 
   ## Rank the time points
@@ -81,8 +85,8 @@ evaluate.trajectory <- function(time, progression) {
 #'
 #' @export
 #'
-#' @importFrom class knn
 #' @importFrom dplyr count
+#' @importFrom stats dist
 #'
 #' @examples
 #' ## Generate a dataset
@@ -101,7 +105,8 @@ evaluate.dim.red <- function(space, progression, k=5) {
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
     stop(sQuote("k"), " must be a whole number and k >= 1")
 
-  requireNamespace("class")
+  requireNamespace("stats")
+  requireNamespace("dplyr")
 
   # if progression is a factor, convert it to an integer
   if (is.factor(progression)) progression <- as.integer(progression)

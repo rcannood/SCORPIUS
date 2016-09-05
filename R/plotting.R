@@ -57,6 +57,7 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
   requireNamespace("ggplot2")
   requireNamespace("MASS")
   requireNamespace("reshape2")
+  requireNamespace("stats")
 
   # retrieve data about the range of the plot
   min <- min(space[,1:2])
@@ -163,6 +164,8 @@ draw.trajectory.plot <- function(space, progression.group=NULL, path=NULL, conto
 #'
 #' @importFrom pheatmap pheatmap
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom grDevices hcl
+#' @importFrom stats setNames
 #'
 #' @examples
 #' ## Generate a dataset
@@ -201,6 +204,8 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
 
   requireNamespace("pheatmap")
   requireNamespace("RColorBrewer")
+  requireNamespace("stats")
+  requireNamespace("grDevices")
 
   col.ann <- data.frame(row.names = rownames(x), Time=time)
 
@@ -212,7 +217,7 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
 
   gg_color_hue <- function(n) {
     hues = seq(15, 375, length=n+1)
-    hcl(h=hues, l=65, c=100)[1:n]
+    grDrvices::hcl(h=hues, l=65, c=100)[1:n]
   }
 
   ann.col <- list(
@@ -229,7 +234,7 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
       } else {
         gg_color_hue(num.progressions)
       }
-    ann.col$Progression <- setNames(progression.cols, levels(progression.group))
+    ann.col$Progression <- stats::setNames(progression.cols, levels(progression.group))
   }
 
   labels_row <- if (!show.labels.row) rep("", nrow(x.part)) else NULL

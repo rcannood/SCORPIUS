@@ -17,6 +17,7 @@
 #' @export
 #'
 #' @importFrom TSP TSP insert_dummy solve_TSP
+#' @importFrom stats kmeans dist
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
@@ -31,6 +32,9 @@
 #' ## Visualise the trajectory
 #' draw.trajectory.plot(space, path = init.traj, progression.group = dataset$sample.info$group.name)
 infer.initial.trajectory <- function(space, k) {
+  requireNamespace("TSP")
+  requireNamespace("stats")
+
   # input checks
   if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
@@ -38,11 +42,11 @@ infer.initial.trajectory <- function(space, k) {
     stop(sQuote("k"), " must be a whole number and k >= 2")
 
   # cluster space into k clusters
-  kmeans.clust <- kmeans(space, centers = k)
+  kmeans.clust <- stat::kmeans(space, centers = k)
   centers <- kmeans.clust$centers
 
   # calculate the euclidean space between clusters
-  eucl.dist <- as.matrix(dist(centers))
+  eucl.dist <- as.matrix(stat::dist(centers))
 
   # calculate the densities along the straight lines between any two cluster centers
   density.dist <- sapply(seq_len(k), function(i) {
@@ -195,14 +199,18 @@ infer.trajectory <- function(space, k = 4) {
 #'
 #' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
 #'
+#' @importFrom stats cor
+#'
 #' @export
 infer.guided.trajectory <- function(space, number = 10, ...) {
+  requireNamespace("stats")
+
   times <- sapply(seq_len(number), function(zzz) {
     infer.trajectory(space, ...)$time
   })
 
   for (i in seq_len(number)) {
-    if (cor(times[,1], times[,i]) < 0) {
+    if (stats::cor(times[,1], times[,i]) < 0) {
       times[,i] <- 1 - times[,i]
     }
   }
@@ -232,14 +240,18 @@ infer.guided.trajectory <- function(space, number = 10, ...) {
 #'
 #' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
 #'
+#' @importFrom stats cor
+#'
 #' @export
 infer.consensus.trajectory <- function(space, number = 10, ...) {
+  requireNamespace("stats")
+
   times <- sapply(seq_len(number), function(zzz) {
     infer.trajectory(space, ...)$time
   })
 
   for (i in seq_len(number)) {
-    if (cor(times[,1], times[,i]) < 0) {
+    if (stats::cor(times[,1], times[,i]) < 0) {
       times[,i] <- 1 - times[,i]
     }
   }
@@ -313,6 +325,7 @@ reverse.trajectory <- function(trajectory) {
 #' @export
 #'
 #' @importFrom mclust Mclust
+#' @importFrom stats as.dist hclust
 #' @importFrom dplyr bind_rows
 #'
 #' @examples
@@ -341,6 +354,7 @@ extract.modules <- function(x, ...) {
 
   requireNamespace("mclust")
   requireNamespace("dplyr")
+  requireNamespace("stats")
 
   feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
 
@@ -352,7 +366,7 @@ extract.modules <- function(x, ...) {
 
   # hierarchically cluster the features
   dist <- correlation.distance(t(x))
-  hcl <- hclust(as.dist(dist), method="average")
+  hcl <- stats::hclust(stats::as.dist(dist), method="average")
 
   # order features within one module according to a dimensionality reduction of the correlation distance
   modules <- dplyr::bind_rows(lapply(unique(labels), function(l) {

@@ -17,6 +17,9 @@
 #'
 #' @return A list containing the expression data and the meta data of the samples.
 #'
+#' @importFrom stats poly rnorm runif
+#' @importFrom splines ns
+#'
 #' @export
 #'
 #' @seealso \code{\link{correlation.distance}}, \code{\link{reduce.dimensionality}}, \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.plot}}
@@ -38,6 +41,9 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
   gene.names <- paste0("Gene", seq_len(num.genes))
   sample.names <- paste0("Sample", seq_len(num.samples))
 
+  requireNamespace("splines")
+  requireNamespace("stats")
+
   # match the type argument
   type <- match.arg(type, c("splines", "polynomial"))
 
@@ -48,7 +54,7 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
 
   # apply function and determine noise sd
   switch(type, polynomial={
-    y <- poly(x, 2)
+    y <- stats::poly(x, 2)
     sd <- .012 * sqrt(num.genes)
   }, splines={
     y <- splines::ns(x, df=3)
@@ -57,15 +63,15 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
 
   # generate expression data
   expression <- sapply(seq_len(num.genes), function(g) {
-    scale <- rnorm(ncol(y), mean=0, sd=1)
-    noise <- rnorm(length(x), sd=sd)
+    scale <- stats::rnorm(ncol(y), mean=0, sd=1)
+    noise <- stats::rnorm(length(x), sd=sd)
     rowSums(sweep(y, 2, scale, "*")) + noise
   })
   dimnames(expression) <- list(sample.names, gene.names)
 
   # simulate genes that are not expressed
   weighted.random.sample <- function(data, weights, n){
-    key <- runif(length(data)) ^ (1 / weights)
+    key <- stats::runif(length(data)) ^ (1 / weights)
     data[order(key, decreasing=TRUE)][seq_len(n)]
   }
 

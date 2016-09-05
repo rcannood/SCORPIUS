@@ -15,7 +15,7 @@ vignette: >
 ---
 
 <!-- github markdown built using 
-render("vignettes/ginhoux.Rmd", output_format = "md_document") 
+rmarkdorn::render("vignettes/ginhoux.Rmd", output_format = "md_document") 
 -->
 
 ```{r, echo=F}
