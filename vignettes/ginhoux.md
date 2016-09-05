@@ -1,5 +1,5 @@
 <!-- github markdown built using 
-render("vignettes/ginhoux.Rmd", output_format = "md_document") 
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document") 
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through dendritic cell progenitors. The `ginhoux` dataset contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 

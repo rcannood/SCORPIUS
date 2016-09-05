@@ -42,11 +42,11 @@ infer.initial.trajectory <- function(space, k) {
     stop(sQuote("k"), " must be a whole number and k >= 2")
 
   # cluster space into k clusters
-  kmeans.clust <- stat::kmeans(space, centers = k)
+  kmeans.clust <- stats::kmeans(space, centers = k)
   centers <- kmeans.clust$centers
 
   # calculate the euclidean space between clusters
-  eucl.dist <- as.matrix(stat::dist(centers))
+  eucl.dist <- as.matrix(stats::dist(centers))
 
   # calculate the densities along the straight lines between any two cluster centers
   density.dist <- sapply(seq_len(k), function(i) {
