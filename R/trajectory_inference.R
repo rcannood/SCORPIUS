@@ -36,7 +36,9 @@ infer.initial.trajectory <- function(space, k) {
   requireNamespace("stats")
 
   # input checks
-  if (!is.matrix(space) && !is.data.frame(space))
+  if (is.data.frame(space))
+    space <- as.matrix(space)
+  if (!is.matrix(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
     stop(sQuote("k"), " must be a whole number and k >= 2")
@@ -147,7 +149,9 @@ infer.trajectory <- function(space, k = 4) {
   requireNamespace("princurve")
 
   # input checks
-  if (!is.matrix(space) && !is.data.frame(space))
+  if (is.data.frame(space))
+    space <- as.matrix(space)
+  if (!is.matrix(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
 
   if (!is.null(k)) {
