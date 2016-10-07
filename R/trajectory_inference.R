@@ -416,6 +416,6 @@ gene.importances <- function(x, time, num.permutations = 10, ntree = 10000, mtry
   } else {
     pvalue <- rep(NA, length(importance))
   }
-  df <- data.frame(gene = colnames(x), importance, pvalue)
+  df <- data.frame(gene = colnames(x), importance, pvalue, stringsAsFactors = F)
   df[order(df$importance, decreasing = T), , drop = F]
 }
