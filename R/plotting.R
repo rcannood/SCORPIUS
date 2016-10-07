@@ -207,6 +207,10 @@ draw.trajectory.heatmap <- function(x, time, progression.group=NULL, modules=NUL
   requireNamespace("stats")
   requireNamespace("grDevices")
 
+  if (is.null(rownames(x))) {
+    rownames(x) <- paste("Row ", seq_len(nrow(x)))
+  }
+
   col.ann <- data.frame(row.names = rownames(x), Time=time)
 
   x.part <- x[order(time),,drop=FALSE]
