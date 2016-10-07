@@ -1,5 +1,5 @@
 <!-- github markdown built using 
-render("README.Rmd", output_format = "md_document")
+rmarkdown::render("README.Rmd", output_format = "md_document")
 -->
 SCORPIUS
 ========
@@ -13,6 +13,8 @@ SCORPIUS
 -   **It automatically identifies marker genes, speeding up knowledge discovery.**
 
 -   **It is fully unsupervised.** Prior knowledge of the relevant marker genes or cellular states of individual cells is not required.
+
+-   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/06/079509)
 
 Installing SCORPIUS
 -------------------
@@ -97,8 +99,27 @@ draw.trajectory.plot(space, group.name, traj$path)
 To identify and visualise candidate marker genes, execute the following code:
 
 ``` r
-gimp <- gene.importances(expression, traj$time, num.permutations = 0)
-gene.sel <- gimp$gene[1:50]
+# warning: setting num.permutations to 10 requires a long time (~30min) to run!
+# set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
+gimp <- gene.importances(expression, traj$time, num.permutations = 10) 
+```
+
+    ## 
+       |                                                  | 0 % ~calculating  
+       |+++++                                             | 10% ~25m 53s      
+       |++++++++++                                        | 20% ~22m 31s      
+       |+++++++++++++++                                   | 30% ~19m 59s      
+       |++++++++++++++++++++                              | 40% ~17m 07s      
+       |+++++++++++++++++++++++++                         | 50% ~14m 22s      
+       |++++++++++++++++++++++++++++++                    | 60% ~11m 27s      
+       |+++++++++++++++++++++++++++++++++++               | 70% ~08m 40s      
+       |++++++++++++++++++++++++++++++++++++++++         | 80% ~05m 49s      
+       |+++++++++++++++++++++++++++++++++++++++++++++    | 90% ~02m 56s      
+       |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 29m 19s
+
+``` r
+gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
+gene.sel <- gimp$gene[gimp$qvalue < .05]
 expr.sel <- quant.scale(expression[,gene.sel])
 modules <- extract.modules(expr.sel)
 
@@ -121,6 +142,8 @@ draw.trajectory.heatmap(expr.sel, traj.sel$time, group.name, modules, scale.feat
 Related approaches
 ------------------
 
+-   [Check out our review on Trajectory Inference methods!](http://onlinelibrary.wiley.com/doi/10.1002/eji.201646347/full)
+-   [Wanderlust](http://www.c2b2.columbia.edu/danapeerlab/html/wanderlust.html)
 -   [Monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html)
 -   [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
 -   [Embeddr](https://github.com/kieranrcampbell/embeddr)
