@@ -14,7 +14,7 @@ SCORPIUS
 
 -   **It is fully unsupervised.** Prior knowledge of the relevant marker genes or cellular states of individual cells is not required.
 
--   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/06/079509)
+-   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/06/079509).
 
 Installing SCORPIUS
 -------------------
@@ -103,19 +103,6 @@ To identify and visualise candidate marker genes, execute the following code:
 # set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
 gimp <- gene.importances(expression, traj$time, num.permutations = 10) 
 ```
-
-    ## 
-       |                                                  | 0 % ~calculating  
-       |+++++                                             | 10% ~25m 53s      
-       |++++++++++                                        | 20% ~22m 31s      
-       |+++++++++++++++                                   | 30% ~19m 59s      
-       |++++++++++++++++++++                              | 40% ~17m 07s      
-       |+++++++++++++++++++++++++                         | 50% ~14m 22s      
-       |++++++++++++++++++++++++++++++                    | 60% ~11m 27s      
-       |+++++++++++++++++++++++++++++++++++               | 70% ~08m 40s      
-       |++++++++++++++++++++++++++++++++++++++++         | 80% ~05m 49s      
-       |+++++++++++++++++++++++++++++++++++++++++++++    | 90% ~02m 56s      
-       |++++++++++++++++++++++++++++++++++++++++++++++++++| 100% elapsed = 29m 19s
 
 ``` r
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
