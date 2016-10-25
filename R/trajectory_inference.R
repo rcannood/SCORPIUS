@@ -76,28 +76,6 @@ infer.initial.trajectory <- function(space, k) {
   stop <- max(which(tour2 == k+1))
   best.ord <- tour2[(start+1):(stop-1)]
 
-
-  # requireNamespace("GA")
-  # # define a fitness function for an ordering of the cluster centers according to the cluster.distances such that the path length will be minimised.
-  # fitness <- function(ord, dist=cluster.distances) {
-  #   -sum(mapply(ord[-1], ord[-length(ord)], FUN=function(i, j) dist[[i, j]]))
-  # }
-  #
-  # # if k <= 7, it's easier to just check all permutations of seq_len(k),
-  # # else a genetic algorithm is used.
-  # if (k <= 7) {
-  #   permutations <- function( x, prefix = c() ) {
-  #     if(length(x) == 0 ) return(prefix)
-  #     do.call(rbind, sapply(1:length(x), FUN = function(idx) permutations( x[-idx], c( prefix, x[idx])), simplify = FALSE))
-  #   }
-  #   ords <- permutations(seq_len(k))
-  #   fitnesses <- apply(ords, 1, fitness)
-  #   best.ord <- ords[which.max(fitnesses),]
-  # } else {
-  #   ga.fit <- GA::ga(type="permutation", fitness=fitness, min=1, max=nrow(centers), monitor=function(...) { })
-  #   best.ord <- ga.fit@solution[1,]
-  # }
-
   # use this ordering as the initial curve
   init.traj <- centers[best.ord,,drop=F]
 
