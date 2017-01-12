@@ -22,7 +22,7 @@ Installing SCORPIUS
 You can install the latest version from github with
 
 ``` r
-devtools::install_github("rcannood/SCORPIUS")
+devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
 ```
 
 <!--

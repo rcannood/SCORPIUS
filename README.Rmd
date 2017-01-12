@@ -33,7 +33,7 @@ RNA sequencing data.** In comparison to similar approaches, it has three main ad
 You can install the latest version from github with
 
 ```R
-devtools::install_github("rcannood/SCORPIUS")
+devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
 ```
 
 <!--
@@ -48,7 +48,7 @@ You can install:
 * the latest development version from github with
 
     ```R
-    devtools::install_github("rcannood/SCORPIUS")
+    devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
     ```
 -->
 
