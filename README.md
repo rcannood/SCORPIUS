@@ -14,7 +14,7 @@ SCORPIUS
 
 -   **It is fully unsupervised.** Prior knowledge of the relevant marker genes or cellular states of individual cells is not required.
 
--   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/06/079509).
+-   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
 
 Installing SCORPIUS
 -------------------
