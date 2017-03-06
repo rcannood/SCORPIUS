@@ -18,6 +18,7 @@ Imports:
     TSP,
     ggplot2 (>= 2.0),
     MASS,
+    Rcpp,
     parallel,
     pbapply,
     pheatmap,
@@ -27,6 +28,8 @@ Imports:
     splines,
     mclust,
     randomForest
+LinkingTo:
+    Rcpp
 License: GPL-3
 URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues

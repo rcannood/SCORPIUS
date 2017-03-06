@@ -11,6 +11,7 @@
 #' @return An \emph{M}-by-\emph{M} (if \code{y} is \code{NULL}) or an \emph{M}-by-\emph{N} (otherwise) matrix containing the Euclidean distances between the given sets of samples.
 #'
 #' @importFrom stats dist
+#' @useDynLib SCORPIUS
 #'
 #' @export
 #'
@@ -31,24 +32,17 @@ euclidean.distance <- function (x, y=NULL) {
     stop(sQuote("x"), " must be a numeric matrix or data frame")
 
   # if y is null, we can simply use the normal dist function
-  if (is.null(y)) return(as.matrix(stats::dist(x)))
+  if (is.null(y)) {
+    return(as.matrix(stats::dist(x)))
+  } else {
+    # more input checks
+    if (!is.matrix(y) && !is.data.frame(y))
+      stop(sQuote("y"), " must be a numeric matrix or data frame")
+    if (ncol(x) != ncol(y))
+      stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
 
-  # more input checks
-  if (!is.matrix(y) && !is.data.frame(y))
-    stop(sQuote("y"), " must be a numeric matrix or data frame")
-  if (ncol(x) != ncol(y))
-    stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
-
-  # initialise a matrix with NAs
-  z <- matrix(NA, nrow = nrow(x), ncol = nrow(y), dimnames=list(rownames(x), rownames(y)))
-
-  # fill matrix by column
-  for (k in seq_len(nrow(y))) {
-    z[,k] <- sqrt(colSums((t(x) - y[k,])^2))
+    euclidean_distance_rcpp(x, y)
   }
-
-  # return distances
-  return(z)
 }
 
 #' @title Correlation distance
