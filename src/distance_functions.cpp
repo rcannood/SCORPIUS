@@ -14,7 +14,7 @@ Rcpp::NumericMatrix euclidean_distance_rcpp (const Rcpp::NumericMatrix & x, cons
   for (i = 0; i < nrow - 1; i++) {
     Rcpp::NumericVector xi = x.row(i);
     for (j = i + 1; j < ncol; j++) {
-      d = sqrt(sum(pow(xi - x.row(j), 2.0)));
+      d = sqrt(sum(pow(xi - y.row(j), 2.0)));
       out(j, i) = d;
       out(i, j) = d;
     }
