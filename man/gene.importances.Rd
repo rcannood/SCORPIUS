@@ -18,7 +18,7 @@ gene.importances(x, time, num.permutations = 0, ntree = 10000,
 
 \item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
 
-\item{...}{Extra parameters passed to randomForest.}
+\item{...}{Extra parameters passed to ranger.}
 }
 \value{
 a data frame containing the importance of each feature for the given time line

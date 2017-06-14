@@ -389,10 +389,12 @@ extract.modules <- function(x, ...) {
 #' traj <- infer.trajectory(space)
 #' gene.importances(expression, traj$time, num.permutations = 0)
 gene.importances <- function(x, time, num.permutations = 0, ntree = 10000, mtry = ncol(x) * .01, ...) {
-  importance <- ranger::ranger(XXXtimeXXX ~ ., data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F), num.trees = ntree, mtry = mtry, importance = "impurity", ...)$variable.importance
+  data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
+  importance <- ranger::ranger(data = data, dependent.variable.name = "XXXtimeXXX", num.trees = ntree, mtry = mtry, importance = "impurity", ...)$variable.importance
   if (num.permutations > 0) {
     perms <- unlist(pbapply::pblapply(seq_len(num.permutations), function(i) {
-      importance <- ranger::ranger(XXXtimeXXX ~ ., data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F), num.trees = ntree, mtry = mtry, importance = "impurity", ...)$variable.importance
+      data$time <- sample(data$time)
+      ranger::ranger(data = data, dependent.variable.name = "XXXtimeXXX", num.trees = ntree, mtry = mtry, importance = "impurity", ...)$variable.importance
     }))
     pvalue <- sapply(importance, function(x) mean(x < perms))
   } else {
