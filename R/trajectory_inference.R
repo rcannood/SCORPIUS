@@ -372,7 +372,7 @@ extract.modules <- function(x, ...) {
 #' @param num.permutations The number of permutations to test against for calculating the p-values (default: 0).
 #' @param ntree The number of trees to grow (default: 10000).
 #' @param mtry The number of variables randomly samples at each split (default: 1\% of features).
-#' @param ... Extra parameters passed to randomForest.
+#' @param ... Extra parameters passed to ranger.
 #'
 #' @return a data frame containing the importance of each feature for the given time line
 #'
