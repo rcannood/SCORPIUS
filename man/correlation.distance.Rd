@@ -32,4 +32,3 @@ dist <- correlation.distance(x, y, method="spearman")
 dist2 <- cor(t(x), t(y), method="spearman")
 plot(dist, dist2)
 }
-

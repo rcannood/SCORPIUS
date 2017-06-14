@@ -28,4 +28,3 @@ to infer a guided trajectory.
 \seealso{
 \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
 }
-

@@ -4,7 +4,7 @@
 \alias{gene.importances}
 \title{Calculate the importance of a feature}
 \usage{
-gene.importances(x, time, num.permutations = 10, ntree = 10000,
+gene.importances(x, time, num.permutations = 0, ntree = 10000,
   mtry = ncol(x) * 0.01, ...)
 }
 \arguments{
@@ -12,7 +12,7 @@ gene.importances(x, time, num.permutations = 10, ntree = 10000,
 
 \item{time}{A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.}
 
-\item{num.permutations}{The number of permutations to test against for calculating the p-values (default: 10).}
+\item{num.permutations}{The number of permutations to test against for calculating the p-values (default: 0).}
 
 \item{ntree}{The number of trees to grow (default: 10000).}
 
@@ -35,4 +35,3 @@ space <- reduce.dimensionality(dist, ndim=2)
 traj <- infer.trajectory(space)
 gene.importances(expression, traj$time, num.permutations = 0)
 }
-

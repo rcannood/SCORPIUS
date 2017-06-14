@@ -28,4 +28,3 @@ traj <- infer.trajectory(space)
 ## Evaluate the trajectory timeline
 evaluate.trajectory(traj$time, dataset$sample.info$group.name)
 }
-

@@ -40,4 +40,3 @@ draw.trajectory.heatmap(expr.sel, time, group.name, modules)
 \seealso{
 \code{\link{gene.importances}}
 }
-

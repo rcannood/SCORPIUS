@@ -41,4 +41,3 @@ draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.inf
 \seealso{
 \code{\link{correlation.distance}}, \code{\link{reduce.dimensionality}}, \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.plot}}
 }
-

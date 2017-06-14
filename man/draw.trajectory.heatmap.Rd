@@ -65,4 +65,3 @@ draw.trajectory.heatmap(expr.sel, time, progression=groups)
 modules <- extract.modules(quant.scale(expr.sel))
 draw.trajectory.heatmap(expr.sel, time, progression.group=groups, modules=modules)
 }
-

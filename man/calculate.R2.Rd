@@ -25,4 +25,3 @@ dist <- correlation.distance(dataset$expression)
 R2 <- calculate.R2(dist, dataset$expression)
 plot(density(R2))
 }
-

@@ -34,4 +34,3 @@ init.traj <- infer.initial.trajectory(space, k = 4)
 ## Visualise the trajectory
 draw.trajectory.plot(space, path = init.traj, progression.group = dataset$sample.info$group.name)
 }
-

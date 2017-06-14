@@ -32,4 +32,3 @@ dist <- euclidean.distance(x, y)
 knnd <- knn(dist, 10)
 plot(density(knnd$distances))
 }
-

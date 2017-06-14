@@ -36,4 +36,3 @@ plot(traj$time, reverse.traj$time, type="l")
 \seealso{
 \code{\link{infer.trajectory}}
 }
-

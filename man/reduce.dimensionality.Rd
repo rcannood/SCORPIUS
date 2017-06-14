@@ -33,4 +33,3 @@ draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
 \seealso{
 \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{rescale.and.center}}, \code{\link{draw.trajectory.plot}}
 }
-

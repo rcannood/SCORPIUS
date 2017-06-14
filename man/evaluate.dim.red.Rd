@@ -29,4 +29,3 @@ space <- reduce.dimensionality(dist, ndim=2)
 ## Evaluate the trajectory timeline
 evaluate.dim.red(space, dataset$sample.info$group.name)
 }
-

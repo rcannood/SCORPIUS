@@ -27,4 +27,3 @@ dist <- euclidean.distance(x, y)
 dist2 <- as.matrix(dist(rbind(x, y)))[1:50, 51:150]
 plot(dist, dist2)
 }
-

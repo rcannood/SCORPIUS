@@ -43,4 +43,3 @@ plot(likelihood.df$amount.removed, likelihood.df$log.likelihood, type="l")
 \seealso{
 \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{outlierness}}
 }
-

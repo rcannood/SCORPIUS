@@ -28,4 +28,3 @@ and averages the orderings.
 \seealso{
 \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
 }
-

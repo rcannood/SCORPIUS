@@ -19,4 +19,3 @@ The centered, scaled matrix. The numeric centering and scalings used are returne
 \description{
 Applying a quantile scale
 }
-

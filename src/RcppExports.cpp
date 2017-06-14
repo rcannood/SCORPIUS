@@ -17,3 +17,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"SCORPIUS_euclidean_distance_rcpp", (DL_FUNC) &SCORPIUS_euclidean_distance_rcpp, 2},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_SCORPIUS(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

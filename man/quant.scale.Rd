@@ -31,4 +31,3 @@ plot(x.scaled)
 ## Show ranges of each column
 apply(x.scaled, 2, range)
 }
-

@@ -47,4 +47,3 @@ traj <- infer.trajectory(space)
 draw.trajectory.plot(space, progression.group=groups, path=traj$path)
 draw.trajectory.plot(space, progression.group=groups, path=traj$path, contour=TRUE)
 }
-

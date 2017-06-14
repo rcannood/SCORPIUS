@@ -26,4 +26,3 @@ outl <- outlierness(dist, 10)
 ## Visualise the outlierness scores for each of the points
 plot(x, cex=outl, pch=20)
 }
-

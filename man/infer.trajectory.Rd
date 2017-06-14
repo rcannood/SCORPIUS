@@ -43,4 +43,3 @@ draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.inf
 \seealso{
 \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
 }
-
