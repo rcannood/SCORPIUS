@@ -27,7 +27,7 @@ Imports:
     reshape2,
     splines,
     mclust,
-    randomForest
+    ranger
 LinkingTo:
     Rcpp
 License: GPL-3
