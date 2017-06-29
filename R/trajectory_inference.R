@@ -98,6 +98,10 @@ infer.initial.trajectory <- function(space, k) {
 #'
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
+#' @param thresh \code{\link[princurve]{principal.curve}} parameter: convergence threshhold on shortest distances to the curve
+#' @param maxit \code{\link[princurve]{principal.curve}} parameter: maximum number of iterations
+#' @param stretch \code{\link[princurve]{principal.curve}} parameter: a factor by which the curve can be extrapolated when points are projected
+#' @param smoother \code{\link[princurve]{principal.curve}} parameter: choice of smoother
 #'
 #' @return A list containing several objects:
 #' \itemize{

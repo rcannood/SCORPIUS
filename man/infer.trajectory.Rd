@@ -10,6 +10,14 @@ infer.trajectory(space, k)
 \item{space}{A numeric matrix or data frame containing the coordinates of samples.}
 
 \item{k}{The number of clusters to cluster the data into.}
+
+\item{thresh}{\code{\link[princurve]{principal.curve}} parameter: convergence threshhold on shortest distances to the curve}
+
+\item{maxit}{\code{\link[princurve]{principal.curve}} parameter: maximum number of iterations}
+
+\item{stretch}{\code{\link[princurve]{principal.curve}} parameter: a factor by which the curve can be extrapolated when points are projected}
+
+\item{smoother}{\code{\link[princurve]{principal.curve}} parameter: choice of smoother}
 }
 \value{
 A list containing several objects:
