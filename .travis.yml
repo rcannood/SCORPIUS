@@ -1,3 +1,8 @@
 language: r
 sudo: required
+dist: trusty
+addons:
+  apt:
+    packages:
+      - libusb-1.0-0-dev
 bioc_required: true
