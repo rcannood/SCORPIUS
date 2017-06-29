@@ -123,7 +123,7 @@ infer.initial.trajectory <- function(space, k) {
 #'
 #' ## Visualise the trajectory
 #' draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
-infer.trajectory <- function(space, k = 4) {
+infer.trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 0, smoother = "smooth.spline") {
   requireNamespace("princurve")
 
   # input checks
@@ -140,7 +140,16 @@ infer.trajectory <- function(space, k = 4) {
   }
 
   # iteratively improve this curve using principal.curve
-  fit <- princurve::principal.curve(space, start = init.traj, plot.true = F, trace = F, stretch = 0)
+  fit <- princurve::principal.curve(
+    space,
+    start = init.traj,
+    thresh = thresh,
+    plot.true = F,
+    maxit = maxit,
+    stretch = stretch,
+    smoother = smoother,
+    trace = F
+  )
 
   # construct final trajectory
   path <- fit$s[fit$tag,,drop=F]
@@ -159,96 +168,96 @@ infer.trajectory <- function(space, k = 4) {
   class(trajectory) <- "SCORPIUS::trajectory"
   trajectory
 }
-
-#' @title Infer a guided trajectory
 #'
-#' @description \code{infer.guided.trajectory} infers multiple
-#' trajectories and uses the original space with the combined trajectory orderings
-#' to infer a guided trajectory.
+#' #' @title Infer a guided trajectory
+#' #'
+#' #' @description \code{infer.guided.trajectory} infers multiple
+#' #' trajectories and uses the original space with the combined trajectory orderings
+#' #' to infer a guided trajectory.
+#' #'
+#' #' @usage
+#' #' infer.guided.trajectory(space, number = 10, ...)
+#' #'
+#' #' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' #' @param number The number of trajectories to infer
+#' #' @param ... Parameters for \code{\link{infer.trajectory}}
+#' #'
+#' #' @return A list containing several objects:
+#' #' \itemize{
+#' #'   \item \code{path}: NULL
+#' #'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#' #' }
+#' #'
+#' #' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#' #'
+#' #' @importFrom stats cor
+#' #'
+#' #' @export
+#' infer.guided.trajectory <- function(space, number = 10, ...) {
+#'   requireNamespace("stats")
 #'
-#' @usage
-#' infer.guided.trajectory(space, number = 10, ...)
+#'   times <- sapply(seq_len(number), function(zzz) {
+#'     infer.trajectory(space, ...)$time
+#'   })
 #'
-#' @param space A numeric matrix or data frame containing the coordinates of samples.
-#' @param number The number of trajectories to infer
-#' @param ... Parameters for \code{\link{infer.trajectory}}
+#'   for (i in seq_len(number)) {
+#'     if (stats::cor(times[,1], times[,i]) < 0) {
+#'       times[,i] <- 1 - times[,i]
+#'     }
+#'   }
 #'
-#' @return A list containing several objects:
-#' \itemize{
-#'   \item \code{path}: NULL
-#'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#'   space.times <- cbind(space, times)
+#'   SCORPIUS::infer.trajectory(space.times)
 #' }
 #'
-#' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#' #' @title Average orderings of multiple trajectories
+#' #'
+#' #' @description \code{infer.consensus.trajectory} infers multiple
+#' #' trajectories with the \code{\link{infer.trajectory}} method, and aligns
+#' #' and averages the orderings.
+#' #'
+#' #' @usage
+#' #' infer.consensus.trajectory(space, number = 10, ...)
+#' #'
+#' #' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' #' @param number The number of trajectories to infer
+#' #' @param ... Parameters for \code{\link{infer.trajectory}}
+#' #'
+#' #' @return A list containing several objects:
+#' #' \itemize{
+#' #'   \item \code{path}: NULL
+#' #'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#' #' }
+#' #'
+#' #' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#' #'
+#' #' @importFrom stats cor
+#' #'
+#' #' @export
+#' infer.consensus.trajectory <- function(space, number = 10, ...) {
+#'   requireNamespace("stats")
 #'
-#' @importFrom stats cor
+#'   times <- sapply(seq_len(number), function(zzz) {
+#'     infer.trajectory(space, ...)$time
+#'   })
 #'
-#' @export
-infer.guided.trajectory <- function(space, number = 10, ...) {
-  requireNamespace("stats")
-
-  times <- sapply(seq_len(number), function(zzz) {
-    infer.trajectory(space, ...)$time
-  })
-
-  for (i in seq_len(number)) {
-    if (stats::cor(times[,1], times[,i]) < 0) {
-      times[,i] <- 1 - times[,i]
-    }
-  }
-
-  space.times <- cbind(space, times)
-  SCORPIUS::infer.trajectory(space.times)
-}
-
-#' @title Average orderings of multiple trajectories
+#'   for (i in seq_len(number)) {
+#'     if (stats::cor(times[,1], times[,i]) < 0) {
+#'       times[,i] <- 1 - times[,i]
+#'     }
+#'   }
 #'
-#' @description \code{infer.consensus.trajectory} infers multiple
-#' trajectories with the \code{\link{infer.trajectory}} method, and aligns
-#' and averages the orderings.
+#'   time <- rowMeans(times)
+#'   path <- space[order(time),,drop=F]
 #'
-#' @usage
-#' infer.consensus.trajectory(space, number = 10, ...)
-#'
-#' @param space A numeric matrix or data frame containing the coordinates of samples.
-#' @param number The number of trajectories to infer
-#' @param ... Parameters for \code{\link{infer.trajectory}}
-#'
-#' @return A list containing several objects:
-#' \itemize{
-#'   \item \code{path}: NULL
-#'   \item \code{time}: the time point of each sample along the inferred trajectory.
+#'   # output result
+#'   trajectory <- list(
+#'     path = path,
+#'     time = time
+#'   )
+#'   class(trajectory) <- "SCORPIUS::trajectory"
+#'   trajectory
 #' }
-#'
-#' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
-#'
-#' @importFrom stats cor
-#'
-#' @export
-infer.consensus.trajectory <- function(space, number = 10, ...) {
-  requireNamespace("stats")
-
-  times <- sapply(seq_len(number), function(zzz) {
-    infer.trajectory(space, ...)$time
-  })
-
-  for (i in seq_len(number)) {
-    if (stats::cor(times[,1], times[,i]) < 0) {
-      times[,i] <- 1 - times[,i]
-    }
-  }
-
-  time <- rowMeans(times)
-  path <- space[order(time),,drop=F]
-
-  # output result
-  trajectory <- list(
-    path = path,
-    time = time
-  )
-  class(trajectory) <- "SCORPIUS::trajectory"
-  trajectory
-}
 
 #' @title Reverse a trajectory
 #'
