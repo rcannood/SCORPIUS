@@ -94,7 +94,7 @@ infer.initial.trajectory <- function(space, k) {
 #' }
 #'
 #' @usage
-#' infer.trajectory(space, k)
+#' infer.trajectory(space, k = 4, thresh = .001, maxit = 10, stretch = 0, smoother = "smooth.spline")
 #'
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
