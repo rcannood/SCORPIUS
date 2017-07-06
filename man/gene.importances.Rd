@@ -18,7 +18,7 @@ gene.importances(x, time, num.permutations = 0, ntree = 10000,
 
 \item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
 
-\item{num.threads}{Number of threads. Default is number of CPUs available.}
+\item{num.threads}{Number of threads. Default is number of CPU cores available.}
 
 \item{...}{Extra parameters passed to ranger.}
 }
