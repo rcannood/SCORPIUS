@@ -5,7 +5,7 @@
 \title{Calculate the importance of a feature}
 \usage{
 gene.importances(x, time, num.permutations = 0, ntree = 10000,
-  mtry = ncol(x) * 0.01, ...)
+  mtry = ncol(x) * 0.01, num.threads = NULL, ...)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
@@ -17,6 +17,8 @@ gene.importances(x, time, num.permutations = 0, ntree = 10000,
 \item{ntree}{The number of trees to grow (default: 10000).}
 
 \item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
+
+\item{num.threads}{Number of threads. Default is number of CPUs available.}
 
 \item{...}{Extra parameters passed to ranger.}
 }
