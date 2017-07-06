@@ -18,7 +18,7 @@
 #' draw.trajectory.plot(space, ginhoux$sample.info$group.name)
 reduce.dimensionality.landmarked <- function(x, dist.fun, ndim = 3, landmark.method = "naive", num.landmarks = 1000, rescale = T) {
   lm.out <- landmark.selection(x, dist.fun, landmark.method, num.landmarks)
-  cmd.out <- cmdscale.withlandmarks(lm.out$dist.lm, lm.out$dist.2lm, ndim = ndim)
+  cmd.out <- cmdscale.withlandmarks(lm.out$dist.lm, lm.out$dist.2lm, ndim = ndim, rescale = rescale)
   attr(cmd.out, "landmarks") <- lm.out$ix.lm
   cmd.out
 }
@@ -84,7 +84,7 @@ cmdscale.withlandmarks <- function(dist.lm, dist.2lm, ndim = 3, rescale = T) {
   # rescale if necessary
   if (rescale) {
     Slm <- rescale.and.center(Slm)
-    S <- apply.quant.scale(S, attr(Slm, "center"), attr(Slm, "scale"))
+    S <- rescale.and.center(S)
   }
 
   # output
