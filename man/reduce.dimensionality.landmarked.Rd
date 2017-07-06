@@ -28,6 +28,6 @@ Multidimensional scaling with landmarks
 }
 \examples{
 data(ginhoux)
-space <- mds_withlandmarks(ginhoux$expression, correlation.distance)
+space <- reduce.dimensionality.landmarked(ginhoux$expression, correlation.distance)
 draw.trajectory.plot(space, ginhoux$sample.info$group.name)
 }

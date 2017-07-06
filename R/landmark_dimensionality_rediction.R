@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' data(ginhoux)
-#' space <- mds_withlandmarks(ginhoux$expression, correlation.distance)
+#' space <- reduce.dimensionality.landmarked(ginhoux$expression, correlation.distance)
 #' draw.trajectory.plot(space, ginhoux$sample.info$group.name)
 reduce.dimensionality.landmarked <- function(x, dist.fun, ndim = 3, landmark.method = "naive", num.landmarks = 1000, rescale = T) {
   lm.out <- landmark.selection(x, dist.fun, landmark.method, num.landmarks)
