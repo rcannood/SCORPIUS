@@ -366,8 +366,12 @@ extract.modules <- function(x, ...) {
   # order features within one module according to a dimensionality reduction of the correlation distance
   modules <- dplyr::bind_rows(lapply(unique(labels), function(l) {
     ix <- which(labels==l)
-    dimred <- reduce.dimensionality(dist[ix, ix, drop=F], ndim=1)
-    data.frame(feature=feature.names[ix], index=ix, module=l, value=dimred[,1], stringsAsFactors = F, row.names = NULL)
+    if (length(ix) > 1) {
+      dimred <- reduce.dimensionality(dist[ix, ix, drop=F], ndim=1)
+      data.frame(feature=feature.names[ix], index=ix, module=l, value=dimred[,1], stringsAsFactors = F, row.names = NULL)
+    } else {
+      data.frame(feature=feature.names[ix], index=ix, module=l, value=0, stringsAsFactors = F, row.names = NULL)
+    }
   }))
 
   modules <- as.data.frame(modules[order(modules$module, modules$value),,drop=F])
