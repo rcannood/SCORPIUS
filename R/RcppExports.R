@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 euclidean_distance_rcpp <- function(x, y) {
-    .Call('SCORPIUS_euclidean_distance_rcpp', PACKAGE = 'SCORPIUS', x, y)
+    .Call('_SCORPIUS_euclidean_distance_rcpp', PACKAGE = 'SCORPIUS', x, y)
 }
 

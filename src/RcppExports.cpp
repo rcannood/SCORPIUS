@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // euclidean_distance_rcpp
 Rcpp::NumericMatrix euclidean_distance_rcpp(const Rcpp::NumericMatrix& x, const Rcpp::NumericMatrix& y);
-RcppExport SEXP SCORPIUS_euclidean_distance_rcpp(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP _SCORPIUS_euclidean_distance_rcpp(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"SCORPIUS_euclidean_distance_rcpp", (DL_FUNC) &SCORPIUS_euclidean_distance_rcpp, 2},
+    {"_SCORPIUS_euclidean_distance_rcpp", (DL_FUNC) &_SCORPIUS_euclidean_distance_rcpp, 2},
     {NULL, NULL, 0}
 };
 
