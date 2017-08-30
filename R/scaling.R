@@ -33,7 +33,7 @@ rescale.and.center <- function(x, center = 0, max.range = 1) {
   new.center <- (ranges[1,] + ranges[2,]) / 2 - (center * new.scale / 2)
 
   # calculate rescaled data
-  out_x <- apply.scale(x, new.center, new.scale)
+  apply.scale(x, new.center, new.scale)
 }
 
 #' Apply scaling factors
