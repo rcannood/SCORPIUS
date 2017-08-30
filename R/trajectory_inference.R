@@ -347,10 +347,6 @@ extract.modules <- function(x, ...) {
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
 
-  requireNamespace("mclust")
-  requireNamespace("dplyr")
-  requireNamespace("stats")
-
   feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
 
   # sigh.. mclust doesn't do well with requireNamespace
