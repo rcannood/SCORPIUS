@@ -94,7 +94,14 @@ infer.initial.trajectory <- function(space, k) {
 #' }
 #'
 #' @usage
-#' infer.trajectory(space, k = 4, thresh = .001, maxit = 10, stretch = 0, smoother = "smooth.spline")
+#' infer.trajectory(
+#'   space,
+#'   k = 4,
+#'   thresh = .001,
+#'   maxit = 10,
+#'   stretch = 0,
+#'   smoother = "smooth.spline"
+#' )
 #'
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
@@ -172,96 +179,6 @@ infer.trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
   class(trajectory) <- "SCORPIUS::trajectory"
   trajectory
 }
-#'
-#' #' @title Infer a guided trajectory
-#' #'
-#' #' @description \code{infer.guided.trajectory} infers multiple
-#' #' trajectories and uses the original space with the combined trajectory orderings
-#' #' to infer a guided trajectory.
-#' #'
-#' #' @usage
-#' #' infer.guided.trajectory(space, number = 10, ...)
-#' #'
-#' #' @param space A numeric matrix or data frame containing the coordinates of samples.
-#' #' @param number The number of trajectories to infer
-#' #' @param ... Parameters for \code{\link{infer.trajectory}}
-#' #'
-#' #' @return A list containing several objects:
-#' #' \itemize{
-#' #'   \item \code{path}: NULL
-#' #'   \item \code{time}: the time point of each sample along the inferred trajectory.
-#' #' }
-#' #'
-#' #' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
-#' #'
-#' #' @importFrom stats cor
-#' #'
-#' #' @export
-#' infer.guided.trajectory <- function(space, number = 10, ...) {
-#'   requireNamespace("stats")
-#'
-#'   times <- sapply(seq_len(number), function(zzz) {
-#'     infer.trajectory(space, ...)$time
-#'   })
-#'
-#'   for (i in seq_len(number)) {
-#'     if (stats::cor(times[,1], times[,i]) < 0) {
-#'       times[,i] <- 1 - times[,i]
-#'     }
-#'   }
-#'
-#'   space.times <- cbind(space, times)
-#'   SCORPIUS::infer.trajectory(space.times)
-#' }
-#'
-#' #' @title Average orderings of multiple trajectories
-#' #'
-#' #' @description \code{infer.consensus.trajectory} infers multiple
-#' #' trajectories with the \code{\link{infer.trajectory}} method, and aligns
-#' #' and averages the orderings.
-#' #'
-#' #' @usage
-#' #' infer.consensus.trajectory(space, number = 10, ...)
-#' #'
-#' #' @param space A numeric matrix or data frame containing the coordinates of samples.
-#' #' @param number The number of trajectories to infer
-#' #' @param ... Parameters for \code{\link{infer.trajectory}}
-#' #'
-#' #' @return A list containing several objects:
-#' #' \itemize{
-#' #'   \item \code{path}: NULL
-#' #'   \item \code{time}: the time point of each sample along the inferred trajectory.
-#' #' }
-#' #'
-#' #' @seealso \code{\link{infer.trajectory}}, \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
-#' #'
-#' #' @importFrom stats cor
-#' #'
-#' #' @export
-#' infer.consensus.trajectory <- function(space, number = 10, ...) {
-#'   requireNamespace("stats")
-#'
-#'   times <- sapply(seq_len(number), function(zzz) {
-#'     infer.trajectory(space, ...)$time
-#'   })
-#'
-#'   for (i in seq_len(number)) {
-#'     if (stats::cor(times[,1], times[,i]) < 0) {
-#'       times[,i] <- 1 - times[,i]
-#'     }
-#'   }
-#'
-#'   time <- rowMeans(times)
-#'   path <- space[order(time),,drop=F]
-#'
-#'   # output result
-#'   trajectory <- list(
-#'     path = path,
-#'     time = time
-#'   )
-#'   class(trajectory) <- "SCORPIUS::trajectory"
-#'   trajectory
-#' }
 
 #' @title Reverse a trajectory
 #'
@@ -301,119 +218,4 @@ reverse.trajectory <- function(trajectory) {
   trajectory$time <- 1-trajectory$time
   trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=F]
   trajectory
-}
-
-#' @title Extract modules of features
-#'
-#' @description \code{extract.modules} uses adaptive branch pruning to extract modules of features, which is typically done on the smoothed expression returned by \code{\link{gene.importances}}.
-#'
-#' @usage
-#' extract.modules(x, ...)
-#'
-#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
-#' @param ... Extra parameters passed to Mclust
-#'
-#' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
-#'
-#' @seealso \code{\link{gene.importances}}
-#'
-#' @export
-#'
-#' @importFrom mclust Mclust
-#' @importFrom stats as.dist hclust
-#' @importFrom dplyr bind_rows
-#'
-#' @examples
-#' ## Generate a dataset and visualise
-#' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
-#' expression <- dataset$expression
-#' group.name <- dataset$sample.info$group.name
-#' dist <- correlation.distance(expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space)
-#' time <- traj$time
-#' draw.trajectory.plot(space, path=traj$path, group.name)
-#'
-#' ## Select most important genes
-#' gimp <- gene.importances(expression, traj$time, num.permutations = 0)
-#' gene.sel <- gimp[1:50,]
-#' expr.sel <- expression[,gene.sel$gene]
-#'
-#' ## Group the genes into modules and visualise the modules in a heatmap
-#' modules <- extract.modules(quant.scale(expr.sel))
-#' draw.trajectory.heatmap(expr.sel, time, group.name, modules)
-extract.modules <- function(x, ...) {
-  # input checks
-  if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
-
-  feature.names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
-
-  # sigh.. mclust doesn't do well with requireNamespace
-  mclustBIC <- mclust::mclustBIC
-
-  # cluster with mclust
-  labels <- mclust::Mclust(t(x), ...)$classification
-
-  # hierarchically cluster the features
-  dist <- correlation.distance(t(x))
-  hcl <- stats::hclust(stats::as.dist(dist), method="average")
-
-  # order features within one module according to a dimensionality reduction of the correlation distance
-  modules <- dplyr::bind_rows(lapply(unique(labels), function(l) {
-    ix <- which(labels==l)
-    if (length(ix) > 1) {
-      dimred <- reduce.dimensionality(dist[ix, ix, drop=F], ndim=1)
-      data.frame(feature=feature.names[ix], index=ix, module=l, value=dimred[,1], stringsAsFactors = F, row.names = NULL)
-    } else {
-      data.frame(feature=feature.names[ix], index=ix, module=l, value=0, stringsAsFactors = F, row.names = NULL)
-    }
-  }))
-
-  modules <- as.data.frame(modules[order(modules$module, modules$value),,drop=F])
-
-  # return output
-  modules[,c("feature", "index", "module")]
-}
-
-#' @title Calculate the importance of a feature
-#'
-#' @description Calculates the feature importance of each column in \code{x} in trying to predict the time ordering.
-#'
-#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
-#' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
-#' @param num.permutations The number of permutations to test against for calculating the p-values (default: 0).
-#' @param ntree The number of trees to grow (default: 10000).
-#' @param mtry The number of variables randomly samples at each split (default: 1\% of features).
-#' @param num.threads Number of threads. Default is number of CPU cores available.
-#' @param ... Extra parameters passed to ranger.
-#'
-#' @return a data frame containing the importance of each feature for the given time line
-#'
-#' @importFrom ranger ranger
-#' @importFrom pbapply pblapply
-#' @export
-#'
-#' @examples
-#' dataset <- generate.dataset(type="s", num.genes=500, num.samples=1000, num.groups=4)
-#' expression <- dataset$expression
-#' group.name <- dataset$sample.info$group.name
-#' dist <- correlation.distance(expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space)
-#' gene.importances(expression, traj$time, num.permutations = 0)
-gene.importances <- function(x, time, num.permutations = 0, ntree = 10000, mtry = ncol(x) * .01, num.threads = NULL, ...) {
-  data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
-  importance <- ranger::ranger(data = data, dependent.variable.name = "XXXtimeXXX", num.trees = ntree, mtry = mtry, importance = "impurity", ...)$variable.importance
-  if (num.permutations > 0) {
-    perms <- unlist(pbapply::pblapply(seq_len(num.permutations), function(i) {
-      data$time <- sample(data$time)
-      ranger::ranger(data = data, dependent.variable.name = "XXXtimeXXX", num.trees = ntree, mtry = mtry, importance = "impurity", num.threads = num.threads, ...)$variable.importance
-    }))
-    pvalue <- sapply(importance, function(x) mean(x < perms))
-  } else {
-    pvalue <- rep(NA, length(importance))
-  }
-  df <- data.frame(gene = colnames(x), importance, pvalue, stringsAsFactors = F)
-  df[order(df$importance, decreasing = T), , drop = F]
 }

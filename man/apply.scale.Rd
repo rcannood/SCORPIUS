@@ -2,7 +2,7 @@
 % Please edit documentation in R/scaling.R
 \name{apply.scale}
 \alias{apply.scale}
-\title{Apply scaling factors}
+\title{Apply a uniform scale}
 \usage{
 apply.scale(x, center, scale)
 }
@@ -17,5 +17,5 @@ apply.scale(x, center, scale)
 The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
 }
 \description{
-Apply scaling factors
+Apply a uniform scale
 }
