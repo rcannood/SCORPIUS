@@ -15,19 +15,23 @@ Imports:
     class,
     dplyr,
     fitdistrplus,
+    grDevices,
     TSP,
     ggplot2 (>= 2.0),
+    magrittr,
     MASS,
+    mclust,
     Rcpp,
     parallel,
     pbapply,
     pheatmap,
     princurve,
+    purrr,
+    ranger,
     RColorBrewer,
     reshape2,
     splines,
-    mclust,
-    ranger
+    tidyr
 LinkingTo:
     Rcpp
 License: GPL-3

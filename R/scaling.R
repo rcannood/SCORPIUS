@@ -36,7 +36,7 @@ rescale.and.center <- function(x, center = 0, max.range = 1) {
   apply.scale(x, new.center, new.scale)
 }
 
-#' Apply scaling factors
+#' Apply a uniform scale
 #'
 #' @param x A numeric matrix or data frame.
 #' @param center A centering vector for each column
