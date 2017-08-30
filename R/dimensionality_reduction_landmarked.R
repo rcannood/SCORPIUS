@@ -8,7 +8,6 @@
 #' @param num.landmarks the number of landmarks to be selected.
 #' @param rescale A logical indicating whether or not the returned space should be rescaled and centered.
 #'
-#'
 #' @return A list containing the reduced space of the landmarks and the complete dataset.
 #' @export
 #'
