@@ -43,7 +43,7 @@
 #' traj <- infer_trajectory(space)
 #' draw_trajectory_plot(space, progression_group=groups, path=traj$path)
 #' draw_trajectory_plot(space, progression_group=groups, path=traj$path, contour=TRUE)
-draw_trajectory_plot <- function(space, progression_group=NULL, path=NULL, contour=FALSE) {
+draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
   # input checks
   if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
@@ -70,16 +70,16 @@ draw_trajectory_plot <- function(space, progression_group=NULL, path=NULL, conto
   lim <- if (contour) c(min-.1*diff, max+.1*diff) else c(min, max)
 
   # construct base ggplot
-  g <- ggplot2::ggplot() +
-    ggplot2::theme_classic() +
-    ggplot2::labs(x="Component 1", y="Component 2", colour="Group", fill="Group") +
-    ggplot2::xlim(min-diff, max+diff) +
-    ggplot2::ylim(min-diff, max+diff) +
-    ggplot2::coord_equal(xlim=lim, ylim=lim)
+  g <- ggplot() +
+    theme_classic() +
+    labs(x="Component 1", y="Component 2", colour="Group", fill="Group") +
+    xlim(min-diff, max+diff) +
+    ylim(min-diff, max+diff) +
+    coord_equal(xlim=lim, ylim=lim)
 
   # if a contour is desirable, add the contour layer
   if (contour) {
-    aes_contour <- ggplot2::aes_string("Comp1", "Comp2", z="density")
+    aes_contour <- aes_string("Comp1", "Comp2", z="density")
     if (!is.null(progression_group)) aes_contour$fill <- quote(progression_group)
 
     groupings <-
@@ -92,7 +92,7 @@ draw_trajectory_plot <- function(space, progression_group=NULL, path=NULL, conto
         gr
       }
 
-    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN=function(group.name) {
+    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN=function(group_name) {
       group_ix <- groupings[[group_name]]
       kde_out <- MASS::kde2d(space_df[group_ix,1], space_df[group_ix,2], lims=c(min-diff, max+diff, min-diff, max+diff))
       z_melt <- reshape2::melt(kde_out$z)
@@ -104,18 +104,18 @@ draw_trajectory_plot <- function(space, progression_group=NULL, path=NULL, conto
     if (!is.null(progression_group) && is.factor(progression_group))
       density_df$progression_group <- factor(density_df$progression_group, levels = levels(progression_group))
 
-    g <- g + ggplot2::stat_contour(geom="polygon", aes_contour, density_df, breaks=c(1), alpha=.2)
+    g <- g + stat_contour(geom="polygon", aes_contour, density_df, breaks=c(1), alpha=.2)
   }
 
   # add the point layer
-  aes_point <- ggplot2::aes_string("Comp1", "Comp2")
+  aes_point <- aes_string("Comp1", "Comp2")
   if (!is.null(progression_group))
     aes_point$colour <- quote(progression_group)
-  g <- g + ggplot2::geom_point(aes_point, space_df)
+  g <- g + geom_point(aes_point, space_df)
 
   # if a path is desirable, add the path layer
   if (!is.null(path))
-    g <- g + ggplot2::geom_path(ggplot2::aes_string("Comp1", "Comp2"), data.frame(path))
+    g <- g + geom_path(aes_string("Comp1", "Comp2"), data.frame(path))
 
   # return the plot
   g

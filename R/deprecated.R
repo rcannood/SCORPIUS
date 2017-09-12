@@ -14,84 +14,64 @@
 #' }
 #'
 generate.dataset <- function(...) {
-  .Deprecated(new = "generate_dataset", package = "SCORPIUS")
-  generate_dataset(...)
+  .Defunct(new = "generate_dataset", package = "SCORPIUS")
 }
 reduce.dimensionality <- function(...) {
-  .Deprecated(new = "reduce_dimensionality", package = "SCORPIUS")
-  reduce_dimensionality(...)
+  .Defunct(new = "reduce_dimensionality", package = "SCORPIUS")
 }
 reduce.dimensionality.landmarked <- function(...) {
-  .Deprecated(new = "reduce_dimensionality_landmarked", package = "SCORPIUS")
-  reduce_dimensionality_landmarked(...)
+  .Defunct(new = "reduce_dimensionality_landmarked", package = "SCORPIUS")
 }
 euclidean.distance <- function(...) {
-  .Deprecated(new = "euclidean_distance", package = "SCORPIUS")
-  euclidean_distance(...)
+  .Defunct(new = "euclidean_distance", package = "SCORPIUS")
 }
 correlation.distance <- function(...) {
-  .Deprecated(new = "correlation_distance", package = "SCORPIUS")
-  correlation_distance(...)
+  .Defunct(new = "correlation_distance", package = "SCORPIUS")
 }
 knn.distances <- function(...) {
-  .Deprecated(new = "knn_distances", package = "SCORPIUS")
-  knn_distances(...)
+  .Defunct(new = "knn_distances", package = "SCORPIUS")
 }
 evaluate.dim.red <- function(...) {
-  .Deprecated(new = "evaluate_dim_red", package = "SCORPIUS")
-  evaluate_dim_red(...)
+  .Defunct(new = "evaluate_dim_red", package = "SCORPIUS")
 }
 evaluate.trajectory <- function(...) {
-  .Deprecated(new = "evaluate_trajectory", package = "SCORPIUS")
-  evaluate_trajectory(...)
+  .Defunct(new = "evaluate_trajectory", package = "SCORPIUS")
 }
 extract.modules <- function(...) {
-  .Deprecated(new = "extract_modules", package = "SCORPIUS")
-  extract_modules(...)
+  .Defunct(new = "extract_modules", package = "SCORPIUS")
 }
 gene.importances <- function(...) {
-  .Deprecated(new = "gene_importances", package = "SCORPIUS")
-  gene_importances(...)
+  .Defunct(new = "gene_importances", package = "SCORPIUS")
 }
 outlier.filter <- function(...) {
-  .Deprecated(new = "outlier_filter", package = "SCORPIUS")
-  outlier_filter(...)
+  .Defunct(new = "outlier_filter", package = "SCORPIUS")
 }
 draw.trajectory.plot <- function(...) {
-  .Deprecated(new = "draw_trajectory_plot", package = "SCORPIUS")
-  draw_trajectory_plot(...)
+  .Defunct(new = "draw_trajectory_plot", package = "SCORPIUS")
 }
 draw.trajectory.heatmap <- function(...) {
-  .Deprecated(new = "draw_trajectory_heatmap", package = "SCORPIUS")
-  draw_trajectory_heatmap(...)
+  .Defunct(new = "draw_trajectory_heatmap", package = "SCORPIUS")
 }
 rescale.and.center <- function(...) {
-  .Deprecated(new = "rescale_and_center", package = "SCORPIUS")
-  rescale_and_center(...)
+  .Defunct(new = "rescale_and_center", package = "SCORPIUS")
 }
 apply.scale <- function(...) {
-  .Deprecated(new = "apply_scale", package = "SCORPIUS")
-  apply_scale(...)
+  .Defunct(new = "apply_scale", package = "SCORPIUS")
 }
 quant.scale <- function(...) {
-  .Deprecated(new = "quant_scale", package = "SCORPIUS")
-  quant_scale(...)
+  .Defunct(new = "quant_scale", package = "SCORPIUS")
 }
 apply.quant.scale <- function(...) {
-  .Deprecated(new = "apply_quant_scale", package = "SCORPIUS")
-  apply_quant_scale(...)
+  .Defunct(new = "apply_quant_scale", package = "SCORPIUS")
 }
 infer.initial.trajectory <- function(...) {
-  .Deprecated(new = "infer_initial_trajectory", package = "SCORPIUS")
-  infer_initial_trajectory(...)
+  .Defunct(new = "infer_initial_trajectory", package = "SCORPIUS")
 }
 infer.trajectory <- function(...) {
-  .Deprecated(new = "infer_trajectory", package = "SCORPIUS")
-  infer_trajectory(...)
+  .Defunct(new = "infer_trajectory", package = "SCORPIUS")
 }
 reverse.trajectory <- function(...) {
-  .Deprecated(new = "reverse_trajectory", package = "SCORPIUS")
-  reverse_trajectory(...)
+  .Defunct(new = "reverse_trajectory", package = "SCORPIUS")
 }
 
 

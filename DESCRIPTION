@@ -7,38 +7,37 @@ Description: SCORPIUS orders single cells with regard to an implicit timeline, s
 Author: Robrecht Cannoodt
 Maintainer: Robrecht Cannoodt <robrecht.cannoodt@gmail.com>
 Authors@R: c(
-    person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre"))
-  )
+  person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre")))
 Depends:
-    R (>= 3.0.0)
+  R (>= 3.0.0)
 Imports:
-    dplyr,
-    fitdistrplus,
-    grDevices,
-    TSP,
-    ggplot2 (>= 2.0),
-    magrittr,
-    MASS,
-    mclust,
-    Rcpp,
-    pbapply,
-    pheatmap,
-    princurve,
-    purrr,
-    ranger,
-    RColorBrewer,
-    reshape2,
-    splines,
-    testthat,
-    tidyr
+  dplyr,
+  fitdistrplus,
+  grDevices,
+  TSP,
+  ggplot2 (>= 2.0),
+  magrittr,
+  MASS,
+  mclust,
+  Rcpp,
+  pbapply,
+  pheatmap,
+  princurve,
+  purrr,
+  ranger,
+  RColorBrewer,
+  reshape2,
+  splines,
+  testthat,
+  tidyr
 LinkingTo:
-    Rcpp
+  Rcpp
 License: GPL-3
 URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
 RoxygenNote: 6.0.1
 Suggests:
-    knitr,
-    rmarkdown
+  knitr,
+  rmarkdown
 VignetteBuilder: knitr
