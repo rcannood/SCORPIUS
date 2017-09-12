@@ -37,7 +37,7 @@ gene_importances <- function(x, time, num_permutations = 0, ntree = 10000, mtry 
   )$variable.importance
   if (num_permutations > 0) {
     perms <- unlist(pbapply::pblapply(seq_len(num_permutations), function(i) {
-      data$time <- sample(data$time)
+      data$XXXtimeXXX <- sample(data$XXXtimeXXX)
       ranger::ranger(
         data = data,
         dependent.variable.name = "XXXtimeXXX",

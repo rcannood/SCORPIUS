@@ -10,10 +10,10 @@ Expression values for 384 cells and 500 genes is generated as follows.
 
 ``` r
 library(SCORPIUS)
-dataset <- generate.dataset(type="poly", num.genes=500, num.samples=384, num.groups=4)
+dataset <- generate_dataset(type="poly", num_genes=500, num_samples=384, num_groups=4)
 ```
 
-The resulting dataset is a list containing a matrix named `expression` and a data frame named `sample.info`.
+The resulting dataset is a list containing a matrix named `expression` and a data frame named `sample_info`.
 
 `expression` is a 384-by-500 matrix containing the expression values of all the cells and all the genes.
 
@@ -29,13 +29,13 @@ dataset$expression[1:6, 1:6]
     ## Sample5 0.8599413 7.037318 0.000000 4.289563 0.000000 2.973694
     ## Sample6 3.9560420 0.000000 6.246375 0.000000 4.308269 4.198609
 
-`sample.info` is a data frame with the metadata of the cells, containing only the group each cell belongs to.
+`sample_info` is a data frame with the metadata of the cells, containing only the group each cell belongs to.
 
 ``` r
-head(dataset$sample.info)
+head(dataset$sample_info)
 ```
 
-    ##         group.name
+    ##         group_name
     ## Sample1    Group 1
     ## Sample2    Group 1
     ## Sample3    Group 1
@@ -54,8 +54,8 @@ The distance between any two samples is defined as their correlation distance, n
 
 ``` r
 expression <- dataset$expression
-group.name <- dataset$sample.info$group.name
-dist <- correlation.distance(expression)
+group_name <- dataset$sample_info$group_name
+dist <- correlation_distance(expression)
 ```
 
 `dist` is a 384-by-384 matrix, with values ranging from 0 to 1.
@@ -75,25 +75,25 @@ plot(density(dist))
 The reduced space is constructed as follows:
 
 ``` r
-space <- reduce.dimensionality(dist)
+space <- reduce_dimensionality(dist)
 ```
 
 The new space is a 384-by-3 matrix, and can be visualised as follows:
 
 ``` r
-draw.trajectory.plot(space)
+draw_trajectory_plot(space)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 Looking at this plot, it seems that the cells in this dataset are involved in a dynamic process.
 
-In addition, if a property of the cells (e.g. cell type) is known, it can be used to colour the plot using the `progression.group` parameter.
+In addition, if a property of the cells (e.g. cell type) is known, it can be used to colour the plot using the `progression_group` parameter.
 
 In this case, the underlying groups of each cell were also given:
 
 ``` r
-draw.trajectory.plot(space, progression.group = group.name)
+draw_trajectory_plot(space, progression_group = group_name)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-9-1.png)
@@ -106,15 +106,15 @@ The main goal of SCORPIUS is to infer a trajectory through the cells, and orden 
 SCORPIUS infers a trajectory through several intermediate steps, which are all executed as follows:
 
 ``` r
-traj <- infer.trajectory(space)
+traj <- infer_trajectory(space)
 ```
 
 The result is a list containing the final trajectory `path` and the inferred timeline for each sample `time`.
 
-The trajectory can be visualised with respect to the samples by passing it to `draw.trajectory.plot`:
+The trajectory can be visualised with respect to the samples by passing it to `draw_trajectory_plot`:
 
 ``` r
-draw.trajectory.plot(space, progression.group = group.name, path = traj$path)
+draw_trajectory_plot(space, progression_group = group_name, path = traj$path)
 ```
 
 ![](simulated-data_files/figure-markdown_github/unnamed-chunk-11-1.png)
@@ -125,15 +125,15 @@ Finding candidate marker genes
 We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, as such genes might be good candidate marker genes for the dynamic process that is being investigated.
 
 ``` r
-gimp <- gene.importances(expression, traj$time, num.permutations = 0)
-gene.sel <- gimp[1:50,]
-expr.sel <- expression[,gene.sel$gene]
+gimp <- gene_importances(expression, traj$time, num_permutations = 0, num_threads = 8)
+gene_sel <- gimp[1:50,]
+expr_sel <- expression[,gene_sel$gene]
 ```
 
-To visualise the expression of the selected genes, use the `draw.trajectory.heatmap` function.
+To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
 
 ``` r
-draw.trajectory.heatmap(expr.sel, traj$time, group.name)
+draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
 ![](simulated-data_files/figure-markdown_github/visualise%20tafs-1.png)
@@ -141,8 +141,126 @@ draw.trajectory.heatmap(expr.sel, traj$time, group.name)
 Finally, these genes can also be grouped into modules as follows:
 
 ``` r
-modules <- extract.modules(quant.scale(expr.sel))
-draw.trajectory.heatmap(expr.sel, traj$time, group.name, modules)
+modules <- extract_modules(quant_scale(expr_sel))
+```
+
+    ## fitting ...
+    ## 
+      |                                                                       
+      |                                                                 |   0%
+      |                                                                       
+      |=                                                                |   2%
+      |                                                                       
+      |==                                                               |   4%
+      |                                                                       
+      |====                                                             |   5%
+      |                                                                       
+      |=====                                                            |   7%
+      |                                                                       
+      |======                                                           |   9%
+      |                                                                       
+      |=======                                                          |  11%
+      |                                                                       
+      |========                                                         |  13%
+      |                                                                       
+      |=========                                                        |  15%
+      |                                                                       
+      |===========                                                      |  16%
+      |                                                                       
+      |============                                                     |  18%
+      |                                                                       
+      |=============                                                    |  20%
+      |                                                                       
+      |==============                                                   |  22%
+      |                                                                       
+      |===============                                                  |  24%
+      |                                                                       
+      |=================                                                |  25%
+      |                                                                       
+      |==================                                               |  27%
+      |                                                                       
+      |===================                                              |  29%
+      |                                                                       
+      |====================                                             |  31%
+      |                                                                       
+      |=====================                                            |  33%
+      |                                                                       
+      |======================                                           |  35%
+      |                                                                       
+      |========================                                         |  36%
+      |                                                                       
+      |=========================                                        |  38%
+      |                                                                       
+      |==========================                                       |  40%
+      |                                                                       
+      |===========================                                      |  42%
+      |                                                                       
+      |============================                                     |  44%
+      |                                                                       
+      |==============================                                   |  45%
+      |                                                                       
+      |===============================                                  |  47%
+      |                                                                       
+      |================================                                 |  49%
+      |                                                                       
+      |=================================                                |  51%
+      |                                                                       
+      |==================================                               |  53%
+      |                                                                       
+      |===================================                              |  55%
+      |                                                                       
+      |=====================================                            |  56%
+      |                                                                       
+      |======================================                           |  58%
+      |                                                                       
+      |=======================================                          |  60%
+      |                                                                       
+      |========================================                         |  62%
+      |                                                                       
+      |=========================================                        |  64%
+      |                                                                       
+      |===========================================                      |  65%
+      |                                                                       
+      |============================================                     |  67%
+      |                                                                       
+      |=============================================                    |  69%
+      |                                                                       
+      |==============================================                   |  71%
+      |                                                                       
+      |===============================================                  |  73%
+      |                                                                       
+      |================================================                 |  75%
+      |                                                                       
+      |==================================================               |  76%
+      |                                                                       
+      |===================================================              |  78%
+      |                                                                       
+      |====================================================             |  80%
+      |                                                                       
+      |=====================================================            |  82%
+      |                                                                       
+      |======================================================           |  84%
+      |                                                                       
+      |========================================================         |  85%
+      |                                                                       
+      |=========================================================        |  87%
+      |                                                                       
+      |==========================================================       |  89%
+      |                                                                       
+      |===========================================================      |  91%
+      |                                                                       
+      |============================================================     |  93%
+      |                                                                       
+      |=============================================================    |  95%
+      |                                                                       
+      |===============================================================  |  96%
+      |                                                                       
+      |================================================================ |  98%
+      |                                                                       
+      |=================================================================| 100%
+
+``` r
+draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
 
 ![](simulated-data_files/figure-markdown_github/moduled%20tafs-1.png)

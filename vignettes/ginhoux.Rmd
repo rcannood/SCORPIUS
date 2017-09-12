@@ -135,7 +135,7 @@ We search for genes whose expression is seems to be a function of the trajectory
 as such genes might be good candidate marker genes for dendritic cell maturation.
 
 ```{r find tafs}
-gimp <- gene_importances(expression, traj$time, num_permutations = 0)
+gimp <- gene_importances(expression, traj$time, num_permutations = 0, num_threads = 8)
 gene_sel <- gimp[1:50,]
 expr_sel <- expression[,gene_sel$gene]
 ```

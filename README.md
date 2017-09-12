@@ -37,7 +37,7 @@ You can install:
 * the latest development version from github with
 
     ```R
-    devtools::install_github("rcannood/SCORPIUS")
+    devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
     ```
 -->
 If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/rcannood/SCORPIUS/issues).
@@ -66,23 +66,23 @@ The `ginhoux` dataset (See Schlitzer et al. 2015) contains 248 dendritic cell pr
 ``` r
 data(ginhoux)
 expression <- ginhoux$expression
-group.name <- ginhoux$sample.info$group.name
+group_name <- ginhoux$sample_info$group_name
 ```
 
 With the following code, SCORPIUS reduces the dimensionality of the dataset and provides a visual overview of the dataset. In this plot, cells that are similar in terms of expression values will be placed closer together than cells with dissimilar expression values.
 
 ``` r
-dist <- correlation.distance(expression)
+dist <- correlation_distance(expression)
 
 # filter outliers
-filt <- outlier.filter(dist)
+filt <- outlier_filter(dist)
 expression <- expression[filt, ]
-group.name <- group.name[filt]
+group_name <- group_name[filt]
 dist <- dist[filt, filt]
 
 # reduce dimensionality
-space <- reduce.dimensionality(dist)
-draw.trajectory.plot(space, group.name)
+space <- reduce_dimensionality(dist)
+draw_trajectory_plot(space, group_name)
 ```
 
 ![](README_files/figure-markdown_github/reduce%20dimensionality-1.png)
@@ -90,8 +90,8 @@ draw.trajectory.plot(space, group.name)
 To infer and visualise a trajectory through these cells, run:
 
 ``` r
-traj <- infer.trajectory(space)
-draw.trajectory.plot(space, group.name, traj$path)
+traj <- infer_trajectory(space)
+draw_trajectory_plot(space, group_name, traj$path)
 ```
 
 ![](README_files/figure-markdown_github/infer%20trajectory-1.png)
@@ -99,19 +99,133 @@ draw.trajectory.plot(space, group.name, traj$path)
 To identify and visualise candidate marker genes, execute the following code:
 
 ``` r
-# warning: setting num.permutations to 10 requires a long time (~30min) to run!
+# warning: setting num_permutations to 10 requires a long time (~30min) to run!
 # set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
-gimp <- gene.importances(expression, traj$time, num.permutations = 10) 
+gimp <- gene_importances(expression, traj$time, num_permutations = 10, num_threads = 8) 
+gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
+gene_sel <- gimp$gene[gimp$qvalue < .05]
+expr_sel <- quant_scale(expression[,gene_sel])
+modules <- extract_modules(expr_sel)
 ```
 
-``` r
-gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
-gene.sel <- gimp$gene[gimp$qvalue < .05]
-expr.sel <- quant.scale(expression[,gene.sel])
-modules <- extract.modules(expr.sel)
+    ## fitting ...
+    ## 
+      |                                                                       
+      |                                                                 |   0%
+      |                                                                       
+      |=                                                                |   2%
+      |                                                                       
+      |==                                                               |   4%
+      |                                                                       
+      |====                                                             |   5%
+      |                                                                       
+      |=====                                                            |   7%
+      |                                                                       
+      |======                                                           |   9%
+      |                                                                       
+      |=======                                                          |  11%
+      |                                                                       
+      |========                                                         |  13%
+      |                                                                       
+      |=========                                                        |  15%
+      |                                                                       
+      |===========                                                      |  16%
+      |                                                                       
+      |============                                                     |  18%
+      |                                                                       
+      |=============                                                    |  20%
+      |                                                                       
+      |==============                                                   |  22%
+      |                                                                       
+      |===============                                                  |  24%
+      |                                                                       
+      |=================                                                |  25%
+      |                                                                       
+      |==================                                               |  27%
+      |                                                                       
+      |===================                                              |  29%
+      |                                                                       
+      |====================                                             |  31%
+      |                                                                       
+      |=====================                                            |  33%
+      |                                                                       
+      |======================                                           |  35%
+      |                                                                       
+      |========================                                         |  36%
+      |                                                                       
+      |=========================                                        |  38%
+      |                                                                       
+      |==========================                                       |  40%
+      |                                                                       
+      |===========================                                      |  42%
+      |                                                                       
+      |============================                                     |  44%
+      |                                                                       
+      |==============================                                   |  45%
+      |                                                                       
+      |===============================                                  |  47%
+      |                                                                       
+      |================================                                 |  49%
+      |                                                                       
+      |=================================                                |  51%
+      |                                                                       
+      |==================================                               |  53%
+      |                                                                       
+      |===================================                              |  55%
+      |                                                                       
+      |=====================================                            |  56%
+      |                                                                       
+      |======================================                           |  58%
+      |                                                                       
+      |=======================================                          |  60%
+      |                                                                       
+      |========================================                         |  62%
+      |                                                                       
+      |=========================================                        |  64%
+      |                                                                       
+      |===========================================                      |  65%
+      |                                                                       
+      |============================================                     |  67%
+      |                                                                       
+      |=============================================                    |  69%
+      |                                                                       
+      |==============================================                   |  71%
+      |                                                                       
+      |===============================================                  |  73%
+      |                                                                       
+      |================================================                 |  75%
+      |                                                                       
+      |==================================================               |  76%
+      |                                                                       
+      |===================================================              |  78%
+      |                                                                       
+      |====================================================             |  80%
+      |                                                                       
+      |=====================================================            |  82%
+      |                                                                       
+      |======================================================           |  84%
+      |                                                                       
+      |========================================================         |  85%
+      |                                                                       
+      |=========================================================        |  87%
+      |                                                                       
+      |==========================================================       |  89%
+      |                                                                       
+      |===========================================================      |  91%
+      |                                                                       
+      |============================================================     |  93%
+      |                                                                       
+      |=============================================================    |  95%
+      |                                                                       
+      |===============================================================  |  96%
+      |                                                                       
+      |================================================================ |  98%
+      |                                                                       
+      |=================================================================| 100%
 
+``` r
 # data is already quantile scaled
-draw.trajectory.heatmap(expr.sel, traj$time, group.name, modules, scale.features = F)
+draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features = F)
 ```
 
 ![](README_files/figure-markdown_github/find%20tafs-1.png)
@@ -119,9 +233,9 @@ draw.trajectory.heatmap(expr.sel, traj$time, group.name, modules, scale.features
 By executing the trajectory inference step once more, on the scaled expression data of the selected genes (keep the number of genes limited!), the trajectory can be further refined.
 
 ``` r
-traj.sel <- infer.trajectory(expr.sel)
+traj_sel <- infer_trajectory(expr_sel)
 
-draw.trajectory.heatmap(expr.sel, traj.sel$time, group.name, modules, scale.features = F)
+draw_trajectory_heatmap(expr_sel, traj_sel$time, group_name, modules, scale_features = F)
 ```
 
 ![](README_files/figure-markdown_github/rerun%20inference-1.png)
