@@ -4,25 +4,25 @@
 #' such as cellular development or progression over time.
 #'
 #' @section Outlier functions:
-#' \code{\link{outlierness}} \code{\link{outlier.filter}}
+#' \code{\link{outlierness}} \code{\link{outlier_filter}}
 #'
 #' @section Distance functions:
-#' \code{\link{correlation.distance}}, \code{\link{euclidean.distance}}, \code{\link{knn}}
+#' \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}, \code{\link{knn}}
 #'
 #' @section Dimensionality Reduction functions:
-#' \code{\link{reduce.dimensionality}}, \code{\link{rescale.and.center}}, \code{\link{quant.scale}}
+#' \code{\link{reduce_dimensionality}}, \code{\link{reduce_dimensionality_landmarked}}, \code{\link{rescale_and_center}}, \code{\link{quant_scale}}
 #'
 #' @section Trajectory Inference functions:
-#' \code{\link{infer.trajectory}}, \code{\link{infer.initial.trajectory}}, \code{\link{reverse.trajectory}}, \code{\link{gene.importances}}, \code{\link{extract.modules}}
+#' \code{\link{infer_trajectory}}, \code{\link{infer_initial_trajectory}}, \code{\link{reverse_trajectory}}, \code{\link{gene_importances}}, \code{\link{extract_modules}}
 #'
 #' @section Visualisation functions:
-#' \code{\link{draw.trajectory.plot}}, \code{\link{draw.trajectory.heatmap}}
+#' \code{\link{draw_trajectory_plot}}, \code{\link{draw_trajectory_heatmap}}
 #'
 #' @section Datasets:
-#' \code{\link{generate.dataset}}, \code{\link{ginhoux}}
+#' \code{\link{generate_dataset}}, \code{\link{ginhoux}}
 #'
 #' @section Evaluation functions:
-#' \code{\link{evaluate.trajectory}}, \code{\link{evaluate.dim.red}}
+#' \code{\link{evaluate_trajectory}}, \code{\link{evaluate_dim_red}}
 #'
 #' @docType package
 #' @name SCORPIUS

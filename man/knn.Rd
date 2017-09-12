@@ -4,14 +4,14 @@
 \alias{knn}
 \title{k Nearest Neighbour indices and distances}
 \usage{
-knn(dist, k, self.loops=F)
+knn(dist, k, self_loops=F)
 }
 \arguments{
 \item{dist}{A numeric matrix, data frame or "\code{dist}" object.}
 
 \item{k}{The maximum number of nearest neighbours to search.}
 
-\item{self.loops}{\code{TRUE} if samples with the same index or name are allowed to be neighbours.}
+\item{self_loops}{\code{TRUE} if samples with the same index or name are allowed to be neighbours.}
 }
 \value{
 A list containing two matrices \code{indices} and \code{distances}
@@ -28,7 +28,7 @@ plot(density(knnd$distances))
 
 ## Calculate the kNN distances between two sets of samples
 y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
-dist <- euclidean.distance(x, y)
+dist <- euclidean_distance(x, y)
 knnd <- knn(dist, 10)
 plot(density(knnd$distances))
 }

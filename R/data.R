@@ -1,19 +1,21 @@
+
+
 #' @title Generate a synthetic dataset
 #'
-#' @description \code{generate.dataset} generates an synthetic dataset which can be used for visualisation purposes.
+#' @description \code{generate_dataset} generates an synthetic dataset which can be used for visualisation purposes.
 #'
 #' @usage
-#' generate.dataset(
-#'   type=c("splines", "polynomial"),
-#'   num.samples=400,
-#'   num.genes=500,
-#'   num.groups=4
+#' generate_dataset(
+#'   type = c("splines", "polynomial"),
+#'   num_samples = 400,
+#'   num_genes = 500,
+#'   num_groups = 4
 #' )
 #'
 #' @param type The type of function used in order to generate the expression data. Must be either \code{"splines"} (default) or \code{"polynomial"} (or abbreviations thereof).
-#' @param num.samples The number of samples the dataset will contain.
-#' @param num.genes The number of genes the dataset will contain.
-#' @param num.groups The number of groups the samples will be split up in.
+#' @param num_samples The number of samples the dataset will contain.
+#' @param num_genes The number of genes the dataset will contain.
+#' @param num_groups The number of groups the samples will be split up in.
 #'
 #' @return A list containing the expression data and the meta data of the samples.
 #'
@@ -22,61 +24,60 @@
 #'
 #' @export
 #'
-#' @seealso \code{\link{correlation.distance}}, \code{\link{reduce.dimensionality}}, \code{\link{infer.trajectory}}, \code{\link{draw.trajectory.plot}}
+#' @seealso \code{\link{correlation_distance}}, \code{\link{reduce_dimensionality}}, \code{\link{infer_trajectory}}, \code{\link{draw_trajectory_plot}}
 #'
 #' @examples
 #' ## Generate a dataset
-#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
+#' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 #'
 #' ## Reduce dimensionality and infer trajectory with SCORPIUS
-#' dist <- correlation.distance(dataset$expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space)
+#' dist <- correlation_distance(dataset$expression)
+#' space <- reduce_dimensionality(dist, ndim=2)
+#' traj <- infer_trajectory(space)
 #'
 #' ## Visualise
-#' draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
-generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, num.genes=500, num.groups=4) {
+#' draw_trajectory_plot(space, path=traj$path, progression_group=dataset$sample_info$group_name)
+generate_dataset <- function(type = c("splines", "polynomial"), num_samples = 400, num_genes = 500, num_groups = 4) {
   # make names for each group, gene and sample
-  group.names <- paste0("Group ", seq_len(num.groups))
-  gene.names <- paste0("Gene", seq_len(num.genes))
-  sample.names <- paste0("Sample", seq_len(num.samples))
-
-  requireNamespace("splines")
-  requireNamespace("stats")
+  group_names <- paste0("Group ", seq_len(num_groups))
+  gene_names <- paste0("Gene", seq_len(num_genes))
+  sample_names <- paste0("Sample", seq_len(num_samples))
 
   # match the type argument
   type <- match.arg(type, c("splines", "polynomial"))
 
   # construct the sample info
-  x <- seq(-1, 1, length.out=num.samples)
-  group <- cut(x, breaks=num.groups, labels = group.names)
-  sample.info <- data.frame(row.names=sample.names, group.name=group)
+  x <- seq(-1, 1, length.out = num_samples)
+  group <- cut(x, breaks = num_groups, labels = group_names)
+  sample_info <- data.frame(row.names = sample_names, group_name = group)
 
   # apply function and determine noise sd
-  switch(type, polynomial={
-    y <- stats::poly(x, 2)
-    sd <- .012 * sqrt(num.genes)
-  }, splines={
-    y <- splines::ns(x, df=3)
-    sd <- .06 * sqrt(num.genes)
-  })
+  switch(type,
+         "polynomial"={
+           y <- stats::poly(x, 2)
+           sd <- .012 * sqrt(num_genes)
+         },
+         "splines"={
+           y <- splines::ns(x, df=3)
+           sd <- .06 * sqrt(num_genes)
+         })
 
   # generate expression data
-  expression <- sapply(seq_len(num.genes), function(g) {
+  expression <- sapply(seq_len(num_genes), function(g) {
     scale <- stats::rnorm(ncol(y), mean=0, sd=1)
     noise <- stats::rnorm(length(x), sd=sd)
     rowSums(sweep(y, 2, scale, "*")) + noise
   })
-  dimnames(expression) <- list(sample.names, gene.names)
+  dimnames(expression) <- list(sample_names, gene_names)
 
   # simulate genes that are not expressed
-  weighted.random.sample <- function(data, weights, n){
+  weighted_random_sample <- function(data, weights, n){
     key <- stats::runif(length(data)) ^ (1 / weights)
     data[order(key, decreasing=TRUE)][seq_len(n)]
   }
 
   undetectable <- which(expression < 0)
-  undetectable <- weighted.random.sample(undetectable, -expression[undetectable], round(length(undetectable)*.5))
+  undetectable <- weighted_random_sample(undetectable, -expression[undetectable], round(length(undetectable)*.5))
 
   # shift expression
   expression <- expression + .5
@@ -87,7 +88,7 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
   # rescale to a reasonable value
   expression <- expression / max(expression) * 20
 
-  list(expression=expression, sample.info=sample.info)
+  list(expression = expression, sample_info = sample_info)
 }
 
 #' @title scRNA-seq data of dendritic cell progenitors.
@@ -98,7 +99,9 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
 #'
 #' @format A list containing two data frames, \code{expression} (248x15752) and \code{sample.info} (248x1).
 #'
-#' @references Schlitzer A, Sivakamasundari V, Chen J, Sumatoh HR et al. Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
+#' @references Schlitzer A, Sivakamasundari V, Chen J, Sumatoh HR et al.
+#' Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at
+#'  the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
 #'
 #' @source \url{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
 #'
@@ -109,10 +112,13 @@ generate.dataset <- function(type=c("splines", "polynomial"), num.samples=400, n
 #' data("ginhoux")
 #'
 #' ## Reduce dimensionality and infer trajectory with SCORPIUS
-#' dist <- correlation.distance(ginhoux$expression)
-#' space <- reduce.dimensionality(dist)
-#' traj <- infer.trajectory(space)
+#' dist <- correlation_distance(ginhoux$expression)
+#' space <- reduce_dimensionality(dist)
+#' traj <- infer_trajectory(space)
 #'
 #' ## Visualise
-#' draw.trajectory.plot(space, path=traj$path, progression.group=ginhoux$sample.info$group.name)
+#' draw_trajectory_plot(
+#'   space,
+#'   path = traj$path,
+#'   progression_group = ginhoux$sample_info$group_name)
 "ginhoux"

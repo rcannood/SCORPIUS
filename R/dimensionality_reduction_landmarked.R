@@ -2,10 +2,10 @@
 #' Multidimensional scaling with landmarks
 #'
 #' @param x a numeric matrix
-#' @param dist.fun the distance function to be used; must have exactly two arguments, namely dist.fun(x, y).
+#' @param dist_fun the distance function to be used; must have exactly two arguments, namely dist_fun(x, y).
 #' @param ndim the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.
-#' @param landmark.method Must be "naive" for now. Other landmark methods will be supported in the future.
-#' @param num.landmarks the number of landmarks to be selected.
+#' @param landmark_method Must be "naive" for now. Other landmark methods will be supported in the future.
+#' @param num_landmarks the number of landmarks to be selected.
 #' @param rescale A logical indicating whether or not the returned space should be rescaled and centered.
 #'
 #' @return A list containing the reduced space of the landmarks and the complete dataset.
@@ -13,35 +13,35 @@
 #'
 #' @examples
 #' data(ginhoux)
-#' space <- reduce.dimensionality.landmarked(
+#' space <- reduce_dimensionality_landmarked(
 #'   ginhoux$expression,
-#'   correlation.distance,
-#'   num.landmarks = 200)
-#' draw.trajectory.plot(space, ginhoux$sample.info$group.name)
-reduce.dimensionality.landmarked <- function(x, dist.fun, ndim = 3, landmark.method = "naive", num.landmarks = 1000, rescale = T) {
-  lm.out <- landmark.selection(x, dist.fun, landmark.method, num.landmarks)
-  cmd.out <- cmdscale.withlandmarks(lm.out$dist.lm, lm.out$dist.2lm, ndim = ndim, rescale = rescale)
-  attr(cmd.out, "landmarks") <- lm.out$ix.lm
-  cmd.out
+#'   correlation_distance,
+#'   num_landmarks = 200)
+#' draw_trajectory_plot(space, ginhoux$sample_info$group_name)
+reduce_dimensionality_landmarked <- function(x, dist_fun, ndim = 3, landmark_method = "naive", num_landmarks = 1000, rescale = T) {
+  lm_out <- landmark_selection(x, dist_fun, landmark_method, num_landmarks)
+  cmd_out <- cmdscale_withlandmarks(lm_out$dist_lm, lm_out$dist_2lm, ndim = ndim, rescale = rescale)
+  attr(cmd_out, "landmarks") <- lm_out$ix_lm
+  cmd_out
 }
 
-landmark.selection <- function(x, dist.fun, landmark.method, num.landmarks) {
+landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
   switch(
-    landmark.method,
+    landmark_method,
     "naive" = {
-      ix.lm <- sample.int(nrow(x), num.landmarks)
-      dist.lm <- dist.fun(x[ix.lm,,drop=F], x[ix.lm,,drop=F])
-      dist.2lm <- dist.fun(x[ix.lm,,drop=F], x)
-      list(ix.lm = ix.lm, dist.lm = dist.lm, dist.2lm = dist.2lm)
+      ix_lm <- sample.int(nrow(x), num_landmarks)
+      dist_lm <- dist_fun(x[ix_lm,,drop=F], x[ix_lm,,drop=F])
+      dist_2lm <- dist_fun(x[ix_lm,,drop=F], x)
+      list(ix_lm = ix_lm, dist_lm = dist_lm, dist_2lm = dist_2lm)
     },
     {
-      stop("landmark.method must be ", sQuote("naive"), "; other landmark methods will be supported in the future.")
+      stop("landmark_method must be ", sQuote("naive"), ".")
     }
   )
 }
 
-cmdscale.withlandmarks <- function(dist.lm, dist.2lm, ndim = 3, rescale = T) {
-  d <- dist.lm
+cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = T) {
+  d <- dist_lm
   if (anyNA(d))
     stop("NA values not allowed in 'd'")
 
@@ -51,20 +51,20 @@ cmdscale.withlandmarks <- function(dist.lm, dist.2lm, ndim = 3, rescale = T) {
     stop("distances must be result of 'dist' or a square matrix")
 
   rn <- rownames(x)
-  rn.all <- colnames(dist.2lm)
+  rn_all <- colnames(dist_2lm)
   n <- as.integer(nrow(x))
-  N <- as.integer(ncol(dist.2lm))
+  N <- as.integer(ncol(dist_2lm))
 
   if((ndim <- as.integer(ndim)) > n - 1 || ndim < 1)
     stop("'ndim' must be in {1, 2, ..  n - 1}")
 
   # double center data
-  mu.n <- rowMeans(x)
+  mu_n <- rowMeans(x)
   mu <- mean(x)
-  x.dc <- x - rep(mu.n, n) - rep(mu.n, each = n) + mu
+  x_dc <- x - rep(mu_n, n) - rep(mu_n, each = n) + mu
 
   # classical MDS on landmarks
-  e <- eigen(-x.dc/2, symmetric = TRUE)
+  e <- eigen(-x_dc/2, symmetric = TRUE)
   ev <- e$values[seq_len(ndim)]
   evec <- e$vectors[, seq_len(ndim), drop = FALSE]
   ndim1 <- sum(ev > 0)
@@ -76,17 +76,17 @@ cmdscale.withlandmarks <- function(dist.lm, dist.2lm, ndim = 3, rescale = T) {
   Slm <- evec * rep(sqrt(ev), each=n)
 
   # distance-based triangulation
-  points.inv <- evec / rep(sqrt(ev), each=n)
-  S <- (-t(dist.2lm - rep(mu.n, each = N))/2) %*% points.inv
+  points_inv <- evec / rep(sqrt(ev), each=n)
+  S <- (-t(dist_2lm - rep(mu_n, each = N))/2) %*% points_inv
 
   # clean up dimension names
   dimnames(Slm) <- list(rn, paste0("Comp", seq_len(ndim)))
-  dimnames(S) <- list(rn.all, paste0("Comp", seq_len(ndim)))
+  dimnames(S) <- list(rn_all, paste0("Comp", seq_len(ndim)))
 
   # rescale if necessary
   if (rescale) {
-    Slm <- rescale.and.center(Slm)
-    S <- rescale.and.center(S)
+    Slm <- rescale_and_center(Slm)
+    S <- rescale_and_center(S)
   }
 
   # output

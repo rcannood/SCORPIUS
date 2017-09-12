@@ -1,13 +1,13 @@
 #' @title Infer an initial trajectory through space
 #'
-#' @description \code{infer.initial.trajectory} infers an initial trajectory for
-#' \code{\link{infer.trajectory}} by clustering the points and calculating
+#' @description \code{infer_initial_trajectory} infers an initial trajectory for
+#' \code{\link{infer_trajectory}} by clustering the points and calculating
 #' the shortest path through cluster centers. The shortest path takes into account
 #' the euclidean distance between cluster centers, and the density between those two
 #' points.
 #'
 #' @usage
-#' infer.initial.trajectory(space, k)
+#' infer_initial_trajectory(space, k)
 #'
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
@@ -21,20 +21,17 @@
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
-#' dataset <- generate.dataset(type = "poly", num.genes = 500, num.samples = 1000, num.groups = 4)
-#' dist <- correlation.distance(dataset$expression)
-#' space <- reduce.dimensionality(dist, ndim = 2)
-#' draw.trajectory.plot(space, progression.group = dataset$sample.info$group.name)
+#' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
+#' dist <- correlation_distance(dataset$expression)
+#' space <- reduce_dimensionality(dist, ndim = 2)
+#' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
-#' init.traj <- infer.initial.trajectory(space, k = 4)
+#' init_traj <- infer_initial_trajectory(space, k = 4)
 #'
 #' ## Visualise the trajectory
-#' draw.trajectory.plot(space, path = init.traj, progression.group = dataset$sample.info$group.name)
-infer.initial.trajectory <- function(space, k) {
-  requireNamespace("TSP")
-  requireNamespace("stats")
-
+#' draw_trajectory_plot(space, path = init_traj, progression_group = dataset$sample_info$group_name)
+infer_initial_trajectory <- function(space, k) {
   # input checks
   if (is.data.frame(space))
     space <- as.matrix(space)
@@ -44,48 +41,48 @@ infer.initial.trajectory <- function(space, k) {
     stop(sQuote("k"), " must be a whole number and k >= 2")
 
   # cluster space into k clusters
-  kmeans.clust <- stats::kmeans(space, centers = k)
-  centers <- kmeans.clust$centers
+  kmeans_clust <- stats::kmeans(space, centers = k)
+  centers <- kmeans_clust$centers
 
   # calculate the euclidean space between clusters
-  eucl.dist <- as.matrix(stats::dist(centers))
+  eucl_dist <- as.matrix(stats::dist(centers))
 
   # calculate the densities along the straight lines between any two cluster centers
-  density.dist <- sapply(seq_len(k), function(i) {
+  density_dist <- sapply(seq_len(k), function(i) {
     sapply(seq_len(k), function(j) {
       if (i == j) {
         0
       } else {
         twocent <- centers[c(i,j),]
-        segment.pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
-        dists <- euclidean.distance(segment.pts, space)
-        mean(knn.distances(dists, 10, self.loops=TRUE))
+        segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
+        dists <- euclidean_distance(segment_pts, space)
+        mean(knn_distances(dists, 10, self_loops=TRUE))
       }
     })
   })
 
   requireNamespace("TSP")
   # combine both distance matrices
-  cluster.distances <- eucl.dist * density.dist
+  cluster_distances <- eucl_dist * density_dist
 
   # find the shortest path through all clusters
-  tsp <- TSP::insert_dummy(TSP::TSP(cluster.distances))
+  tsp <- TSP::insert_dummy(TSP::TSP(cluster_distances))
   tour <- as.vector(TSP::solve_TSP(tsp))
   tour2 <- c(tour, tour)
   start <- min(which(tour2 == k+1))
   stop <- max(which(tour2 == k+1))
-  best.ord <- tour2[(start+1):(stop-1)]
+  best_ord <- tour2[(start+1):(stop-1)]
 
   # use this ordering as the initial curve
-  init.traj <- centers[best.ord,,drop=F]
+  init_traj <- centers[best_ord,,drop=F]
 
-  init.traj
+  init_traj
 }
 
 
 #' @title Infer linear trajectory through space
 #'
-#' @description \code{infer.trajectory} infers a trajectory through samples in a given space in a four-step process:
+#' @description \code{infer_trajectory} infers a trajectory through samples in a given space in a four-step process:
 #' \enumerate{
 #'   \item Perform \emph{k}-means clustering
 #'   \item Calculate distance matrix between cluster centers using a custom distance function
@@ -94,7 +91,7 @@ infer.initial.trajectory <- function(space, k) {
 #' }
 #'
 #' @usage
-#' infer.trajectory(
+#' infer_trajectory(
 #'   space,
 #'   k = 4,
 #'   thresh = .001,
@@ -116,7 +113,7 @@ infer.initial.trajectory <- function(space, k) {
 #'   \item \code{time}: the time point of each sample along the inferred trajectory.
 #' }
 #'
-#' @seealso \code{\link{reduce.dimensionality}}, \code{\link{draw.trajectory.plot}}
+#' @seealso \code{\link{reduce_dimensionality}}, \code{\link{draw_trajectory_plot}}
 #'
 #' @export
 #'
@@ -124,19 +121,17 @@ infer.initial.trajectory <- function(space, k) {
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
-#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
-#' dist <- correlation.distance(dataset$expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' draw.trajectory.plot(space, progression.group=dataset$sample.info$group.name)
+#' dataset <- generate_dataset(type="poly", num_genes=500, num_samples=1000, num_groups=4)
+#' dist <- correlation_distance(dataset$expression)
+#' space <- reduce_dimensionality(dist, ndim=2)
+#' draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
-#' traj <- infer.trajectory(space)
+#' traj <- infer_trajectory(space)
 #'
 #' ## Visualise the trajectory
-#' draw.trajectory.plot(space, path=traj$path, progression.group=dataset$sample.info$group.name)
-infer.trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 0, smoother = "smooth.spline") {
-  requireNamespace("princurve")
-
+#' draw_trajectory_plot(space, path=traj$path, progression_group=dataset$sample_info$group_name)
+infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 0, smoother = "smooth.spline") {
   # input checks
   if (is.data.frame(space))
     space <- as.matrix(space)
@@ -145,15 +140,15 @@ infer.trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
 
   if (!is.null(k)) {
     # use a clustering and shortest path based approach to define an intiial trajectory
-    init.traj <- infer.initial.trajectory(space, k)
+    init_traj <- infer_initial_trajectory(space, k)
   } else {
-    init.traj <- NULL
+    init_traj <- NULL
   }
 
   # iteratively improve this curve using principal.curve
   fit <- princurve::principal.curve(
     space,
-    start = init.traj,
+    start = init_traj,
     thresh = thresh,
     plot.true = F,
     maxit = maxit,
@@ -182,39 +177,39 @@ infer.trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
 
 #' @title Reverse a trajectory
 #'
-#' @description Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse.trajectory}.
+#' @description Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse_trajectory}.
 #'
 #' @usage
-#' reverse.trajectory(trajectory)
+#' reverse_trajectory(trajectory)
 #'
-#' @param trajectory A trajectory as returned by \code{\link{infer.trajectory}}.
+#' @param trajectory A trajectory as returned by \code{\link{infer_trajectory}}.
 #'
 #' @return The same trajectory, but in the other direction.
 #'
-#' @seealso \code{\link{infer.trajectory}}
+#' @seealso \code{\link{infer_trajectory}}
 #'
 #' @export
 #'
 #' @examples
 #' ## Generate an example dataset and infer a trajectory through it
-#' dataset <- generate.dataset(type="poly", num.genes=500, num.samples=1000, num.groups=4)
-#' group.name <- dataset$sample.info$group.name
-#' dist <- correlation.distance(dataset$expression)
-#' space <- reduce.dimensionality(dist, ndim=2)
-#' traj <- infer.trajectory(space)
+#' dataset <- generate_dataset(type="poly", num_genes=500, num_samples=1000, num_groups=4)
+#' group_name <- dataset$sample_info$group_name
+#' dist <- correlation_distance(dataset$expression)
+#' space <- reduce_dimensionality(dist, ndim=2)
+#' traj <- infer_trajectory(space)
 #'
 #' ## Visualise the trajectory
-#' draw.trajectory.plot(space, group.name, path=traj$path)
+#' draw_trajectory_plot(space, group_name, path=traj$path)
 #'
 #' ## Reverse the trajectory
-#' reverse.traj <- reverse.trajectory(traj)
-#' draw.trajectory.plot(space, group.name, path=reverse.traj$path)
+#' reverse_traj <- reverse_trajectory(traj)
+#' draw_trajectory_plot(space, group_name, path=reverse_traj$path)
 #'
 #' ## It's the same but reversed?!
-#' plot(traj$time, reverse.traj$time, type="l")
-reverse.trajectory <- function(trajectory) {
+#' plot(traj$time, reverse_traj$time, type="l")
+reverse_trajectory <- function(trajectory) {
   if (class(trajectory) != "SCORPIUS::trajectory" && c("path", "time") %in% names(trajectory))
-    stop(sQuote("trajectory"), " needs to be an object returned by infer.trajectory")
+    stop(sQuote("trajectory"), " needs to be an object returned by infer_trajectory")
   trajectory$time <- 1-trajectory$time
   trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=F]
   trajectory

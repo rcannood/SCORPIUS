@@ -12,7 +12,6 @@ Authors@R: c(
 Depends:
     R (>= 3.0.0)
 Imports:
-    class,
     dplyr,
     fitdistrplus,
     grDevices,
@@ -22,7 +21,6 @@ Imports:
     MASS,
     mclust,
     Rcpp,
-    parallel,
     pbapply,
     pheatmap,
     princurve,
