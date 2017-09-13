@@ -102,7 +102,7 @@ outlier_filter <- function(dist) {
     tryCatch({
       dist_fit <- fitdistrplus::fitdist(outliernesses, distr="norm", keepdata=FALSE)
       logliks[[i+1]] <- dist_fit$loglik
-    }, error=function(e) {})
+    }, error=function(e) {}, warning=function(w) {})
   }
 
   # finish up tail of execution
