@@ -56,7 +56,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
   labels <- mclust::Mclust(t(x), ...)$classification
 
   # determine mean module expression
-  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn])))
+  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn,drop=F])))
 
   order_data <- function(z) {
     if (ncol(z) <= 2) {
@@ -67,7 +67,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
     } else {
       pct <- infer_trajectory(t(z), k = NULL)$time
     }
-    if (!is.null(time) && cor(time[apply(z, 2, which.max)], pct) < 0) {
+    if (!is.null(time) && ncol(z) > 1 && cor(cor(time, z)[1,], pct) < 0) {
       pct <- -pct
     }
     pct
@@ -81,7 +81,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
   modules <- bind_rows(lapply(sort(unique(labels)), function(l) {
     ix <- which(labels==l)
 
-    value <- order_data(x[,ix])
+    value <- order_data(x[,ix,drop=F])
 
     data_frame(
       feature = feature_names[ix],
