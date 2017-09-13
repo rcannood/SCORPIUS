@@ -107,27 +107,36 @@ traj <- infer_trajectory(space)
 draw_trajectory_plot(space, group_name, traj$path)
 ```
 
+```{r echo=F}
+# reverse the trajectory. This does not change the results in any way,
+# other than the heatmap being ordered more logically.
+traj <- reverse_trajectory(traj)
+```
 
-To identify and visualise candidate marker genes, execute the following code:
-```{r find tafs, message=F}
+
+To identify candidate marker genes
+```{r find tafs, message=F, warning=F}
 # warning: setting num_permutations to 10 requires a long time (~30min) to run!
 # set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
-gimp <- gene_importances(expression, traj$time, num_permutations = 10, num_threads = 8) 
+gimp <- gene_importances(
+  expression, 
+  traj$time, 
+  num_permutations = 10, 
+  num_threads = 8, 
+  ntree = 10000,
+  ntree_perm = 1000
+) 
+```
+
+Select the most important genes, scale its expession, cluster them into modules, and visualise it.
+```{r visualise tafs, message=F, warning=F}
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- quant_scale(expression[,gene_sel])
-modules <- extract_modules(expr_sel)
+modules <- extract_modules(expr_sel, traj$time)
 
 # data is already quantile scaled
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features = F)
-```
-
-By executing the trajectory inference step once more, on the scaled expression data of the selected genes
-(keep the number of genes limited!), the trajectory can be further refined.
-```{r rerun inference, message=F}
-traj_sel <- infer_trajectory(expr_sel)
-
-draw_trajectory_heatmap(expr_sel, traj_sel$time, group_name, modules, scale_features = F)
 ```
 
 ## Related approaches

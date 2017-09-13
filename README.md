@@ -115,16 +115,6 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features
 
 ![](README_files/figure-markdown_github/find%20tafs-1.png)
 
-By executing the trajectory inference step once more, on the scaled expression data of the selected genes (keep the number of genes limited!), the trajectory can be further refined.
-
-``` r
-traj_sel <- infer_trajectory(expr_sel)
-
-draw_trajectory_heatmap(expr_sel, traj_sel$time, group_name, modules, scale_features = F)
-```
-
-![](README_files/figure-markdown_github/rerun%20inference-1.png)
-
 Related approaches
 ------------------
 

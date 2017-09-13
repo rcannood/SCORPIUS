@@ -230,7 +230,7 @@ draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NUL
   labels_col <- if (!show_labels_col) rep("", ncol(x_part)) else NULL
 
   if (!is.null(modules)) {
-    x_part <- x_part[modules$index,]
+    x_part <- x_part[modules$feature,]
     gaps_row <- which(modules$module[-1] != modules$module[-length(modules$module)])
     cluster_rows <- F
   } else {

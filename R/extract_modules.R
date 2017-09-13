@@ -7,7 +7,8 @@
 #' extract_modules(x, ...)
 #'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
-#' @param ... Extra parameters passed to Mclust
+#' @param time (Optional) Order the modules according to a pseudotime
+#' @param ... Extra parameters passed to \code{\link[mclust]{Mclust}}
 #'
 #' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
 #'
@@ -16,7 +17,7 @@
 #' @export
 #'
 #' @importFrom mclust Mclust
-#' @importFrom stats as.dist hclust
+#' @importFrom stats as.dist
 #'
 #' @examples
 #' ## Generate a dataset and visualise
@@ -37,7 +38,7 @@
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract_modules(quant_scale(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
-extract_modules <- function(x, ...) {
+extract_modules <- function(x, time = NULL, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -50,23 +51,42 @@ extract_modules <- function(x, ...) {
   # cluster with mclust
   labels <- mclust::Mclust(t(x), ...)$classification
 
-  # hierarchically cluster the features
-  dist <- correlation_distance(t(x))
-  hcl <- stats::hclust(stats::as.dist(dist), method="average")
+  # determine mean module expression
+  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn])))
+
+  # reorder modules
+  if (!is.null(time)) {
+    module_traj <- infer_trajectory(t(module_means), k = NULL)
+    if (cor(time[apply(module_means, 2, which.max)], module_traj$time) < 0) {
+      module_traj <- reverse_trajectory(module_traj)
+    }
+    labels <- order(order(module_traj$time))[labels]
+  }
 
   # order features within one module according to a dimensionality reduction of the correlation distance
-  modules <- dplyr::bind_rows(lapply(unique(labels), function(l) {
+  modules <- bind_rows(lapply(sort(unique(labels)), function(l) {
     ix <- which(labels==l)
+
     if (length(ix) > 1) {
-      dimred <- reduce_dimensionality(dist[ix, ix, drop=F], ndim=1)
-      data.frame(feature=feature_names[ix], index=ix, module=l, value=dimred[,1], stringsAsFactors = F, row.names = NULL)
+      value <- infer_trajectory(t(x[,ix]))$time
+
+      if (!is.null(time) && cor(time[apply(x[,ix], 2, which.max)], value) < 0) {
+        value <- 1 - value
+      }
+
     } else {
-      data.frame(feature=feature_names[ix], index=ix, module=l, value=0, stringsAsFactors = F, row.names = NULL)
+      value <- 1
     }
+
+    data_frame(
+      feature = feature_names[ix],
+      orig_index = ix,
+      module = l,
+      within_module_ordering = percent_rank(value)
+    ) %>%
+      arrange(within_module_ordering)
   }))
 
-  modules <- as.data.frame(modules[order(modules$module, modules$value),,drop=F])
-
   # return output
-  modules[,c("feature", "index", "module")]
+  modules
 }

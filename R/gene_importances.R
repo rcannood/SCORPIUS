@@ -6,6 +6,7 @@
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.
 #' @param num_permutations The number of permutations to test against for calculating the p-values (default: 0).
 #' @param ntree The number of trees to grow (default: 10000).
+#' @param ntree_perm The number of trees to grow for each of the permutations (default: ntree / 10).
 #' @param mtry The number of variables randomly samples at each split (default: 1\% of features).
 #' @param num_threads Number of threads. Default is number of CPU cores available.
 #' @param ... Extra parameters passed to ranger.
@@ -24,7 +25,7 @@
 #' space <- reduce_dimensionality(dist, ndim=2)
 #' traj <- infer_trajectory(space)
 #' gene_importances(expression, traj$time, num_permutations = 0)
-gene_importances <- function(x, time, num_permutations = 0, ntree = 10000, mtry = ncol(x) * .01, num_threads = NULL, ...) {
+gene_importances <- function(x, time, num_permutations = 0, ntree = 10000, ntree_perm = ntree / 10, mtry = ncol(x) * .01, num_threads = NULL, ...) {
   data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
   importance <- ranger::ranger(
     data = data,
@@ -41,7 +42,7 @@ gene_importances <- function(x, time, num_permutations = 0, ntree = 10000, mtry 
       ranger::ranger(
         data = data,
         dependent.variable.name = "XXXtimeXXX",
-        num.trees = ntree,
+        num.trees = ntree_perm,
         mtry = mtry,
         importance = "impurity",
         num.threads = num_threads,
