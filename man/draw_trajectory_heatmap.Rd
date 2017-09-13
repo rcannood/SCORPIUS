@@ -42,7 +42,7 @@ feature modules can be passed along to further enhance the visualisation.
 }
 \examples{
 ## Generate a dataset
-dataset <- generate_dataset(type="s", num_genes=500, num_samples=1000, num_groups=4)
+dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 expression <- dataset$expression
 dist <- correlation_distance(expression)
 space <- reduce_dimensionality(dist, ndim=2)
@@ -50,8 +50,8 @@ groups <- dataset$sample_info$group_name
 traj <- infer_trajectory(space)
 time <- traj$time
 
-## Select most important genes
-gimp <- gene_importances(expression, traj$time, num_permutations = 0)
+## Select most important genes (set the ntree to at least 10000!)
+gimp <- gene_importances(expression, traj$time, num_permutations = 0, ntree = 1000)
 gene_sel <- gimp[1:50,]
 expr_sel <- expression[,gene_sel$gene]
 

@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' ## Generate a dataset and visualise
-#' dataset <- generate_dataset(type="s", num_genes=500, num_samples=1000, num_groups=4)
+#' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 #' expression <- dataset$expression
 #' group_name <- dataset$sample_info$group_name
 #' dist <- correlation_distance(expression)
@@ -28,15 +28,15 @@
 #' time <- traj$time
 #' draw_trajectory_plot(space, path=traj$path, group_name)
 #'
-#' ## Select most important genes
-#' gimp <- gene_importances(expression, traj$time, num_permutations = 0)
+#' ## Select most important genes (set ntree to at least 10000!)
+#' gimp <- gene_importances(expression, traj$time, num_permutations = 0, ntree = 1000)
 #' gene_sel <- gimp[1:50,]
 #' expr_sel <- expression[,gene_sel$gene]
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
-extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
+extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -62,7 +62,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
     if (ncol(z) <= 2) {
       pct <- seq(0, 1, length.out = ncol(z))
     } else if (ncol(z) == 3) {
-      pct <- reduce_dimensionality(correlation_distance(t(z)), ndim = 2)
+      pct <- reduce_dimensionality(correlation_distance(t(z)), ndim = 1)[,1]
       pct <- (pct - min(pct)) / (max(pct) - min(pct))
     } else {
       pct <- suppressWarnings(infer_trajectory(t(z), k = NULL)$time)
@@ -82,12 +82,13 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
     ix <- which(labels==l)
 
     value <- order_data(x[,ix,drop=F])
+    within_module_ordering <- percent_rank(value)
 
     data_frame(
       feature = feature_names[ix],
       orig_index = ix,
       module = l,
-      within_module_ordering = percent_rank(value)
+      within_module_ordering
     ) %>%
       arrange(within_module_ordering)
   }))

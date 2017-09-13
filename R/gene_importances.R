@@ -18,13 +18,14 @@
 #' @export
 #'
 #' @examples
-#' dataset <- generate_dataset(type="s", num_genes=500, num_samples=1000, num_groups=4)
+#' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 #' expression <- dataset$expression
 #' group_name <- dataset$sample_info$group_name
 #' dist <- correlation_distance(expression)
 #' space <- reduce_dimensionality(dist, ndim=2)
 #' traj <- infer_trajectory(space)
-#' gene_importances(expression, traj$time, num_permutations = 0)
+#' # set ntree to at least 1000!
+#' gene_importances(expression, traj$time, num_permutations = 0, ntree = 1000)
 gene_importances <- function(x, time, num_permutations = 0, ntree = 10000, ntree_perm = ntree / 10, mtry = ncol(x) * .01, num_threads = NULL, ...) {
   data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
   importance <- ranger::ranger(
