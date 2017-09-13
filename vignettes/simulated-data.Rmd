@@ -15,8 +15,8 @@ vignette: >
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "md_document")
 rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "html_document")
+rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "md_document")
 -->
 
 ```{r, echo=F}
