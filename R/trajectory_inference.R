@@ -53,7 +53,7 @@ infer_initial_trajectory <- function(space, k) {
       if (i == j) {
         0
       } else {
-        twocent <- centers[c(i,j),]
+        twocent <- centers[c(i,j),,drop=F]
         segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
         dists <- euclidean_distance(segment_pts, space)
         mean(knn_distances(dists, 10, self_loops=TRUE))
@@ -171,7 +171,7 @@ infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
     path = path,
     time = time
   )
-  class(trajectory) <- "SCORPIUS::trajectory"
+  class(trajectory) <- c(class(trajectory), "SCORPIUS::trajectory")
   trajectory
 }
 
@@ -208,7 +208,7 @@ infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
 #' ## It's the same but reversed?!
 #' plot(traj$time, reverse_traj$time, type="l")
 reverse_trajectory <- function(trajectory) {
-  if (class(trajectory) != "SCORPIUS::trajectory" && c("path", "time") %in% names(trajectory))
+  if (! "SCORPIUS::trajectory" %in% class(trajectory))
     stop(sQuote("trajectory"), " needs to be an object returned by infer_trajectory")
   trajectory$time <- 1-trajectory$time
   trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=F]
