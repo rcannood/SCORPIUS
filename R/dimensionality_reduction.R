@@ -11,7 +11,7 @@
 #'
 #' @return A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
 #'
-#' @seealso \code{\link{correlation_distance}}, \code{\link{rescale_and_center}}, \code{\link{draw_trajectory_plot}}
+#' @seealso \code{\link{correlation_distance}}, \code{\link{scale_uniform}}, \code{\link{draw_trajectory_plot}}
 #'
 #' @export
 #'
@@ -37,7 +37,7 @@ reduce_dimensionality <- function(dist, ndim = 3, rescale = TRUE) {
     stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(dist)-1")
 
   space <- stats::cmdscale(dist, k = ndim)
-  if (rescale) space <- rescale_and_center(space)
+  if (rescale) space <- scale_uniform(space)
   colnames(space) <- paste("Comp", seq_len(ncol(space)), sep = "")
   space
 }

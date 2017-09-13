@@ -21,7 +21,7 @@ such as cellular development or progression over time.
 
 \section{Dimensionality Reduction functions}{
 
-\code{\link{reduce_dimensionality}}, \code{\link{reduce_dimensionality_landmarked}}, \code{\link{rescale_and_center}}, \code{\link{quant_scale}}
+\code{\link{reduce_dimensionality}}, \code{\link{reduce_dimensionality_landmarked}}, \code{\link{scale_uniform}}, \code{\link{scale_quantile}}
 }
 
 \section{Trajectory Inference functions}{

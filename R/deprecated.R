@@ -53,16 +53,16 @@ draw.trajectory.heatmap <- function(...) {
   .Defunct(new = "draw_trajectory_heatmap", package = "SCORPIUS")
 }
 rescale.and.center <- function(...) {
-  .Defunct(new = "rescale_and_center", package = "SCORPIUS")
+  .Defunct(new = "scale_uniform", package = "SCORPIUS")
 }
 apply.scale <- function(...) {
-  .Defunct(new = "apply_scale", package = "SCORPIUS")
+  .Defunct(new = "apply_uniform_scale", package = "SCORPIUS")
 }
 quant.scale <- function(...) {
-  .Defunct(new = "quant_scale", package = "SCORPIUS")
+  .Defunct(new = "scale_quantile", package = "SCORPIUS")
 }
 apply.quant.scale <- function(...) {
-  .Defunct(new = "apply_quant_scale", package = "SCORPIUS")
+  .Defunct(new = "apply_quantile_Scale", package = "SCORPIUS")
 }
 infer.initial.trajectory <- function(...) {
   .Defunct(new = "infer_initial_trajectory", package = "SCORPIUS")

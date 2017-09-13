@@ -85,8 +85,8 @@ cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = T) {
 
   # rescale if necessary
   if (rescale) {
-    Slm <- rescale_and_center(Slm)
-    S <- rescale_and_center(S)
+    Slm <- scale_uniform(Slm)
+    S <- scale_uniform(S)
   }
 
   # output

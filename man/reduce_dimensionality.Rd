@@ -31,5 +31,5 @@ space <- reduce_dimensionality(dist, ndim = 2)
 draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
 }
 \seealso{
-\code{\link{correlation_distance}}, \code{\link{rescale_and_center}}, \code{\link{draw_trajectory_plot}}
+\code{\link{correlation_distance}}, \code{\link{scale_uniform}}, \code{\link{draw_trajectory_plot}}
 }
