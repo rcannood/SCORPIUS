@@ -2,7 +2,7 @@ context("Gene importances")
 
 test_that("With generated data", {
   dataset <- generate_dataset(type = "poly", num_genes = 400, num_samples = 101, num_groups = 4)
-  expression <- dataset$expression %>% quant_scale(0)
+  expression <- dataset$expression %>% scale_quantile(0)
 
   time <- seq(-1, 1, length.out = nrow(expression))
 
@@ -17,9 +17,8 @@ test_that("With generated data", {
   own_dists <- t(sapply(seq_len(nrow(dist)), function(i) dist[i, knn_out$indices[i,]]))
   expect_true(all(mapply(all.equal, as.vector(knn_out$distances), as.vector(own_dists))))
 
-  sapply(seq_len(nrow(dist)), function(i) {
-    order(dist[i,])[1:5]
-
-  })
+  expect_true(all(sapply(seq_len(nrow(dist)), function(i) {
+    all(order(dist[i,])[1:5] == knn_out$indices[i,])
+  })))
 
 })

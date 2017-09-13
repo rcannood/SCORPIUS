@@ -116,7 +116,7 @@ Select the most important genes, scale its expession, cluster them into modules,
 ``` r
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
-expr_sel <- quant_scale(expression[,gene_sel])
+expr_sel <- scale_quantile(expression[,gene_sel])
 modules <- extract_modules(expr_sel, traj$time)
 ```
 

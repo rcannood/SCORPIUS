@@ -179,7 +179,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' draw_trajectory_heatmap(expr_sel, time, progression=groups)
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
-#' modules <- extract_modules(quant_scale(expr_sel))
+#' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, progression_group=groups, modules=modules)
 draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NULL, show_labels_row=FALSE, show_labels_col=FALSE, scale_features=TRUE, ...) {
   # input checks
@@ -200,7 +200,7 @@ draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NUL
 
   x_part <- x[order(time),,drop=FALSE]
   if (scale_features) {
-    x_part <- quant_scale(x_part)
+    x_part <- scale_quantile(x_part)
   }
   x_part <- t(x_part)
 

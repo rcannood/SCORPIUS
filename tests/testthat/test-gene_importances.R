@@ -2,7 +2,7 @@ context("Gene importances")
 
 test_that("With generated data", {
   dataset <- generate_dataset(type = "poly", num_genes = 400, num_samples = 101, num_groups = 4)
-  expression <- dataset$expression %>% quant_scale(0)
+  expression <- dataset$expression %>% scale_quantile(0)
 
   time <- seq(-1, 1, length.out = nrow(expression))
 

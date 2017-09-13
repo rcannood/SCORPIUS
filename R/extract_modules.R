@@ -34,7 +34,7 @@
 #' expr_sel <- expression[,gene_sel$gene]
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
-#' modules <- extract_modules(quant_scale(expr_sel))
+#' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
 extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
   # input checks

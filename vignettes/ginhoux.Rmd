@@ -150,6 +150,6 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 
 Finally, these genes can also be grouped into modules as follows: 
 ```{r moduled tafs}
-modules <- extract_modules(quant_scale(expr_sel), traj$time)
+modules <- extract_modules(scale_quantile(expr_sel), traj$time)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```

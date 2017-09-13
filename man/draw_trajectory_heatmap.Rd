@@ -62,6 +62,6 @@ draw_trajectory_heatmap(expr_sel, time)
 draw_trajectory_heatmap(expr_sel, time, progression=groups)
 
 ## Group the genes into modules and visualise the modules in a heatmap
-modules <- extract_modules(quant_scale(expr_sel))
+modules <- extract_modules(scale_quantile(expr_sel))
 draw_trajectory_heatmap(expr_sel, time, progression_group=groups, modules=modules)
 }
