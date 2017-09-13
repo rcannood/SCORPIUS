@@ -30,8 +30,8 @@ landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
     landmark_method,
     "naive" = {
       ix_lm <- sample.int(nrow(x), num_landmarks)
-      dist_lm <- dist_fun(x[ix_lm,,drop=F], x[ix_lm,,drop=F])
-      dist_2lm <- dist_fun(x[ix_lm,,drop=F], x)
+      dist_lm <- dist_fun(x[ix_lm,,drop=FALSE], x[ix_lm,,drop=FALSE])
+      dist_2lm <- dist_fun(x[ix_lm,,drop=FALSE], x)
       list(ix_lm = ix_lm, dist_lm = dist_lm, dist_2lm = dist_2lm)
     },
     {

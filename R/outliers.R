@@ -97,10 +97,10 @@ outlier_filter <- function(dist) {
     removed_sample <- which(filt)[[which.max(outliernesses)]]
     removed[[i+1]] <- removed_sample
     filt <- !ix %in% removed
-    outliernesses <- outlierness(dist[filt,filt,drop=F])
+    outliernesses <- outlierness(dist[filt,filt,drop=FALSE])
 
     tryCatch({
-      dist_fit <- fitdistrplus::fitdist(outliernesses, distr="norm", keepdata=F)
+      dist_fit <- fitdistrplus::fitdist(outliernesses, distr="norm", keepdata=FALSE)
       logliks[[i+1]] <- dist_fit$loglik
     }, error=function(e) {})
   }

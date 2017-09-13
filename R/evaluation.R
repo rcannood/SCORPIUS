@@ -56,7 +56,7 @@ evaluate_trajectory <- function(time, progression) {
   comp$pj <- progression[comp$j]
   comp$ri <- rank[comp$i]
   comp$rj <- rank[comp$j]
-  comp <- comp[comp$pi != comp$pj,,drop=F]
+  comp <- comp[comp$pi != comp$pj,,drop=FALSE]
   comp$consistent <- with(comp, (pi < pj) == (ri < rj))
 
   ## Calculate the mean consistency

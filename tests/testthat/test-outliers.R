@@ -8,8 +8,9 @@ test_that("With generated data", {
   outl_ix <- sort(sample.int(nrow(expression), 10))
   expression[outl_ix, ] <- runif(10 * ncol(expression))
   dist <- correlation_distance(expression)
-  dist[outl_ix,] <- dist[outl_ix,] * 1.1
-  dist[,outl_ix] <- dist[,outl_ix] * 1.1
+  dist[outl_ix,] <- dist[outl_ix,] * 1.2
+  dist[,outl_ix] <- dist[,outl_ix] * 1.2
+  dist[dist > 1] <- 1
 
   # testing outlierness with k = 5
   outl5 <- outlierness(dist, 5)

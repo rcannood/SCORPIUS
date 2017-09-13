@@ -18,7 +18,6 @@ Imports:
   dplyr,
   fitdistrplus,
   grDevices,
-  TSP,
   ggplot2 (>= 2.0),
   magrittr,
   MASS,
@@ -32,8 +31,11 @@ Imports:
   RColorBrewer,
   reshape2,
   splines,
+  stats,
   testthat,
-  tidyr
+  tidyr,
+  TSP,
+  utils
 Suggests:
   knitr,
   rmarkdown

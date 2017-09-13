@@ -56,7 +56,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, ...) {
   labels <- mclust::Mclust(t(x), ...)$classification
 
   # determine mean module expression
-  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn,drop=F])))
+  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn,drop=FALSE])))
 
   order_data <- function(z) {
     if (ncol(z) <= 2) {
@@ -81,7 +81,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, ...) {
   modules <- bind_rows(lapply(sort(unique(labels)), function(l) {
     ix <- which(labels==l)
 
-    value <- order_data(x[,ix,drop=F])
+    value <- order_data(x[,ix,drop=FALSE])
     within_module_ordering <- percent_rank(value)
 
     data_frame(

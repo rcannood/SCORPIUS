@@ -53,7 +53,7 @@ infer_initial_trajectory <- function(space, k) {
       if (i == j) {
         0
       } else {
-        twocent <- centers[c(i,j),,drop=F]
+        twocent <- centers[c(i,j),,drop=FALSE]
         segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
         dists <- euclidean_distance(segment_pts, space)
         mean(knn_distances(dists, 10, self_loops=TRUE))
@@ -74,7 +74,7 @@ infer_initial_trajectory <- function(space, k) {
   best_ord <- tour2[(start+1):(stop-1)]
 
   # use this ordering as the initial curve
-  init_traj <- centers[best_ord,,drop=F]
+  init_traj <- centers[best_ord,,drop=FALSE]
 
   init_traj
 }
@@ -158,7 +158,7 @@ infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
   )
 
   # construct final trajectory
-  path <- fit$s[fit$tag,,drop=F]
+  path <- fit$s[fit$tag,,drop=FALSE]
   dimnames(path) <- list(NULL, paste0("Comp", seq_len(ncol(path))))
 
   # construct timeline values
@@ -211,6 +211,6 @@ reverse_trajectory <- function(trajectory) {
   if (! "SCORPIUS::trajectory" %in% class(trajectory))
     stop(sQuote("trajectory"), " needs to be an object returned by infer_trajectory")
   trajectory$time <- 1-trajectory$time
-  trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=F]
+  trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=FALSE]
   trajectory
 }

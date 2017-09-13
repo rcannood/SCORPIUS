@@ -4,8 +4,6 @@
 #'
 #' @description \code{knn_distances} returns the distances of the \emph{k} nearest neighbours of each sample.
 #'
-#' @usage knn_distances(dist, k, self_loops=F)
-#'
 #' @param dist A numeric matrix, data frame or "\code{dist}" object.
 #' @param k The maximum number of nearest neighbours to search.
 #' @param self_loops \code{TRUE} if samples with the same index or name are allowed to be neighbours.
@@ -26,15 +24,13 @@
 #' dist <- euclidean_distance(x, y)
 #' knnd <- knn_distances(dist, 10)
 #' plot(density(knnd))
-knn_distances <- function(dist, k, self_loops=F) {
+knn_distances <- function(dist, k, self_loops=FALSE) {
   knn(dist, k, self_loops = self_loops)$distances
 }
 
 #' @title k Nearest Neighbour indices and distances
 #'
 #' @description \code{knn} returns the indices and distances of the \emph{k} nearest neighbours of each sample.
-#'
-#' @usage knn(dist, k, self_loops=F)
 #'
 #' @param dist A numeric matrix, data frame or "\code{dist}" object.
 #' @param k The maximum number of nearest neighbours to search.
@@ -58,7 +54,7 @@ knn_distances <- function(dist, k, self_loops=F) {
 #' dist <- euclidean_distance(x, y)
 #' knnd <- knn(dist, 10)
 #' plot(density(knnd$distances))
-knn <- function(dist, k, self_loops=F) {
+knn <- function(dist, k, self_loops=FALSE) {
   requireNamespace("utils")
 
   # input checks

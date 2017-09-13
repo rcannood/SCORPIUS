@@ -4,7 +4,7 @@
 \alias{knn}
 \title{k Nearest Neighbour indices and distances}
 \usage{
-knn(dist, k, self_loops=F)
+knn(dist, k, self_loops = FALSE)
 }
 \arguments{
 \item{dist}{A numeric matrix, data frame or "\code{dist}" object.}
