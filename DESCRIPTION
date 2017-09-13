@@ -18,7 +18,6 @@ Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
-  dynutils,
   fitdistrplus,
   grDevices,
   TSP,
@@ -42,6 +41,4 @@ Suggests:
   rmarkdown
 LinkingTo:
   Rcpp
-Remotes: 
-  rcannood/dynutils
 
