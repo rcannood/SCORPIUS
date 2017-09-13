@@ -65,7 +65,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
       pct <- reduce_dimensionality(correlation_distance(t(z)), ndim = 2)
       pct <- (pct - min(pct)) / (max(pct) - min(pct))
     } else {
-      pct <- infer_trajectory(t(z), k = NULL)$time
+      pct <- suppressWarnings(infer_trajectory(t(z), k = NULL)$time)
     }
     if (!is.null(time) && ncol(z) > 1 && cor(cor(time, z)[1,], pct) < 0) {
       pct <- -pct

@@ -32,8 +32,8 @@ test_that("Compare to normal dimred", {
 
   for (i in 1:10) {
     space_lm <- reduce_dimensionality_landmarked(dataset$expression, correlation_distance,
-                                                 num_landmarks = 250)
+                                                 num_landmarks = 500)
     dist_lm <- as.vector(as.matrix(dist(space_lm)))
-    expect_gt( cor(dist_normal, dist_lm), .4 )
+    expect_gt( cor(dist_normal, dist_lm), .3 )
   }
 })

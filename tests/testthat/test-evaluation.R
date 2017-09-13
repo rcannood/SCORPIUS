@@ -1,4 +1,4 @@
-context("Distance functions")
+context("Evaluation functions")
 
 test_that("evaluate_trajectory", {
   time <- runif(1000)

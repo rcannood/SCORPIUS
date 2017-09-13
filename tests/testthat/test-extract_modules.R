@@ -1,7 +1,7 @@
 context("Extract modules")
 
 test_that("With generated data", {
-  dataset <- generate_dataset(type = "poly", num_genes = 99, num_samples = 101, num_groups = 4)
+  dataset <- generate_dataset(type = "poly", num_genes = 101, num_samples = 91, num_groups = 4)
   expression <- dataset$expression
 
   time <- seq(-1, 1, length.out = nrow(expression))
