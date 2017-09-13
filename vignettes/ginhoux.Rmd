@@ -15,7 +15,8 @@ vignette: >
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document") 
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "html_document")
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document")
 -->
 
 ```{r, echo=F}
@@ -149,6 +150,6 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 
 Finally, these genes can also be grouped into modules as follows: 
 ```{r moduled tafs}
-modules <- extract_modules(quant_scale(expr_sel))
+modules <- extract_modules(quant_scale(expr_sel), traj$time)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```

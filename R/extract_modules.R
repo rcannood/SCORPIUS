@@ -3,11 +3,9 @@
 #' @description \code{extract_modules} uses adaptive branch pruning to extract modules of features,
 #'  which is typically done on the smoothed expression returned by \code{\link{gene_importances}}.
 #'
-#' @usage
-#' extract_modules(x, ...)
-#'
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time (Optional) Order the modules according to a pseudotime
+#' @param suppress_warnings Whether or not to suppress warnings when P > 1000
 #' @param ... Extra parameters passed to \code{\link[mclust]{Mclust}}
 #'
 #' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
@@ -38,10 +36,16 @@
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract_modules(quant_scale(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
-extract_modules <- function(x, time = NULL, ...) {
+extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
+
+  if (!suppress_warnings && ncol(x) > 1000) {
+    warning(sQuote("x"), " has more than 1000 features. ",
+            "This might take a while. Use suppress_warnings = TRUE ",
+            "if you do not wish to get this message.")
+  }
 
   feature_names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
 
@@ -54,29 +58,32 @@ extract_modules <- function(x, time = NULL, ...) {
   # determine mean module expression
   module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn])))
 
+  order_data <- function(z) {
+    if (ncol(z) <= 2) {
+      pct <- seq(0, 1, length.out = ncol(z))
+    } else if (ncol(z) == 3) {
+      pct <- reduce_dimensionality(correlation_distance(t(z)), ndim = 2)
+      pct <- (pct - min(pct)) / (max(pct) - min(pct))
+    } else {
+      pct <- infer_trajectory(t(z), k = NULL)$time
+    }
+    if (cor(time[apply(z, 2, which.max)], pct) < 0) {
+      pct <- -pct
+    }
+    pct
+  }
+
   # reorder modules
   if (!is.null(time)) {
-    module_traj <- infer_trajectory(t(module_means), k = NULL)
-    if (cor(time[apply(module_means, 2, which.max)], module_traj$time) < 0) {
-      module_traj <- reverse_trajectory(module_traj)
-    }
-    labels <- order(order(module_traj$time))[labels]
+    module_time <- order_data(module_means)
+    labels <- order(order(module_time))[labels]
   }
 
   # order features within one module according to a dimensionality reduction of the correlation distance
   modules <- bind_rows(lapply(sort(unique(labels)), function(l) {
     ix <- which(labels==l)
 
-    if (length(ix) > 1) {
-      value <- infer_trajectory(t(x[,ix]))$time
-
-      if (!is.null(time) && cor(time[apply(x[,ix], 2, which.max)], value) < 0) {
-        value <- 1 - value
-      }
-
-    } else {
-      value <- 1
-    }
+    value <- order_data(x[,ix])
 
     data_frame(
       feature = feature_names[ix],

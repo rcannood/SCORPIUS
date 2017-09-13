@@ -31,8 +31,8 @@
 rescale_and_center <- function(x, center = 0, max_range = 1) {
   ranges <- apply(x, 2, range)
 
-  new_scale <- max(ranges[2,] - ranges[1,]) / max_range
-  new_center <- (ranges[1,] + ranges[2,]) / 2 - (center * new_scale / 2)
+  new_scale <- max(apply(ranges, 2, diff)) / max_range
+  new_center <- colMeans(ranges) - (center * new_scale / 2)
 
   # calculate rescaled data
   apply_scale(x, new_center, new_scale)
@@ -47,7 +47,9 @@ rescale_and_center <- function(x, center = 0, max_range = 1) {
 #' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
 #' @export
 apply_scale <- function(x, center, scale) {
-  y <- t(apply(x, 1, function(x) (x - center) / scale))
+  y <- x %>%
+    sweep(2, center, "-") %>%
+    sweep(2, scale, "/")
   attr(y, "center") <- center
   attr(y, "scale") <- scale
   y
@@ -80,11 +82,11 @@ apply_scale <- function(x, center, scale) {
 quant_scale <- function(x, outlier_cutoff = .05) {
   quants <- apply(x, 2, quantile, c(outlier_cutoff, 1 - outlier_cutoff), na.rm = T)
 
-  center <- quants[1,]
-  scale <- quants[2,] - quants[1,]
+  begin <- quants[1,]
+  scale <- apply(quants, 2, diff)
   scale[scale == 0] <- 1
 
-  apply_quant_scale(x, center, scale)
+  apply_quant_scale(x, begin, scale)
 }
 
 #' Apply a quantile scale.
@@ -92,13 +94,13 @@ quant_scale <- function(x, outlier_cutoff = .05) {
 #' Anything outside the range of [0, 1] will be set to 0 or 1.
 #'
 #' @param x A numeric matrix or data frame.
-#' @param center A centering vector for each column
+#' @param begin A minimum vector for each column
 #' @param scale A scaling vector for each column
 #'
-#' @return The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
+#' @return The scaled matrix. The numeric centering and scalings used are returned as attributes.
 #' @export
-apply_quant_scale <- function(x, center, scale) {
-  y <- apply_scale(x, center, scale)
+apply_quant_scale <- function(x, begin, scale) {
+  y <- apply_scale(x, begin, scale)
   y[y > 1] <- 1
   y[y < 0] <- 0
   y

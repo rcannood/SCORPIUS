@@ -96,16 +96,28 @@ draw_trajectory_plot(space, group_name, traj$path)
 
 ![](README_files/figure-markdown_github/infer%20trajectory-1.png)
 
-To identify and visualise candidate marker genes, execute the following code:
+To identify candidate marker genes
 
 ``` r
 # warning: setting num_permutations to 10 requires a long time (~30min) to run!
 # set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
-gimp <- gene_importances(expression, traj$time, num_permutations = 10, num_threads = 8) 
+gimp <- gene_importances(
+  expression, 
+  traj$time, 
+  num_permutations = 10, 
+  num_threads = 8, 
+  ntree = 10000,
+  ntree_perm = 1000
+) 
+```
+
+Select the most important genes, scale its expession, cluster them into modules, and visualise it.
+
+``` r
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- quant_scale(expression[,gene_sel])
-modules <- extract_modules(expr_sel)
+modules <- extract_modules(expr_sel, traj$time)
 ```
 
 ``` r
@@ -113,7 +125,7 @@ modules <- extract_modules(expr_sel)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features = F)
 ```
 
-![](README_files/figure-markdown_github/find%20tafs-1.png)
+![](README_files/figure-markdown_github/visualise%20tafs-1.png)
 
 Related approaches
 ------------------

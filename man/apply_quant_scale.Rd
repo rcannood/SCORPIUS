@@ -4,17 +4,17 @@
 \alias{apply_quant_scale}
 \title{Apply a quantile scale.}
 \usage{
-apply_quant_scale(x, center, scale)
+apply_quant_scale(x, begin, scale)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame.}
 
-\item{center}{A centering vector for each column}
+\item{begin}{A minimum vector for each column}
 
 \item{scale}{A scaling vector for each column}
 }
 \value{
-The centered, scaled matrix. The numeric centering and scalings used are returned as attributes.
+The scaled matrix. The numeric centering and scalings used are returned as attributes.
 }
 \description{
 Anything outside the range of [0, 1] will be set to 0 or 1.

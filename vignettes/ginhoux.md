@@ -1,5 +1,6 @@
 <!-- github markdown built using 
-rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document") 
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document")
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "html_document")
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through dendritic cell progenitors. The `ginhoux` dataset contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 
@@ -183,7 +184,7 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 Finally, these genes can also be grouped into modules as follows:
 
 ``` r
-modules <- extract_modules(quant_scale(expr_sel))
+modules <- extract_modules(quant_scale(expr_sel), traj$time)
 ```
 
     ## fitting ...
