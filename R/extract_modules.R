@@ -67,17 +67,15 @@ extract_modules <- function(x, time = NULL, suppress_warnings = F, ...) {
     } else {
       pct <- infer_trajectory(t(z), k = NULL)$time
     }
-    if (cor(time[apply(z, 2, which.max)], pct) < 0) {
+    if (!is.null(time) && cor(time[apply(z, 2, which.max)], pct) < 0) {
       pct <- -pct
     }
     pct
   }
 
   # reorder modules
-  if (!is.null(time)) {
-    module_time <- order_data(module_means)
-    labels <- order(order(module_time))[labels]
-  }
+  module_time <- order_data(module_means)
+  labels <- order(order(module_time))[labels]
 
   # order features within one module according to a dimensionality reduction of the correlation distance
   modules <- bind_rows(lapply(sort(unique(labels)), function(l) {

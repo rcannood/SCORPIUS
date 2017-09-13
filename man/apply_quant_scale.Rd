@@ -4,14 +4,14 @@
 \alias{apply_quant_scale}
 \title{Apply a quantile scale.}
 \usage{
-apply_quant_scale(x, begin, scale)
+apply_quant_scale(x, addend, multiplier)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame.}
 
-\item{begin}{A minimum vector for each column}
+\item{addend}{A minimum vector for each column}
 
-\item{scale}{A scaling vector for each column}
+\item{multiplier}{A scaling vector for each column}
 }
 \value{
 The scaled matrix. The numeric centering and scalings used are returned as attributes.
