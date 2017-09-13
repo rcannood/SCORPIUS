@@ -37,10 +37,11 @@ Imports:
   splines,
   testthat,
   tidyr
+Suggests:
+  knitr,
+  rmarkdown
 LinkingTo:
   Rcpp
 Remotes: 
   rcannood/dynutils
-Suggests:
-  knitr,
-  rmarkdown
+
