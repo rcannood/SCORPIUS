@@ -6,7 +6,6 @@ Rcpp::NumericMatrix euclidean_distance_rcpp (const Rcpp::NumericMatrix & x, cons
   unsigned int nrow = x.nrow();
   unsigned int ncol = y.nrow();
   unsigned int i = 0, j = 0;
-  double d;
   Rcpp::NumericMatrix out(nrow, ncol);
   rownames(out) = rownames(x);
   colnames(out) = rownames(y);
