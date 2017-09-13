@@ -8,10 +8,17 @@ Author: Robrecht Cannoodt
 Maintainer: Robrecht Cannoodt <robrecht.cannoodt@gmail.com>
 Authors@R: c(
   person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre")))
+License: GPL-3
+URL: http://github.com/rcannood/SCORPIUS
+BugReports: https://github.com/rcannood/SCORPIUS/issues
+LazyData: true
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
 Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
+  dynutils,
   fitdistrplus,
   grDevices,
   TSP,
@@ -32,12 +39,8 @@ Imports:
   tidyr
 LinkingTo:
   Rcpp
-License: GPL-3
-URL: http://github.com/rcannood/SCORPIUS
-BugReports: https://github.com/rcannood/SCORPIUS/issues
-LazyData: true
-RoxygenNote: 6.0.1
+Remotes: 
+  rcannood/dynutils
 Suggests:
   knitr,
   rmarkdown
-VignetteBuilder: knitr
