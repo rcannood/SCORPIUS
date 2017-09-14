@@ -25,6 +25,8 @@ RNA sequencing data.** In comparison to similar approaches, it has three main ad
 * **It is fully unsupervised.** Prior knowledge of the relevant marker genes or 
   cellular states of individual cells is not required.
   
+News: 
+
 * A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
 
 * Check out our [review](http://onlinelibrary.wiley.com/doi/10.1002/eji.201646347/full) on Trajectory Inference methods!
