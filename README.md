@@ -8,13 +8,15 @@ SCORPIUS
 
 **SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell RNA sequencing data.** In comparison to similar approaches, it has three main advantages:
 
--   **It accurately reconstructs trajectories for a wide variety of dynamic cellular processes.** The performance was evaluated using a new, quantitative evaluation pipeline, comparing the performance of current state-of-the-art techniques on 10 publicly available single-cell RNA sequencing datasets.
+-   **It accurately reconstructs linear dynamic processes.** The performance was evaluated using a quantitative evaluation pipeline and ten single-cell RNA sequencing datasets.
 
 -   **It automatically identifies marker genes, speeding up knowledge discovery.**
 
 -   **It is fully unsupervised.** Prior knowledge of the relevant marker genes or cellular states of individual cells is not required.
 
 -   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
+
+-   Check out our [review](http://onlinelibrary.wiley.com/doi/10.1002/eji.201646347/full) on Trajectory Inference methods!
 
 Installing SCORPIUS
 -------------------
@@ -40,7 +42,7 @@ You can install:
     devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
     ```
 -->
-If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/rcannood/SCORPIUS/issues).
+If you encounter a bug, please file a minimal reproducible example on the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 
 Learning SCORPIUS
 -----------------
@@ -120,6 +122,7 @@ expr_sel <- scale_quantile(expression[,gene_sel])
 modules <- extract_modules(expr_sel, traj$time)
 ```
 
+
 ``` r
 # data is already quantile scaled
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features = F)
@@ -130,7 +133,6 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features
 Related approaches
 ------------------
 
--   [Check out our review on Trajectory Inference methods!](http://onlinelibrary.wiley.com/doi/10.1002/eji.201646347/full)
 -   [Wanderlust](http://www.c2b2.columbia.edu/danapeerlab/html/wanderlust.html)
 -   [Monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html)
 -   [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
