@@ -19,8 +19,8 @@ test_that("With generated data", {
   cor_gimp1 <- cor(gimp1$importance, amount_noise)
   cor_gimp2 <- cor(gimp2$importance, amount_noise)
   cor_gimp3 <- cor(gimp3$importance, amount_noise)
-  expect_lt(cor_gimp1, cor_gimp2)
-  expect_lt(cor_gimp2, cor_gimp3)
+  expect_lt(cor_gimp1, cor_gimp2 + .05) # allow for some error
+  expect_lt(cor_gimp2, cor_gimp3 + .05) # allow for some error
   expect_gt(cor_gimp3, .35)
 
   gimp <- gene_importances(expression, time, num_permutations = 5) %>% slice(match(colnames(expression), gene))

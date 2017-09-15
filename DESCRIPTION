@@ -3,7 +3,11 @@ Type: Package
 Title: Inferring Developmental Chronologies from Single-Cell RNA Sequencing Data
 Version: 1.0
 Date: 2017-09-13
-Description: Ordering single cells with regard to an implicit dynamic process, such as cellular development or progression over time.
+Description: An accurate and easy tool for performing trajectory inference on
+  single cells using single-cell RNA sequencing data. In addition, SCORPIUS
+  provides functions for discovering the most important genes with respect to
+  the reconstructed trajectory, as well as nice visualisation tools.
+  Cannoodt et al. (2016) <doi:10.1101/079509>.
 Authors@R: c(
   person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre")))
 License: GPL-3
