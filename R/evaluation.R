@@ -89,7 +89,7 @@ evaluate_trajectory <- function(time, progression) {
 #'
 #' @examples
 #' ## Generate a dataset
-#' dataset <- generate_dataset(type="s", num_genes=500, num_samples=1000, num_groups=4)
+#' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 #' dist <- correlation_distance(dataset$expression)
 #' space <- reduce_dimensionality(dist, ndim=2)
 #'
