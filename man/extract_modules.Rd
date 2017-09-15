@@ -4,7 +4,8 @@
 \alias{extract_modules}
 \title{Extract modules of features}
 \usage{
-extract_modules(x, time = NULL, suppress_warnings = FALSE, ...)
+extract_modules(x, time = NULL, suppress_warnings = FALSE,
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
@@ -12,6 +13,8 @@ extract_modules(x, time = NULL, suppress_warnings = FALSE, ...)
 \item{time}{(Optional) Order the modules according to a pseudotime}
 
 \item{suppress_warnings}{Whether or not to suppress warnings when P > 1000}
+
+\item{verbose}{Whether or not Mclust will print output or not}
 
 \item{...}{Extra parameters passed to \code{\link[mclust]{Mclust}}}
 }

@@ -8,8 +8,8 @@
 #' @param ntree The number of trees to grow (default: 10000).
 #' @param ntree_perm The number of trees to grow for each of the permutations (default: ntree / 10).
 #' @param mtry The number of variables randomly samples at each split (default: 1\% of features).
-#' @param num_threads Number of threads. Default is number of CPU cores available.
-#' @param ... Extra parameters passed to ranger.
+#' @param num_threads Number of threads. Default is 1.
+#' @param ... Extra parameters passed to \code{\link[ranger]{ranger}}.
 #'
 #' @return a data frame containing the importance of each feature for the given time line
 #'
@@ -26,7 +26,16 @@
 #' traj <- infer_trajectory(space)
 #' # set ntree to at least 1000!
 #' gene_importances(expression, traj$time, num_permutations = 0, ntree = 1000)
-gene_importances <- function(x, time, num_permutations = 0, ntree = 10000, ntree_perm = ntree / 10, mtry = ncol(x) * .01, num_threads = NULL, ...) {
+gene_importances <- function(
+  x,
+  time,
+  num_permutations = 0,
+  ntree = 10000,
+  ntree_perm = ntree / 10,
+  mtry = ncol(x) * .01,
+  num_threads = 1,
+  ...
+) {
   data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
   importance <- ranger::ranger(
     data = data,

@@ -1,6 +1,6 @@
 <!-- github markdown built using 
-rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "md_document")
 rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "html_document")
+rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "md_document")
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data. Note that the dataset is generated in a very naive manner and is only meant to be used for demonstration purposes, not for evaluating trajectory inference methods.
 
@@ -142,10 +142,7 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 Finally, these genes can also be grouped into modules as follows:
 
 ``` r
-modules <- extract_modules(scale_quantile(expr_sel), traj$time)
-```
-
-``` r
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
 

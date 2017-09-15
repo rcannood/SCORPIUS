@@ -1,6 +1,6 @@
 <!-- github markdown built using 
-rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document")
 rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "html_document")
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document")
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through dendritic cell progenitors. The `ginhoux` dataset contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 
@@ -9,9 +9,9 @@ library(SCORPIUS)
 data(ginhoux)
 ```
 
-The dataset is a list containing a matrix named `expression` and a data frame named `sample.info`.
+The dataset is a list containing a matrix named `expression` and a data frame named `sample_info`.
 
-`expression` is a 248-by-15752 matrix containing the expression values of all the cells and all the genes.
+`expression` was a 248-by-15752 matrix containing the expression values of all the cells and all the genes, but this dataset had to be reduced to 2000 genes in order to reduce the package size. See ?ginhoux for more info.
 
 ``` r
 ginhoux$expression[1:6, 1:6]
@@ -32,7 +32,7 @@ ginhoux$expression[1:6, 1:6]
     ## SRR1558748             0      0.000000
     ## SRR1558749             0      8.190802
 
-`sample.info` is a data frame with the metadata of the cells, containing cell types of the individual cells.
+`sample_info` is a data frame with the metadata of the cells, containing cell types of the individual cells.
 
 ``` r
 head(ginhoux$sample_info)
@@ -173,6 +173,12 @@ gene_sel <- gimp[1:50,]
 expr_sel <- expression[,gene_sel$gene]
 ```
 
+Oftentimes by performing ordering on a good selection of genes can result in better trajectories.
+
+``` r
+traj <- infer_trajectory(expr_sel)
+```
+
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
 
 ``` r
@@ -184,10 +190,7 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 Finally, these genes can also be grouped into modules as follows:
 
 ``` r
-modules <- extract_modules(scale_quantile(expr_sel), traj$time)
-```
-
-``` r
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
 

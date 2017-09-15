@@ -78,7 +78,7 @@ library(SCORPIUS)
 ```
 
 
-The `ginhoux` dataset [See @Schlitzer2015] contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
+The `ginhoux` dataset [See @Schlitzer2015] contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.
 ```{r load ginhoux}
 data(ginhoux)
 expression <- ginhoux$expression
@@ -110,12 +110,6 @@ traj <- infer_trajectory(space)
 draw_trajectory_plot(space, group_name, traj$path)
 ```
 
-```{r echo=F}
-# reverse the trajectory. This does not change the results in any way,
-# other than the heatmap being ordered more logically.
-traj <- reverse_trajectory(traj)
-```
-
 
 To identify candidate marker genes
 ```{r find tafs, message=F, warning=F}
@@ -131,16 +125,36 @@ gimp <- gene_importances(
 ) 
 ```
 
-Select the most important genes, scale its expession, cluster them into modules, and visualise it.
-```{r visualise tafs, message=F, warning=F}
+Select the most important genes and scale its expession.
+```{r calculate pvalue, message=F, warning=F}
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- scale_quantile(expression[,gene_sel])
-modules <- extract_modules(expr_sel, traj$time)
-
-# data is already quantile scaled
-draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features = F)
 ```
+
+Oftentimes by performing ordering on a good selection of genes can result in better trajectories.
+```{r recalculate time}
+traj <- infer_trajectory(expr_sel)
+```
+
+```{r echo=F}
+# reverse the trajectory. This does not change the results in any way,
+# other than the heatmap being ordered more logically.
+traj <- reverse_trajectory(traj)
+```
+
+To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
+```{r visualise tafs}
+draw_trajectory_heatmap(expr_sel, traj$time, group_name)
+```
+
+
+Finally, these genes can also be grouped into modules as follows: 
+```{r moduled tafs}
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
+draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
+```
+
 
 ## Related approaches
 

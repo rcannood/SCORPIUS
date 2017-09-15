@@ -26,19 +26,21 @@
 #' plot(dist, dist2)
 euclidean_distance <- function (x, y=NULL) {
   # input checks
-  if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
+  if (!any(c("matrix", "data.frame", "dgCMatrix") %in% class(x)))
+    stop(sQuote("x"), " must be a numeric matrix, a data frame, or a Matrix::dgCMatrix")
+  if (!is.null(y) && !any(c("matrix", "data.frame", "dgCMatrix") %in% class(y)))
+    stop(sQuote("y"), " must be NULL, a numeric matrix, a data frame, or a Matrix::dgCMatrix")
+  if (!is.null(y) && ncol(x) != ncol(y))
+    stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
+
+  # casting, just to make sure
+  x <- as.matrix(x)
+  if (!is.null(y)) y <- as.matrix(x)
 
   # if y is null, we can simply use the normal dist function
   if (is.null(y)) {
     return(as.matrix(stats::dist(x)))
   } else {
-    # more input checks
-    if (!is.matrix(y) && !is.data.frame(y))
-      stop(sQuote("y"), " must be a numeric matrix or data frame")
-    if (ncol(x) != ncol(y))
-      stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
-
     euclidean_distance_rcpp(x, y)
   }
 }
@@ -69,10 +71,10 @@ euclidean_distance <- function (x, y=NULL) {
 #' plot(dist, dist2)
 correlation_distance <- function(x, y = NULL, method = c("spearman", "pearson", "kendall"), use = "everything") {
   # input checks
-  if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if (!is.null(y) && !is.matrix(y) && !is.data.frame(y))
-    stop(sQuote("y"), " must be NULL, a numeric matrix or a data frame")
+  if (!any(c("matrix", "data.frame", "dgCMatrix") %in% class(x)))
+    stop(sQuote("x"), " must be a numeric matrix, a data frame, or a Matrix::dgCMatrix")
+  if (!is.null(y) && !any(c("matrix", "data.frame", "dgCMatrix") %in% class(y)))
+    stop(sQuote("y"), " must be NULL, a numeric matrix, a data frame, or a Matrix::dgCMatrix")
   if (!is.null(y) && ncol(x) != ncol(y))
     stop(sQuote("x"), " and ", sQuote("y"), " must have the same number of columns")
   na.method <- pmatch(use, c("all.obs", "complete.obs", "pairwise.complete.obs", "everything", "na.or.complete"))
@@ -81,8 +83,8 @@ correlation_distance <- function(x, y = NULL, method = c("spearman", "pearson", 
   method <- match.arg(method)
 
   # transpose if necessary
-  x <- t(x)
-  if (!is.null(y)) y <- t(y)
+  x <- t(as.matrix(x))
+  if (!is.null(y)) y <- t(as.matrix(y))
 
   # calculate and return correlation distance
   1 - (stats::cor(x, y, method=method, use = use)+1)/2

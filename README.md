@@ -65,7 +65,7 @@ To start using SCORPIUS, simply write:
 library(SCORPIUS)
 ```
 
-The `ginhoux` dataset (See Schlitzer et al. 2015) contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
+The `ginhoux` dataset (See Schlitzer et al. 2015) contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.
 
 ``` r
 data(ginhoux)
@@ -115,22 +115,36 @@ gimp <- gene_importances(
 ) 
 ```
 
-Select the most important genes, scale its expession, cluster them into modules, and visualise it.
+Select the most important genes and scale its expession.
 
 ``` r
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- scale_quantile(expression[,gene_sel])
-modules <- extract_modules(expr_sel, traj$time)
 ```
 
+Oftentimes by performing ordering on a good selection of genes can result in better trajectories.
 
 ``` r
-# data is already quantile scaled
-draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules, scale_features = F)
+traj <- infer_trajectory(expr_sel)
+```
+
+To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
+
+``` r
+draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
 ![](README_files/figure-markdown_github/visualise%20tafs-1.png)
+
+Finally, these genes can also be grouped into modules as follows:
+
+``` r
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
+draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
+```
+
+![](README_files/figure-markdown_github/moduled%20tafs-1.png)
 
 Related approaches
 ------------------

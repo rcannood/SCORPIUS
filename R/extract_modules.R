@@ -6,6 +6,7 @@
 #' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time (Optional) Order the modules according to a pseudotime
 #' @param suppress_warnings Whether or not to suppress warnings when P > 1000
+#' @param verbose Whether or not Mclust will print output or not
 #' @param ... Extra parameters passed to \code{\link[mclust]{Mclust}}
 #'
 #' @return A data frame containing meta-data for the features in \code{x}, namely the order in which to visualise the features in and which module they belong to.
@@ -36,7 +37,7 @@
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
-extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, ...) {
+extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose = FALSE, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -53,7 +54,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, ...) {
   mclustBIC <- mclust::mclustBIC
 
   # cluster with mclust
-  labels <- mclust::Mclust(t(x), ...)$classification
+  labels <- mclust::Mclust(t(x), verbose = verbose, ...)$classification
 
   # determine mean module expression
   module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn,drop=FALSE])))

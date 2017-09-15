@@ -5,7 +5,7 @@
 \title{Calculate the importance of a feature}
 \usage{
 gene_importances(x, time, num_permutations = 0, ntree = 10000,
-  ntree_perm = ntree/10, mtry = ncol(x) * 0.01, num_threads = NULL, ...)
+  ntree_perm = ntree/10, mtry = ncol(x) * 0.01, num_threads = 1, ...)
 }
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
@@ -20,9 +20,9 @@ gene_importances(x, time, num_permutations = 0, ntree = 10000,
 
 \item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
 
-\item{num_threads}{Number of threads. Default is number of CPU cores available.}
+\item{num_threads}{Number of threads. Default is 1.}
 
-\item{...}{Extra parameters passed to ranger.}
+\item{...}{Extra parameters passed to \code{\link[ranger]{ranger}}.}
 }
 \value{
 a data frame containing the importance of each feature for the given time line
