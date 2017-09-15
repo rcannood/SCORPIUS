@@ -5,3 +5,4 @@
 ^SCORPIUS\.Rproj$
 ^\.travis\.yml$
 ^vignettes/.*\.md$
+^data/ginhoux_orig\.rds$

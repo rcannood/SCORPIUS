@@ -93,11 +93,20 @@ generate_dataset <- function(type = c("splines", "polynomial"), num_samples = 40
 
 #' @title scRNA-seq data of dendritic cell progenitors.
 #'
-#' @description This dataset contains the expression values of 15752 genes for 248 dendritic cell progenitors.
-#' Each cell is in one of three maturation stages: MDP, CDP or PreDC. The levels of the factor in \code{sample.info}
-#' are ordered according to the maturation process.
+#' @description This dataset contains the expression values of the
+#' top 2000 most variable genes for 248 dendritic cell progenitors.
+#' Each cell is in one of three maturation stages: MDP, CDP or PreDC.
+#' The levels of the factor in \code{sample.info} are ordered according to the maturation process.
 #'
-#' @format A list containing two data frames, \code{expression} (248x15752) and \code{sample.info} (248x1).
+#' The number of genes had to be reduced specifically for reducing the package size of SCORPIUS.
+#' Use the following code to download the original data:
+#' \preformatted{
+#' download.file("https://github.com/rcannood/SCORPIUS/raw/master/data/ginhoux_orig.rds", destfile = "local.rds")
+#' ginhoux <- readRDS("local.rds")
+#' # do something with ginhoux
+#' }
+#'
+#' @format A list containing two data frames, \code{expression} (248x2000) and \code{sample_info} (248x1).
 #'
 #' @references Schlitzer A, Sivakamasundari V, Chen J, Sumatoh HR et al.
 #' Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at

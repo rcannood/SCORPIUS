@@ -4,7 +4,7 @@
 \name{ginhoux}
 \alias{ginhoux}
 \title{scRNA-seq data of dendritic cell progenitors.}
-\format{A list containing two data frames, \code{expression} (248x15752) and \code{sample.info} (248x1).}
+\format{A list containing two data frames, \code{expression} (248x2000) and \code{sample_info} (248x1).}
 \source{
 \url{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
 }
@@ -12,9 +12,18 @@
 ginhoux
 }
 \description{
-This dataset contains the expression values of 15752 genes for 248 dendritic cell progenitors.
-Each cell is in one of three maturation stages: MDP, CDP or PreDC. The levels of the factor in \code{sample.info}
-are ordered according to the maturation process.
+This dataset contains the expression values of the
+top 2000 most variable genes for 248 dendritic cell progenitors.
+Each cell is in one of three maturation stages: MDP, CDP or PreDC.
+The levels of the factor in \code{sample.info} are ordered according to the maturation process.
+
+The number of genes had to be reduced specifically for reducing the package size of SCORPIUS.
+Use the following code to download the original data:
+\preformatted{
+download.file("https://github.com/rcannood/SCORPIUS/raw/master/data/ginhoux_orig.rds", destfile = "local.rds")
+ginhoux <- readRDS("local.rds")
+# do something with ginhoux
+}
 }
 \examples{
 ## Load dataset from Schlitzer et al., 2015
