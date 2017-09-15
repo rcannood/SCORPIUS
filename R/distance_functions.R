@@ -35,7 +35,7 @@ euclidean_distance <- function (x, y=NULL) {
 
   # casting, just to make sure
   x <- as.matrix(x)
-  if (!is.null(y)) y <- as.matrix(x)
+  if (!is.null(y)) y <- as.matrix(y)
 
   # if y is null, we can simply use the normal dist function
   if (is.null(y)) {
