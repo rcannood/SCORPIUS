@@ -41,6 +41,7 @@ are ranked according their position in an inferred trajectory. In addition, the 
 feature modules can be passed along to further enhance the visualisation.
 }
 \examples{
+\dontrun{
 ## Generate a dataset
 dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 expression <- dataset$expression
@@ -50,8 +51,7 @@ groups <- dataset$sample_info$group_name
 traj <- infer_trajectory(space)
 time <- traj$time
 
-## Select most important genes (set the ntree to at least 10000!)
-gimp <- gene_importances(expression, traj$time, num_permutations = 0, ntree = 1000)
+gimp <- gene_importances(expression, traj$time, num_permutations = 0, ntree = 10000)
 gene_sel <- gimp[1:50,]
 expr_sel <- expression[,gene_sel$gene]
 
@@ -64,4 +64,5 @@ draw_trajectory_heatmap(expr_sel, time, progression=groups)
 ## Group the genes into modules and visualise the modules in a heatmap
 modules <- extract_modules(scale_quantile(expr_sel))
 draw_trajectory_heatmap(expr_sel, time, progression_group=groups, modules=modules)
+}
 }

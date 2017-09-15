@@ -53,6 +53,7 @@ outlierness <- function(dist, k=10) {
 #' @seealso \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}, \code{\link{outlierness}}
 #'
 #' @examples
+#' \dontrun{
 #' ## Generate normally distributed points, calculate their outliernesses and which points are outliers
 #' x <- matrix(rnorm(200*2), ncol=2)
 #' dist <- euclidean_distance(x)
@@ -73,6 +74,7 @@ outlierness <- function(dist, k=10) {
 #' # plot the score at each iteration of the removal process
 #' likelihood_df <- attr(filt, "loglikelihood")
 #' plot(likelihood_df$amount_removed, likelihood_df$log_likelihood, type="l")
+#' }
 outlier_filter <- function(dist) {
   # input check
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")

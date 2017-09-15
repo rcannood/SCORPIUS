@@ -158,6 +158,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' @importFrom stats setNames
 #'
 #' @examples
+#' \dontrun{
 #' ## Generate a dataset
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 #' expression <- dataset$expression
@@ -167,8 +168,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' traj <- infer_trajectory(space)
 #' time <- traj$time
 #'
-#' ## Select most important genes (set the ntree to at least 10000!)
-#' gimp <- gene_importances(expression, traj$time, num_permutations = 0, ntree = 1000)
+#' gimp <- gene_importances(expression, traj$time, num_permutations = 0, ntree = 10000)
 #' gene_sel <- gimp[1:50,]
 #' expr_sel <- expression[,gene_sel$gene]
 #'
@@ -181,6 +181,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, progression_group=groups, modules=modules)
+#' }
 draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NULL, show_labels_row=FALSE, show_labels_col=FALSE, scale_features=TRUE, ...) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
