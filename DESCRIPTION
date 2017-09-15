@@ -3,7 +3,7 @@ Type: Package
 Title: Inferring Developmental Chronologies from Single-Cell RNA Sequencing Data
 Version: 1.0
 Date: 2017-09-13
-Description: Ordering single cells with regard to an implicit timeline, such as cellular development or progression over time.
+Description: Ordering single cells with regard to an implicit dynamic process, such as cellular development or progression over time.
 Authors@R: c(
   person("Robrecht", "Cannoodt", email = "robrecht.cannoodt@gmail.com", role = c("aut", "cre")))
 License: GPL-3
