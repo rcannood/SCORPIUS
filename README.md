@@ -23,27 +23,20 @@ News:
 Installing SCORPIUS
 -------------------
 
-You can install the latest version from github with
-
-``` r
-devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
-```
-
-<!--
 You can install:
 
-* the latest released version from CRAN with
+-   the latest released version from CRAN with
 
-    ```R
+    ``` r
     install.packages("SCORPIUS")
     ```
 
-* the latest development version from github with
+-   the latest development version from github with
 
-    ```R
+    ``` r
     devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
     ```
--->
+
 If you encounter a bug, please file a minimal reproducible example on the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 
 Learning SCORPIUS
