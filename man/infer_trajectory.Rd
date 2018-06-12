@@ -18,13 +18,13 @@ infer_trajectory(
 
 \item{k}{The number of clusters to cluster the data into.}
 
-\item{thresh}{\code{\link[princurve]{principal.curve}} parameter: convergence threshhold on shortest distances to the curve}
+\item{thresh}{\code{\link[princurve]{principal_curve}} parameter: convergence threshhold on shortest distances to the curve}
 
-\item{maxit}{\code{\link[princurve]{principal.curve}} parameter: maximum number of iterations}
+\item{maxit}{\code{\link[princurve]{principal_curve}} parameter: maximum number of iterations}
 
-\item{stretch}{\code{\link[princurve]{principal.curve}} parameter: a factor by which the curve can be extrapolated when points are projected}
+\item{stretch}{\code{\link[princurve]{principal_curve}} parameter: a factor by which the curve can be extrapolated when points are projected}
 
-\item{smoother}{\code{\link[princurve]{principal.curve}} parameter: choice of smoother}
+\item{smoother}{\code{\link[princurve]{principal_curve}} parameter: choice of smoother}
 }
 \value{
 A list containing several objects:
@@ -44,10 +44,10 @@ A list containing several objects:
 }
 \examples{
 ## Generate an example dataset and visualise it
-dataset <- generate_dataset(type="poly", num_genes=500, num_samples=1000, num_groups=4)
+dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 dist <- correlation_distance(dataset$expression)
-space <- reduce_dimensionality(dist, ndim=2)
-draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
+space <- reduce_dimensionality(dist, ndim = 2)
+draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 
 ## Infer a trajectory through this space
 traj <- infer_trajectory(space)
