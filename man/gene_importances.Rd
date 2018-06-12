@@ -10,7 +10,7 @@ gene_importances(x, time, num_permutations = 0, ntree = 10000,
 \arguments{
 \item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
-\item{time}{A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer.trajectory}}.}
+\item{time}{A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer_trajectory}}.}
 
 \item{num_permutations}{The number of permutations to test against for calculating the p-values (default: 0).}
 
