@@ -24,10 +24,10 @@ plot(density(dist))
 space <- reduce.dimensionality(dist)
 
 ## ------------------------------------------------------------------------
-draw.trajectory.plot(space)
+draw_trajectory_plot(space)
 
 ## ------------------------------------------------------------------------
-draw.trajectory.plot(space, progression.group = group.name)
+draw_trajectory_plot(space, progression_group = group.name)
 
 ## ------------------------------------------------------------------------
 traj <- infer.trajectory(space)

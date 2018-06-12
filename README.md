@@ -18,7 +18,7 @@ News:
 
 -   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
 
--   Check out our [review](http://onlinelibrary.wiley.com/doi/10.1002/eji.201646347/full) on Trajectory Inference methods!
+-   Check out our [review](https://www.biorxiv.org/content/early/2018/03/05/276907) on Trajectory Inference methods!
 
 Installing SCORPIUS
 -------------------
@@ -34,7 +34,7 @@ You can install:
 -   the latest development version from github with
 
     ``` r
-    devtools::install_github("rcannood/SCORPIUS", build_vignettes=TRUE)
+    devtools::install_github("rcannood/SCORPIUS", build_vignettes = TRUE)
     ```
 
 If you encounter a bug, please file a minimal reproducible example on the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
@@ -138,14 +138,6 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
 
 ![](README_files/figure-markdown_github/moduled%20tafs-1.png)
-
-Related approaches
-------------------
-
--   [Wanderlust](http://www.c2b2.columbia.edu/danapeerlab/html/wanderlust.html)
--   [Monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html)
--   [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
--   [Embeddr](https://github.com/kieranrcampbell/embeddr)
 
 References
 ----------
