@@ -98,14 +98,14 @@ closer together than cells with dissimilar expression values.
     space <- reduce_dimensionality(dist)
     draw_trajectory_plot(space, group_name)
 
-![](man/figures/README_reduce%20dimensionality-1.png)
+![](man/figures/README_reduce_dimensionality-1.png)
 
 To infer and visualise a trajectory through these cells, run:
 
     traj <- infer_trajectory(space)
     draw_trajectory_plot(space, group_name, traj$path)
 
-![](man/figures/README_infer%20trajectory-1.png)
+![](man/figures/README_infer_trajectory-1.png)
 
 To identify candidate marker genes
 
@@ -136,14 +136,14 @@ To visualise the expression of the selected genes, use the
 
     draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 
-![](man/figures/README_visualise%20tafs-1.png)
+![](man/figures/README_visualise_tafs-1.png)
 
 Finally, these genes can also be grouped into modules as follows:
 
     modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
     draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 
-![](man/figures/README_moduled%20tafs-1.png)
+![](man/figures/README_moduled_tafs-1.png)
 
 References
 ----------
