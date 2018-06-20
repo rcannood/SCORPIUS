@@ -9,7 +9,14 @@ Description: An accurate and easy tool for performing trajectory inference on
   the reconstructed trajectory, as well as nice visualisation tools.
   Cannoodt et al. (2016) <doi:10.1101/079509>.
 Authors@R: c(
-  person("Robrecht", "Cannoodt", email = "rcannood@gmail.com", role = c("aut", "cre")))
+    person(
+      "Robrecht", 
+      "Cannoodt", 
+      email = "rcannood@gmail.com", 
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0003-3641-729X", github = "rcannood")
+    )
+  )
 License: GPL-3
 URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
