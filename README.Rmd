@@ -1,17 +1,21 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: md_document
+editor_options: 
+  chunk_output_type: console
 bibliography: library.bib
 ---
 
-<!-- github markdown built using 
-rmarkdown::render("README.Rmd", output_format = "md_document")
--->
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(fig.path = "man/figures/README_", warning = FALSE, message = FALSE, error = FALSE, echo = TRUE)
+```
 
 # SCORPIUS
 
-[![Build Status](https://travis-ci.org/rcannood/SCORPIUS.png?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
+[![Build Status](https://travis-ci.org/rcannood/SCORPIUS.svg?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rcannood/SCORPIUS?branch=master&svg=true)](https://ci.appveyor.com/project/rcannood/SCORPIUS)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SCORPIUS)](https://cran.r-project.org/package=SCORPIUS)
+[![Coverage Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
+
 
 **SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell
 RNA sequencing data.** In comparison to similar approaches, it has three main advantages:
