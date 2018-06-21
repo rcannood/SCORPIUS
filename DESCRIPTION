@@ -50,13 +50,13 @@ Imports:
   reshape2,
   splines,
   stats,
-  testthat,
   tidyr,
   TSP,
   utils
 Suggests:
   knitr,
-  rmarkdown
+  rmarkdown,
+  testthat
 LinkingTo:
   Rcpp
 
