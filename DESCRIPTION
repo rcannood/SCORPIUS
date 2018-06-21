@@ -1,8 +1,8 @@
 Package: SCORPIUS
 Type: Package
 Title: Inferring Developmental Chronologies from Single-Cell RNA Sequencing Data
-Version: 1.0
-Date: 2017-09-13
+Version: 1.0.1
+Date: 2018-06-12
 Description: An accurate and easy tool for performing trajectory inference on
   single cells using single-cell RNA sequencing data. In addition, SCORPIUS
   provides functions for discovering the most important genes with respect to
@@ -36,7 +36,7 @@ Imports:
   Rcpp,
   pbapply,
   pheatmap,
-  princurve,
+  princurve (>= 2.0.2),
   purrr,
   ranger,
   RColorBrewer,

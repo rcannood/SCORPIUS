@@ -142,7 +142,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' @param x A numeric matrix or data frame with one row per sample and one column per feature.
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
-#' @param modules \code{NULL} or a data frame as returned by \code{\link{extract.modules}}.
+#' @param modules \code{NULL} or a data frame as returned by \code{\link{extract_modules}}.
 #' @param show_labels_row \code{TRUE} if the labels of the rows are to be plotted (default \code{FALSE}).
 #' @param show_labels_col \code{TRUE} if the labels of the cols are to be plotted (default \code{FALSE}).
 #' @param scale_features \code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).

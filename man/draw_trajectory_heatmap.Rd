@@ -22,7 +22,7 @@ draw_trajectory_heatmap(
 
 \item{progression_group}{\code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).}
 
-\item{modules}{\code{NULL} or a data frame as returned by \code{\link{extract.modules}}.}
+\item{modules}{\code{NULL} or a data frame as returned by \code{\link{extract_modules}}.}
 
 \item{show_labels_row}{\code{TRUE} if the labels of the rows are to be plotted (default \code{FALSE}).}
 

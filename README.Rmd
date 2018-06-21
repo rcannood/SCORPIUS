@@ -1,17 +1,21 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: md_document
+editor_options: 
+  chunk_output_type: console
 bibliography: library.bib
 ---
 
-<!-- github markdown built using 
-rmarkdown::render("README.Rmd", output_format = "md_document")
--->
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(fig.path = "man/figures/README_", warning = FALSE, message = FALSE, error = FALSE, echo = TRUE)
+```
 
 # SCORPIUS
 
-[![Build Status](https://travis-ci.org/rcannood/SCORPIUS.png?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
+[![Build Status](https://travis-ci.org/rcannood/SCORPIUS.svg?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/rcannood/SCORPIUS?branch=master&svg=true)](https://ci.appveyor.com/project/rcannood/SCORPIUS)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SCORPIUS)](https://cran.r-project.org/package=SCORPIUS)
+[![Coverage Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
+
 
 **SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell
 RNA sequencing data.** In comparison to similar approaches, it has three main advantages:
@@ -29,7 +33,7 @@ News:
 
 * A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
 
-* Check out our [review](http://onlinelibrary.wiley.com/doi/10.1002/eji.201646347/full) on Trajectory Inference methods!
+* Check out our [review](https://www.biorxiv.org/content/early/2018/03/05/276907) on Trajectory Inference methods!
   
 ## Installing SCORPIUS
 
@@ -71,7 +75,7 @@ library(SCORPIUS)
 
 
 The `ginhoux` dataset [See @Schlitzer2015] contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.
-```{r load ginhoux}
+```{r load_ginhoux}
 data(ginhoux)
 expression <- ginhoux$expression
 group_name <- ginhoux$sample_info$group_name
@@ -81,7 +85,7 @@ group_name <- ginhoux$sample_info$group_name
 With the following code, SCORPIUS reduces the dimensionality of the dataset and provides a visual overview of the dataset. 
 In this plot, cells that are similar in terms of expression values will be placed closer together than cells with dissimilar expression values.
 
-```{r reduce dimensionality}
+```{r reduce_dimensionality}
 dist <- correlation_distance(expression)
 
 # filter outliers
@@ -97,14 +101,14 @@ draw_trajectory_plot(space, group_name)
 
 
 To infer and visualise a trajectory through these cells, run:
-```{r infer trajectory}
+```{r infer_trajectory}
 traj <- infer_trajectory(space)
 draw_trajectory_plot(space, group_name, traj$path)
 ```
 
 
 To identify candidate marker genes
-```{r find tafs, message=F, warning=F}
+```{r find_tafs, message=F, warning=F}
 # warning: setting num_permutations to 10 requires a long time (~30min) to run!
 # set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
 gimp <- gene_importances(
@@ -118,14 +122,14 @@ gimp <- gene_importances(
 ```
 
 Select the most important genes and scale its expession.
-```{r calculate pvalue, message=F, warning=F}
+```{r calculate_pvalue, message=F, warning=F}
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- scale_quantile(expression[,gene_sel])
 ```
 
 Oftentimes by performing ordering on a good selection of genes can result in better trajectories.
-```{r recalculate time}
+```{r recalculate_time}
 traj <- infer_trajectory(expr_sel)
 ```
 
@@ -136,24 +140,16 @@ traj <- reverse_trajectory(traj)
 ```
 
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
-```{r visualise tafs}
+```{r visualise_tafs}
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
 
 Finally, these genes can also be grouped into modules as follows: 
-```{r moduled tafs}
+```{r moduled_tafs}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
-
-
-## Related approaches
-
-* [Wanderlust](http://www.c2b2.columbia.edu/danapeerlab/html/wanderlust.html)
-* [Monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html)
-* [Waterfall](http://dx.doi.org/10.1016/j.stem.2015.07.013)
-* [Embeddr](https://github.com/kieranrcampbell/embeddr)
 
 
 ## References

@@ -7,3 +7,7 @@ addons:
     packages:
       - libusb-1.0-0-dev
 bioc_required: true
+r_packages:
+ - covr
+after_success:
+ - R -e 'covr::codecov()'
