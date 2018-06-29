@@ -34,13 +34,13 @@ Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
+  dynutils,
   fitdistrplus,
   grDevices,
   ggplot2 (>= 2.0),
   magrittr,
   MASS,
   mclust,
-  Rcpp,
   pbapply,
   pheatmap,
   princurve (>= 2.0.2),
@@ -57,6 +57,4 @@ Suggests:
   knitr,
   rmarkdown,
   testthat
-LinkingTo:
-  Rcpp
 
