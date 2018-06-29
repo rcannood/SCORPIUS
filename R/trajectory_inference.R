@@ -22,8 +22,7 @@
 #' @examples
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim = 2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
@@ -112,8 +111,7 @@ infer_initial_trajectory <- function(space, k) {
 #' @examples
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim = 2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
@@ -184,8 +182,7 @@ infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
 #' ## Generate an example dataset and infer a trajectory through it
 #' dataset <- generate_dataset(type="poly", num_genes=500, num_samples=1000, num_groups=4)
 #' group_name <- dataset$sample_info$group_name
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise the trajectory

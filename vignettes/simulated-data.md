@@ -51,32 +51,12 @@ Reduce dimensionality of the dataset
 
 SCORPIUS uses classical Torgerson multi-dimensional scaling to reduce the dataset to three dimensions. In short, this technique attempts to place the cells in a space such that the distance between any two points in that space approximates the original distance between the two cells as well as possible.
 
-The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. The distance matrix is calculated as follows:
+The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. The reduced space is constructed as follows:
 
 ``` r
 expression <- dataset$expression
 group_name <- dataset$sample_info$group_name
-dist <- correlation_distance(expression)
-```
-
-`dist` is a 384-by-384 matrix, with values ranging from 0 to 1.
-
-``` r
-dim(dist)
-```
-
-    ## [1] 384 384
-
-``` r
-plot(density(dist))
-```
-
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-6-1.png)
-
-The reduced space is constructed as follows:
-
-``` r
-space <- reduce_dimensionality(dist)
+space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
 ```
 
 The new space is a 384-by-3 matrix, and can be visualised as follows:
@@ -85,7 +65,7 @@ The new space is a 384-by-3 matrix, and can be visualised as follows:
 draw_trajectory_plot(space)
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 Looking at this plot, it seems that the cells in this dataset are involved in a dynamic process.
 
@@ -97,7 +77,7 @@ In this case, the underlying groups of each cell were also given:
 draw_trajectory_plot(space, progression_group = group_name)
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 Inferring a trajectory through the cells
 ----------------------------------------
@@ -118,7 +98,7 @@ The trajectory can be visualised with respect to the samples by passing it to `d
 draw_trajectory_plot(space, progression_group = group_name, path = traj$path)
 ```
 
-![](simulated-data_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](simulated-data_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Finding candidate marker genes
 ------------------------------

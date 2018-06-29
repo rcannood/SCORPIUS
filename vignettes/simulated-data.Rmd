@@ -55,23 +55,11 @@ In short, this technique attempts to place the cells in a space such that the di
 two points in that space approximates the original distance between the two cells as well as possible.
 
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. 
-The distance matrix is calculated as follows:
+The reduced space is constructed as follows:
 ```{r}
 expression <- dataset$expression
 group_name <- dataset$sample_info$group_name
-dist <- correlation_distance(expression)
-```
-
-`dist` is a 384-by-384 matrix, with values ranging from 0 to 1.
-```{r}
-dim(dist)
-plot(density(dist))
-```
-
-
-The reduced space is constructed as follows:
-```{r}
-space <- reduce_dimensionality(dist)
+space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
 ```
 
 

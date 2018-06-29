@@ -19,8 +19,7 @@ Since the direction of the trajectory is not specified, the ordering of a trajec
 ## Generate an example dataset and infer a trajectory through it
 dataset <- generate_dataset(type="poly", num_genes=500, num_samples=1000, num_groups=4)
 group_name <- dataset$sample_info$group_name
-dist <- correlation_distance(dataset$expression)
-space <- reduce_dimensionality(dist, ndim=2)
+space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 traj <- infer_trajectory(space)
 
 ## Visualise the trajectory

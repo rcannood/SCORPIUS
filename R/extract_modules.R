@@ -16,15 +16,14 @@
 #' @export
 #'
 #' @importFrom mclust Mclust
-#' @importFrom stats as.dist
+#' @importFrom stats as.dist cor
 #'
 #' @examples
 #' ## Generate a dataset and visualise
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 #' expression <- dataset$expression
 #' group_name <- dataset$sample_info$group_name
-#' dist <- correlation_distance(expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(expression, correlation_distance, ndim=2)
 #' traj <- infer_trajectory(space)
 #' time <- traj$time
 #' draw_trajectory_plot(space, path=traj$path, group_name)
@@ -63,12 +62,12 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
     if (ncol(z) <= 2) {
       pct <- seq(0, 1, length.out = ncol(z))
     } else if (ncol(z) == 3) {
-      pct <- reduce_dimensionality(correlation_distance(t(z)), ndim = 1)[,1]
+      pct <- reduce_dimensionality(t(z), correlation_distance, ndim = 1)[,1]
       pct <- (pct - min(pct)) / (max(pct) - min(pct))
     } else {
       pct <- suppressWarnings(infer_trajectory(t(z), k = NULL)$time)
     }
-    if (!is.null(time) && ncol(z) > 1 && cor(cor(time, z)[1,], pct) < 0) {
+    if (!is.null(time) && ncol(z) > 1 && stats::cor(stats::cor(time, z)[1,], pct) < 0) {
       pct <- -pct
     }
     pct

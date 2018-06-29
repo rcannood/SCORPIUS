@@ -18,8 +18,7 @@
 #' @examples
 #' ## Generate a dataset
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=1000, num_groups=4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Evaluate the trajectory timeline
@@ -90,12 +89,11 @@ evaluate_trajectory <- function(time, progression) {
 #' @examples
 #' ## Generate a dataset
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #'
 #' ## Evaluate the trajectory timeline
 #' evaluate_dim_red(space, dataset$sample_info$group_name)
-evaluate_dim_red <- function(space, progression, k=5) {
+evaluate_dim_red <- function(space, progression, k = 5) {
   # input checks
   if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
@@ -108,7 +106,7 @@ evaluate_dim_red <- function(space, progression, k=5) {
   if (is.factor(progression)) progression <- as.integer(progression)
 
   # perform 5NN LOOCV
-  knn_out <- knn(as.matrix(dist(space)), k = k)
+  knn_out <- knn(as.matrix(stats::dist(space)), k = k)
 
   multi_mode <- sapply(seq_along(progression), function(i) {
     z <- progression[knn_out$indices[i,]]

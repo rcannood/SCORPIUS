@@ -46,32 +46,12 @@ Reduce dimensionality of the dataset
 
 SCORPIUS uses classical Torgerson multi-dimensional scaling to reduce the dataset to three dimensions. In short, this technique attempts to place the cells in a space such that the distance between any two points in that space approximates the original distance between the two cells as well as possible.
 
-The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. The distance matrix is calculated as follows:
+The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. The reduced space is constructed as follows:
 
 ``` r
 expression <- ginhoux$expression
 group_name <- ginhoux$sample_info$group_name
-dist <- correlation_distance(expression)
-```
-
-`dist` is a 248-by-248 matrix, with values ranging from 0 to 1.
-
-``` r
-dim(dist)
-```
-
-    ## [1] 248 248
-
-``` r
-plot(density(dist))
-```
-
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-6-1.png)
-
-The reduced space is constructed as follows:
-
-``` r
-space <- reduce_dimensionality(dist)
+space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
 ```
 
 The new space is a 248-by-3 matrix, and can be visualised as follows:
@@ -80,7 +60,7 @@ The new space is a 248-by-3 matrix, and can be visualised as follows:
 draw_trajectory_plot(space)
 ```
 
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](ginhoux_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 We can also visualise the cell types as colours as follows:
 
@@ -88,51 +68,7 @@ We can also visualise the cell types as colours as follows:
 draw_trajectory_plot(space, progression_group = group_name)
 ```
 
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-9-1.png)
-
-Outlier filtering
------------------
-
-Most scRNA-seq datasets contain a few outliers, and these often have a dentrimental effect on the end results.
-
-In this case, looking at the first and third dimensions, we clearly see a few outliers.
-
-``` r
-library(ggplot2)
-draw_trajectory_plot(space[, c(1, 3)]) + labs(y="Component 3")
-```
-
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-10-1.png)
-
-We filter away a few outliers and execute the dimensionality reduction again.
-
-``` r
-filt <- outlier_filter(dist)
-expression <- expression[filt, ]
-group_name <- group_name[filt]
-dist <- dist[filt, filt]
-space <- reduce_dimensionality(dist)
-```
-
-Looking at each pairwise combination of dimensions, we see that there are no more clear outliers.
-
-``` r
-draw_trajectory_plot(space[, c(1, 2)])
-```
-
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-12-1.png)
-
-``` r
-draw_trajectory_plot(space[, c(1, 3)]) + labs(y = "Component 3")
-```
-
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-12-2.png)
-
-``` r
-draw_trajectory_plot(space[, c(2, 3)]) + labs(x = "Component 2", y = "Component 3")
-```
-
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-12-3.png)
+![](ginhoux_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 Inferring a trajectory through the cells
 ----------------------------------------
@@ -153,7 +89,7 @@ The trajectory can be visualised with respect to the samples by passing it to `d
 draw_trajectory_plot(space, progression_group = group_name, path = traj$path)
 ```
 
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-14-1.png)
+![](ginhoux_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Finding candidate marker genes
 ------------------------------

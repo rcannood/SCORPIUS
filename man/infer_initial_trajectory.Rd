@@ -24,8 +24,7 @@ points.
 \examples{
 ## Generate an example dataset and visualise it
 dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-dist <- correlation_distance(dataset$expression)
-space <- reduce_dimensionality(dist, ndim = 2)
+space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 
 ## Infer a trajectory through this space

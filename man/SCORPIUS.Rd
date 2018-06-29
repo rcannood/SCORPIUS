@@ -9,19 +9,14 @@
 SCORPIUS orders single cells with regard to an implicit timeline,
 such as cellular development or progression over time.
 }
-\section{Outlier functions}{
-
-\code{\link{outlierness}} \code{\link{outlier_filter}}
-}
-
 \section{Distance functions}{
 
-\code{\link{correlation_distance}}, \code{\link{euclidean_distance}}, \code{\link{knn}}
+\code{\link{correlation_distance}}, \code{\link{euclidean_distance}}
 }
 
 \section{Dimensionality Reduction functions}{
 
-\code{\link{reduce_dimensionality}}, \code{\link{reduce_dimensionality_landmarked}}, \code{\link{scale_uniform}}, \code{\link{scale_quantile}}
+\code{\link{reduce_dimensionality}}, \code{\link{scale_uniform}}, \code{\link{scale_quantile}}
 }
 
 \section{Trajectory Inference functions}{

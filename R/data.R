@@ -31,8 +31,7 @@
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 #'
 #' ## Reduce dimensionality and infer trajectory with SCORPIUS
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise
@@ -121,8 +120,7 @@ generate_dataset <- function(type = c("splines", "polynomial"), num_samples = 40
 #' data("ginhoux")
 #'
 #' ## Reduce dimensionality and infer trajectory with SCORPIUS
-#' dist <- correlation_distance(ginhoux$expression)
-#' space <- reduce_dimensionality(dist)
+#' space <- reduce_dimensionality(ginhoux$expression, correlation_distance)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise
