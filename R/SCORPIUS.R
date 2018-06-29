@@ -10,7 +10,7 @@
 #' \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}, \code{\link{knn}}
 #'
 #' @section Dimensionality Reduction functions:
-#' \code{\link{reduce_dimensionality}}, \code{\link{reduce_dimensionality_landmarked}}, \code{\link{scale_uniform}}, \code{\link{scale_quantile}}
+#' \code{\link{reduce_dimensionality}}, \code{\link{scale_uniform}}, \code{\link{scale_quantile}}
 #'
 #' @section Trajectory Inference functions:
 #' \code{\link{infer_trajectory}}, \code{\link{infer_initial_trajectory}}, \code{\link{reverse_trajectory}}, \code{\link{gene_importances}}, \code{\link{extract_modules}}

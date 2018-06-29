@@ -31,8 +31,7 @@ A list containing the expression data and the meta data of the samples.
 dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 
 ## Reduce dimensionality and infer trajectory with SCORPIUS
-dist <- correlation_distance(dataset$expression)
-space <- reduce_dimensionality(dist, ndim=2)
+space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
 traj <- infer_trajectory(space)
 
 ## Visualise

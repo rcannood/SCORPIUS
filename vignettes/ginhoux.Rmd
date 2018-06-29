@@ -53,27 +53,13 @@ SCORPIUS uses classical Torgerson multi-dimensional scaling to reduce the datase
 In short, this technique attempts to place the cells in a space such that the distance between any
 two points in that space approximates the original distance between the two cells as well as possible.
 
-The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. 
-The distance matrix is calculated as follows:
+The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`.
+The reduced space is constructed as follows:
 ```{r}
 expression <- ginhoux$expression
 group_name <- ginhoux$sample_info$group_name
-dist <- correlation_distance(expression)
+space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
 ```
-
-
-`dist` is a 248-by-248 matrix, with values ranging from 0 to 1.
-```{r}
-dim(dist)
-plot(density(dist))
-```
-
-
-The reduced space is constructed as follows:
-```{r}
-space <- reduce_dimensionality(dist)
-```
-
 
 The new space is a 248-by-3 matrix, and can be visualised as follows:
 ```{r}
@@ -84,35 +70,6 @@ draw_trajectory_plot(space)
 We can also visualise the cell types as colours as follows:
 ```{r}
 draw_trajectory_plot(space, progression_group = group_name)
-```
-
-
-## Outlier filtering
-
-Most scRNA-seq datasets contain a few outliers, and these often have a dentrimental effect on the end results.
-
-In this case, looking at the first and third dimensions, we clearly see a few outliers.
-```{r}
-library(ggplot2)
-draw_trajectory_plot(space[, c(1, 3)]) + labs(y="Component 3")
-```
-
-
-We filter away a few outliers and execute the dimensionality reduction again.
-```{r}
-filt <- outlier_filter(dist)
-expression <- expression[filt, ]
-group_name <- group_name[filt]
-dist <- dist[filt, filt]
-space <- reduce_dimensionality(dist)
-```
-
-
-Looking at each pairwise combination of dimensions, we see that there are no more clear outliers.
-```{r}
-draw_trajectory_plot(space[, c(1, 2)])
-draw_trajectory_plot(space[, c(1, 3)]) + labs(y = "Component 3")
-draw_trajectory_plot(space[, c(2, 3)]) + labs(x = "Component 2", y = "Component 3")
 ```
 
 

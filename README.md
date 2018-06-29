@@ -86,16 +86,7 @@ dataset and provides a visual overview of the dataset. In this plot,
 cells that are similar in terms of expression values will be placed
 closer together than cells with dissimilar expression values.
 
-    dist <- correlation_distance(expression)
-
-    # filter outliers
-    filt <- outlier_filter(dist)
-    expression <- expression[filt, ]
-    group_name <- group_name[filt]
-    dist <- dist[filt, filt]
-
-    # reduce dimensionality
-    space <- reduce_dimensionality(dist)
+    space <- reduce_dimensionality(expression, correlation_distance)
     draw_trajectory_plot(space, group_name)
 
 ![](man/figures/README_reduce_dimensionality-1.png)

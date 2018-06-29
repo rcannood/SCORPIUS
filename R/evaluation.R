@@ -18,8 +18,7 @@
 #' @examples
 #' ## Generate a dataset
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=1000, num_groups=4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Evaluate the trajectory timeline
@@ -90,8 +89,7 @@ evaluate_trajectory <- function(time, progression) {
 #' @examples
 #' ## Generate a dataset
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #'
 #' ## Evaluate the trajectory timeline
 #' evaluate_dim_red(space, dataset$sample_info$group_name)

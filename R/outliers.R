@@ -66,8 +66,7 @@ outlierness <- function(dist, k=10) {
 #'
 #' ## Generate a random expression dataset
 #' dataset <- generate_dataset(type="poly", num_genes=500, num_samples=200, num_groups=4)
-#' dist <- correlation_distance(dataset$expression)
-#' space <- reduce_dimensionality(dist, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
 #' filt <- outlier_filter(dist)
 #' # plot points using their outlierness value as size and whether or not they were outliers as colours
 #' plot(space, col=filt+2, cex=outlierness(dist)+1, pch=20)

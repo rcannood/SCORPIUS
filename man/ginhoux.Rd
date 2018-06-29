@@ -30,8 +30,7 @@ ginhoux <- readRDS("local.rds")
 data("ginhoux")
 
 ## Reduce dimensionality and infer trajectory with SCORPIUS
-dist <- correlation_distance(ginhoux$expression)
-space <- reduce_dimensionality(dist)
+space <- reduce_dimensionality(ginhoux$expression, correlation_distance)
 traj <- infer_trajectory(space)
 
 ## Visualise
