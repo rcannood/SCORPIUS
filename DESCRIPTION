@@ -35,7 +35,6 @@ Depends:
 Imports:
   dplyr,
   dynutils,
-  fitdistrplus,
   grDevices,
   ggplot2 (>= 2.0),
   magrittr,

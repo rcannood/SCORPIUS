@@ -93,7 +93,7 @@ evaluate_trajectory <- function(time, progression) {
 #'
 #' ## Evaluate the trajectory timeline
 #' evaluate_dim_red(space, dataset$sample_info$group_name)
-evaluate_dim_red <- function(space, progression, k=5) {
+evaluate_dim_red <- function(space, progression, k = 5) {
   # input checks
   if (!is.matrix(space) && !is.data.frame(space))
     stop(sQuote("space"), " must be a numeric matrix or data frame")
@@ -106,7 +106,7 @@ evaluate_dim_red <- function(space, progression, k=5) {
   if (is.factor(progression)) progression <- as.integer(progression)
 
   # perform 5NN LOOCV
-  knn_out <- knn(as.matrix(dist(space)), k = k)
+  knn_out <- knn(as.matrix(stats::dist(space)), k = k)
 
   multi_mode <- sapply(seq_along(progression), function(i) {
     z <- progression[knn_out$indices[i,]]
