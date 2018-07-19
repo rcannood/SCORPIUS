@@ -51,6 +51,9 @@ evaluate_trajectory <- function(time, progression) {
     progression <- as.integer(progression)
   }
 
+  ## satisfying r cmd check
+  i <- j <- pri <- prj <- rai <- raj <- NA
+
   ## Calculate whether or not pairs of samples are consistent in terms of its progression and rank
   comp <-
     crossing(
@@ -58,13 +61,13 @@ evaluate_trajectory <- function(time, progression) {
       j = seq_along(progression)
     ) %>%
     mutate(
-      pi = progression[i],
-      pj = progression[j],
-      ri = rank[i],
-      rj = rank[j],
-      consistent = (pi < pj) == (ri < rj)
+      pri = progression[i],
+      prj = progression[j],
+      rai = rank[i],
+      raj = rank[j],
+      consistent = (pri < prj) == (rai < raj)
     ) %>%
-    filter(pi != pj)
+    filter(pri != prj)
 
   ## Calculate the mean consistency
   con <- mean(comp$consistent)
