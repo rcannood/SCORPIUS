@@ -34,7 +34,7 @@ Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
-  dynutils,
+  dynutils (>= 1.0.0),
   grDevices,
   ggplot2 (>= 2.0),
   magrittr,
@@ -42,7 +42,7 @@ Imports:
   mclust,
   pbapply,
   pheatmap,
-  princurve (>= 2.0.2),
+  princurve (>= 2.1.0),
   purrr,
   ranger,
   RColorBrewer,
