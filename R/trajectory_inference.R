@@ -52,7 +52,7 @@ infer_initial_trajectory <- function(space, k) {
       if (i == j) {
         0
       } else {
-        twocent <- centers[c(i,j),,drop=FALSE]
+        twocent <- centers[c(i,j), , drop = FALSE]
         segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
         dists <- euclidean_distance(segment_pts, space)
         mean(knn_distances(dists, 10, self_loops=TRUE))
