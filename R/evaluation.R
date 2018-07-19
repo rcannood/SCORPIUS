@@ -40,32 +40,40 @@ evaluate_trajectory <- function(time, progression) {
   min_diff <- min(diff[diff != 0])
 
   ## Add small values to the time points. If there are time points with same values, samples will now be ordered randomly.
-  noises <- stats::runif(length(time), 0, 0.01) * min_diff
+  noises <- stats::runif(length(time), 0, 0.01 * min_diff)
   noised_time <- time + noises
 
   ## Rank the time points
   rank <- rank(noised_time)
 
   ## If progression is a factor, convert it to an integer
-  if (is.factor(progression)) progression <- as.integer(progression)
+  if (is.factor(progression)) {
+    progression <- as.integer(progression)
+  }
 
   ## Calculate whether or not pairs of samples are consistent in terms of its progression and rank
-  comp <- expand.grid(i=seq_along(progression), j=seq_along(progression))
-  comp$pi <- progression[comp$i]
-  comp$pj <- progression[comp$j]
-  comp$ri <- rank[comp$i]
-  comp$rj <- rank[comp$j]
-  comp <- comp[comp$pi != comp$pj,,drop=FALSE]
-  comp$consistent <- with(comp, (pi < pj) == (ri < rj))
+  comp <-
+    crossing(
+      i = seq_along(progression),
+      j = seq_along(progression)
+    ) %>%
+    mutate(
+      pi = progression[i],
+      pj = progression[j],
+      ri = rank[i],
+      rj = rank[j],
+      consistent = (pi < pj) == (ri < rj)
+    ) %>%
+    filter(pi != pj)
 
   ## Calculate the mean consistency
   con <- mean(comp$consistent)
 
   ## Take into account undirectionality of the timeline
-  con <- max(con, 1-con)
+  con <- max(con, 1 - con)
 
   ## Rescale and return
-  (con-.5)*2
+  (con - .5) * 2
 }
 
 #' @title Evaluate the dimensionality reduction
