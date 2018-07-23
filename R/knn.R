@@ -55,8 +55,6 @@ knn_distances <- function(dist, k, self_loops=FALSE) {
 #' knnd <- knn(dist, 10)
 #' plot(density(knnd$distances))
 knn <- function(dist, k, self_loops=FALSE) {
-  requireNamespace("utils")
-
   # input checks
   if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
     stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")

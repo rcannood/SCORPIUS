@@ -15,7 +15,7 @@
 #'
 #' @export
 #'
-#' @importFrom mclust Mclust
+#' @importFrom mclust Mclust mclustBIC
 #' @importFrom stats as.dist cor
 #'
 #' @examples
@@ -48,9 +48,6 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
   }
 
   feature_names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
-
-  # sigh.. mclust doesn't do well with requireNamespace
-  mclustBIC <- mclust::mclustBIC
 
   # cluster with mclust
   labels <- mclust::Mclust(t(x), verbose = verbose, ...)$classification

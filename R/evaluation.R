@@ -24,7 +24,6 @@
 #' ## Evaluate the trajectory timeline
 #' evaluate_trajectory(traj$time, dataset$sample_info$group_name)
 evaluate_trajectory <- function(time, progression) {
-  requireNamespace("stats")
   # remove any irrelevant parameters from time
   attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
 

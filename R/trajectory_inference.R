@@ -60,7 +60,6 @@ infer_initial_trajectory <- function(space, k) {
     })
   })
 
-  requireNamespace("TSP")
   # combine both distance matrices
   cluster_distances <- eucl_dist * density_dist
 
