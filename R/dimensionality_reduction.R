@@ -70,8 +70,8 @@ landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
     landmark_method,
     "naive" = {
       ix_lm <- sample.int(nrow(x), num_landmarks)
-      dist_lm <- dist_fun(x[ix_lm,,drop=FALSE], x[ix_lm,,drop=FALSE])
-      dist_2lm <- dist_fun(x[ix_lm,,drop=FALSE], x)
+      dist_lm <- dist_fun(x[ix_lm, , drop = FALSE], x[ix_lm, , drop = FALSE])
+      dist_2lm <- dist_fun(x[ix_lm, , drop = FALSE], x)
       list(ix_lm = ix_lm, dist_lm = dist_lm, dist_2lm = dist_2lm)
     },
     {
@@ -80,7 +80,7 @@ landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
   )
 }
 
-cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = T) {
+cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = TRUE) {
   d <- dist_lm
   if (anyNA(d))
     stop("NA values not allowed in 'd'")
@@ -104,20 +104,20 @@ cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = T) {
   x_dc <- x - rep(mu_n, n) - rep(mu_n, each = n) + mu
 
   # classical MDS on landmarks
-  e <- eigen(-x_dc/2, symmetric = TRUE)
+  e <- eigen(-x_dc / 2, symmetric = TRUE)
   ev <- e$values[seq_len(ndim)]
-  evec <- e$vectors[, seq_len(ndim), drop = FALSE]
+  evec <- e$vectors[ , seq_len(ndim), drop = FALSE]
   ndim1 <- sum(ev > 0)
   if (ndim1 < ndim) {
     warning(gettextf("only %d of the first %d eigenvalues are > 0", ndim1, ndim), domain = NA)
-    evec <- evec[, ev > 0,  drop = FALSE]
+    evec <- evec[, ev > 0, drop = FALSE]
     ev <- ev[ev > 0]
   }
-  Slm <- evec * rep(sqrt(ev), each=n)
+  Slm <- evec * rep(sqrt(ev), each = n)
 
   # distance-based triangulation
-  points_inv <- evec / rep(sqrt(ev), each=n)
-  S <- (-t(dist_2lm - rep(mu_n, each = N))/2) %*% points_inv
+  points_inv <- evec / rep(sqrt(ev), each = n)
+  S <- (-t(dist_2lm - rep(mu_n, each = N)) / 2) %*% points_inv
 
   # clean up dimension names
   dimnames(Slm) <- list(rn, paste0("Comp", seq_len(ndim)))
