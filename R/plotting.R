@@ -209,6 +209,7 @@ draw_trajectory_heatmap <- function(
     rownames(x) <- paste("Row ", seq_len(nrow(x)))
   }
 
+  attributes(time) <- NULL
   col_ann <- data.frame(row.names = rownames(x), Time = time)
 
   x_part <- x[order(time),,drop=FALSE]
