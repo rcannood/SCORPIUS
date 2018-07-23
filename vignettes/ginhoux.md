@@ -1,6 +1,10 @@
+Investigating dendritic cell maturation in dendritic cell progenitors
+================
+Robrecht Cannoodt
+2016-01-22
+
 <!-- github markdown built using 
-rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "html_document")
-rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "md_document")
+rmarkdown::render("vignettes/ginhoux.Rmd", output_format = "github_document")
 -->
 In this vignette, SCORPIUS is used to infer a trajectory through dendritic cell progenitors. The `ginhoux` dataset contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC.
 
@@ -11,7 +15,7 @@ data(ginhoux)
 
 The dataset is a list containing a matrix named `expression` and a data frame named `sample_info`.
 
-`expression` was a 248-by-15752 matrix containing the expression values of all the cells and all the genes, but this dataset had to be reduced to 2000 genes in order to reduce the package size. See ?ginhoux for more info.
+`expression` was a 248-by-15752 matrix containing the expression values of all the cells and all the genes, but this dataset had to be reduced to 2000 genes in order to reduce the package size. See `?ginhoux` for more info.
 
 ``` r
 ginhoux$expression[1:6, 1:6]
@@ -44,7 +48,7 @@ In order to infer a trajectory through this data, SCORPIUS first reduces the dim
 Reduce dimensionality of the dataset
 ------------------------------------
 
-SCORPIUS uses classical Torgerson multi-dimensional scaling to reduce the dataset to three dimensions. In short, this technique attempts to place the cells in a space such that the distance between any two points in that space approximates the original distance between the two cells as well as possible.
+SCORPIUS uses Torgerson multi-dimensional scaling to reduce the dataset to three dimensions. This technique attempts to place the cells in a space such that the distance between any two points in that space approximates the original distance between the two cells as well as possible.
 
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`. The reduced space is constructed as follows:
 
@@ -54,21 +58,13 @@ group_name <- ginhoux$sample_info$group_name
 space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
 ```
 
-The new space is a 248-by-3 matrix, and can be visualised as follows:
+The new space is a 248-by-3 matrix, and can be visualised with or without colouring of the different cell types.
 
 ``` r
-draw_trajectory_plot(space)
+draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
 ```
 
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-6-1.png)
-
-We can also visualise the cell types as colours as follows:
-
-``` r
-draw_trajectory_plot(space, progression_group = group_name)
-```
-
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](ginhoux_files/figure-markdown_github/show_dimred-1.png)
 
 Inferring a trajectory through the cells
 ----------------------------------------
@@ -86,10 +82,15 @@ The result is a list containing the final trajectory `path` and the inferred tim
 The trajectory can be visualised with respect to the samples by passing it to `draw_trajectory_plot`:
 
 ``` r
-draw_trajectory_plot(space, progression_group = group_name, path = traj$path)
+draw_trajectory_plot(
+  space, 
+  progression_group = group_name,
+  path = traj$path,
+  contour = TRUE
+)
 ```
 
-![](ginhoux_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](ginhoux_files/figure-markdown_github/plot_trajectory-1.png)
 
 Finding candidate marker genes
 ------------------------------
@@ -114,13 +115,9 @@ To visualise the expression of the selected genes, use the `draw_trajectory_heat
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
-![](ginhoux_files/figure-markdown_github/visualise%20tafs-1.png)
-
 Finally, these genes can also be grouped into modules as follows:
 
 ``` r
-modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
-
-![](ginhoux_files/figure-markdown_github/moduled%20tafs-1.png)

@@ -7,6 +7,8 @@ bibliography: library.bib
 
 ```{r setup1, include=FALSE}
 knitr::opts_chunk$set(fig.path = "man/figures/README_", warning = FALSE, message = FALSE, error = FALSE, echo = TRUE)
+
+library(tidyverse)
 ```
 
 
@@ -100,14 +102,14 @@ In this plot, cells that are similar in terms of expression values will be place
 
 ```{r reduce_dimensionality}
 space <- reduce_dimensionality(expression, correlation_distance)
-draw_trajectory_plot(space, group_name)
+draw_trajectory_plot(space, group_name, contour = TRUE)
 ```
 
 
 To infer and visualise a trajectory through these cells, run:
 ```{r infer_trajectory}
 traj <- infer_trajectory(space)
-draw_trajectory_plot(space, group_name, traj$path)
+draw_trajectory_plot(space, group_name, traj$path, contour = TRUE)
 ```
 
 

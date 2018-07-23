@@ -87,14 +87,14 @@ cells that are similar in terms of expression values will be placed
 closer together than cells with dissimilar expression values.
 
     space <- reduce_dimensionality(expression, correlation_distance)
-    draw_trajectory_plot(space, group_name)
+    draw_trajectory_plot(space, group_name, contour = TRUE)
 
 ![](man/figures/README_reduce_dimensionality-1.png)
 
 To infer and visualise a trajectory through these cells, run:
 
     traj <- infer_trajectory(space)
-    draw_trajectory_plot(space, group_name, traj$path)
+    draw_trajectory_plot(space, group_name, traj$path, contour = TRUE)
 
 ![](man/figures/README_infer_trajectory-1.png)
 
