@@ -195,6 +195,9 @@ draw_trajectory_heatmap <- function(
   scale_features = TRUE,
   ...
 ) {
+  # remove any irrelevant parameters from time
+  attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
+
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -209,7 +212,7 @@ draw_trajectory_heatmap <- function(
     rownames(x) <- paste("Row ", seq_len(nrow(x)))
   }
 
-  attributes(time) <- NULL
+
   col_ann <- data.frame(row.names = rownames(x), Time = time)
 
   x_part <- x[order(time),,drop=FALSE]

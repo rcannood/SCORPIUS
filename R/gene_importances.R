@@ -35,7 +35,9 @@ gene_importances <- function(
   num_threads = 1,
   ...
 ) {
-  attributes(time) <- NULL
+  # remove any irrelevant parameters from time
+  attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
+
   data <- data.frame(x, XXXtimeXXX = time, check.names = FALSE, stringsAsFactors = FALSE)
 
   importance <- ranger::ranger(
