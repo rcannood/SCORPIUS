@@ -2,12 +2,7 @@
 title: "Trajectory inference from simulated data"
 author: "Robrecht Cannoodt"
 date: "2016-01-22"
-output: 
-  rmarkdown::html_vignette: 
-    fig_height: 6
-    fig_width: 6
-  md_document:
-    variant: markdown_github
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Trajectory inference from simulated data}
   %\VignetteEngine{knitr::rmarkdown}

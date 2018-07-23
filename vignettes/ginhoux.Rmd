@@ -2,12 +2,7 @@
 title: "Investigating dendritic cell maturation in dendritic cell progenitors"
 author: "Robrecht Cannoodt"
 date: "2016-01-22"
-output: 
-  rmarkdown::html_vignette: 
-    fig_height: 6
-    fig_width: 6
-  md_document:
-    variant: markdown_github
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Investigating dendritic cell maturation in dendritic cell progenitors}
   %\VignetteEncoding{UTF-8}
