@@ -28,13 +28,15 @@
 #' draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
 reduce_dimensionality <- function(x, dist_fun, ndim = 3, landmark_method = c("naive", "none"), num_landmarks = 1000, rescale = T) {
   # input check
-  if (!is.matrix(x) && !is.data.frame(x))
+  if (!is.matrix(x) && !is.data.frame(x)) {
     stop(sQuote("x"), " must be a numeric matrix or data frame")
+  }
   if (!is.function(dist_fun)) {
     stop(sQuote("dist_fun"), " must be a function(x, y) {...}")
   }
-  if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(x))
+  if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(x)) {
     stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(x)-1")
+  }
 
   landmark_method <- match.arg(landmark_method)
 
@@ -95,8 +97,9 @@ cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = TRUE) 
   n <- as.integer(nrow(x))
   N <- as.integer(ncol(dist_2lm))
 
-  if((ndim <- as.integer(ndim)) > n - 1 || ndim < 1)
-    stop("'ndim' must be in {1, 2, ..  n - 1}")
+  if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(x)) {
+    stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(x)-1")
+  }
 
   # double center data
   mu_n <- rowMeans(x)
@@ -112,6 +115,7 @@ cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = TRUE) 
     warning(gettextf("only %d of the first %d eigenvalues are > 0", ndim1, ndim), domain = NA)
     evec <- evec[, ev > 0, drop = FALSE]
     ev <- ev[ev > 0]
+    ndim <- ndim1
   }
   Slm <- evec * rep(sqrt(ev), each = n)
 
