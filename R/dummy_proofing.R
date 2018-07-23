@@ -30,7 +30,7 @@ check_numeric_vector <- function(x, param_name, is_nullable = TRUE, finite = FAL
   }
 
   if (factor && is.factor(x)) {
-    factor <- as.numeric(x)
+    x <- as.numeric(x)
   }
 
   check <- is.numeric(x)

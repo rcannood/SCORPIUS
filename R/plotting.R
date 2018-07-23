@@ -45,7 +45,7 @@
 draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
-  check_numeric_matrix(path, "path", finite = TRUE, nullable = TRUE)
+  check_numeric_matrix(path, "path", finite = TRUE, is_nullable = TRUE)
   check_logical_vector(contour, "contour", length = 1)
   check_numeric_vector(progression_group, "progression_group", is_nullable = TRUE, finite = TRUE, length = nrow(space), factor = TRUE)
 
