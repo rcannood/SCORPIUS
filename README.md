@@ -25,6 +25,9 @@ similar approaches, it has three main advantages:
 
 News:
 
+-   See `news(package = "SCORPIUS")` for a full list of changes to the
+    package.
+
 -   A preprint is available on
     [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
 

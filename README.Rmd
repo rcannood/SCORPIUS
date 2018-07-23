@@ -13,14 +13,11 @@ library(tidyverse)
 
 
 ```{r news, echo=FALSE}
-# Automatically update inst/NEWS
-news_md <- readr::read_lines("inst/NEWS.md")
-
-# creating NEWS for package
-news_normal <- news_md %>% 
+# automatically update inst/NEWS with inst/NEWS.md
+readr::read_lines("inst/NEWS.md") %>% 
   stringr::str_replace_all("^# dynutils", "dynutils") %>% 
-  stringr::str_replace_all("\\[[^\\]]*\\]\\(([^\\)]*)\\)", "\\1")
-readr::write_lines(news_normal, "inst/NEWS")
+  stringr::str_replace_all("\\[[^\\]]*\\]\\(([^\\)]*)\\)", "\\1") %>% 
+  readr::write_lines("inst/NEWS")
 ```
 
 
@@ -45,6 +42,8 @@ RNA sequencing data.** In comparison to similar approaches, it has three main ad
   cellular states of individual cells is not required.
   
 News: 
+
+* See `news(package = "SCORPIUS")` for a full list of changes to the package.
 
 * A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
 
