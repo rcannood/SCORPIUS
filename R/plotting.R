@@ -46,13 +46,8 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
   check_numeric_matrix(path, "path", finite = TRUE, nullable = TRUE)
-
-  if ((!is.null(progression_group) && !is.vector(progression_group) && !is.factor(progression_group)) || (!is.null(progression_group) && length(progression_group) != nrow(space)))
-    stop(sQuote("progression_group"), " must be a vector or a factor of length nrow(space)")
-  if (!is.null(path) && !is.matrix(path) && !is.data.frame(path))
-    stop(sQuote("path"), " must be NULL, a numeric matrix or a data frame")
-  if (!is.logical(contour))
-    stop(sQuote("contour"), " must be a logical")
+  check_logical_vector(contour, "contour", length = 1)
+  check_numeric_vector(progression_group, "progression_group", is_nullable = TRUE, finite = TRUE, length = nrow(space), factor = TRUE)
 
   # retrieve data about the range of the plot
   min <- min(space[,1:2])
@@ -60,7 +55,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   diff <- (max - min)/2
 
   # construct data frame
-  space_df <- data.frame(space[,1:2], check.rows = F, check.names = F, stringsAsFactors = F)
+  space_df <- data.frame(space[,1:2], check.rows = FALSE, check.names = FALSE, stringsAsFactors = FALSE)
   colnames(space_df) <- c("Comp1", "Comp2")
 
   # if the grouping colours are specified, add these to the data frame
@@ -200,19 +195,13 @@ draw_trajectory_heatmap <- function(
   attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
 
   # input checks
-  if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix, or a data frame")
-  if (!is.vector(time) || !is.numeric(time))
-    stop(sQuote("time"), " must be a numeric vector")
-  if (nrow(x) != length(time))
-    stop(sQuote("time"), " must have one value for each row in ", sQuote("x"))
-  if ((!is.null(progression_group) && !is.vector(progression_group) && !is.factor(progression_group)) || (!is.null(progression_group) && length(progression_group) != nrow(x)))
-    stop(sQuote("progression_group"), " must be a vector or a factor of length nrow(x)")
+  check_numeric_matrix(x, "x")
+  check_numeric_vector(time, "time", length = nrow(x))
+  check_numeric_vector(progression_group, "progression_group", is_nullable = TRUE, factor = TRUE, length = nrow(x))
 
   if (is.null(rownames(x))) {
     rownames(x) <- paste("Row ", seq_len(nrow(x)))
   }
-
 
   col_ann <- data.frame(row.names = rownames(x), Time = time)
 

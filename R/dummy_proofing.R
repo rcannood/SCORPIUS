@@ -24,9 +24,13 @@ check_numeric_matrix <- function(x, param_name, is_nullable = FALSE, finite = FA
   }
 }
 
-check_numeric_vector <- function(x, param_name, is_nullable = TRUE, finite = FALSE, whole = FALSE, range = NULL, length = NULL) {
+check_numeric_vector <- function(x, param_name, is_nullable = TRUE, finite = FALSE, whole = FALSE, range = NULL, length = NULL, factor = FALSE) {
   if (is_nullable && is.null(x)) {
     return(invisible())
+  }
+
+  if (factor && is.factor(x)) {
+    factor <- as.numeric(x)
   }
 
   check <- is.numeric(x)
@@ -43,8 +47,30 @@ check_numeric_vector <- function(x, param_name, is_nullable = TRUE, finite = FAL
       ifelse(!is.null(length), paste0(length, " "), ""),
       ifelse(finite, "finite ", ""),
       ifelse(whole, "whole ", ""),
-      "numbers",
+      "number(s)",
       ifelse(!is.null(range), paste0(" within the range of [", range[[1]], ", ", range[[2]], "]"), "")
+    )
+
+    stop(error)
+  }
+}
+
+
+check_logical_vector <- function(x, param_name, is_nullable = TRUE, length = NULL) {
+  if (is_nullable && is.null(x)) {
+    return(invisible())
+  }
+
+  check <- is.logical(x)
+
+  check <- check && (is.null(length) || length(x) == length)
+
+  if (!check) {
+    error <- paste0(
+      sQuote(param_name),
+      " must be a logical vector consisting of ",
+      ifelse(!is.null(length), paste0(length, " "), ""),
+      "logical(s)"
     )
 
     stop(error)

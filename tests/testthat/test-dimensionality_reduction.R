@@ -63,8 +63,8 @@ test_that("fail gracefully", {
 
   expect_error(reduce_dimensionality(dataset$expression, 1), "must be a function")
 
-  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 0), "finite whole numbers")
-  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 1.5), "finite whole numbers")
+  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 0), "finite whole number")
+  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 1.5), "finite whole number")
   expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = nrow(dataset$expression) + 10), "finite whole number")
 })
 

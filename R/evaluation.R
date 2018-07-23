@@ -28,12 +28,16 @@ evaluate_trajectory <- function(time, progression) {
   attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
 
   # input checks
-  if (!is.vector(time) || !is.numeric(time))
-    stop(sQuote("time"), " must be a numeric vector")
-  if (!is.factor(progression) && (!is.vector(progression) || !is.numeric(progression)))
-    stop(sQuote("progression"), " must be a numeric vector or a factor")
-  if (length(time) != length(progression))
+  check_numeric_vector(time, "time", finite = TRUE)
+  check_numeric_vector(progression, "progression", finite = TRUE, factor = TRUE)
+  if (length(time) != length(progression)) {
     stop(sQuote("time"), " and ", sQuote("progression"), " must have equal lengths.")
+  }
+
+  # if progression is a factor, convert it to a numeric
+  if (is.factor(progression)) {
+    progression <- as.numeric(progression)
+  }
 
   ## Calculate the smallest distance between any two time values other than 0
   stime <- sort(time)
@@ -46,11 +50,6 @@ evaluate_trajectory <- function(time, progression) {
 
   ## Rank the time points
   rank <- rank(noised_time)
-
-  ## If progression is a factor, convert it to an integer
-  if (is.factor(progression)) {
-    progression <- as.integer(rank(progression))
-  }
 
   ## satisfying r cmd check
   i <- j <- pri <- prj <- rai <- raj <- NA
@@ -108,10 +107,9 @@ evaluate_trajectory <- function(time, progression) {
 evaluate_dim_red <- function(space, progression, k = 5) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
-  if (!is.factor(progression) && (!is.vector(progression) || !is.numeric(progression)))
-    stop(sQuote("progression"), " must be a numeric vector or a factor")
-  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
-    stop(sQuote("k"), " must be a whole number and k >= 1")
+  check_numeric_vector(k, "k", finite = TRUE, whole = TRUE, range = c(1, nrow(space) - 1), length = 1)
+  check_numeric_vector(progression, "progression", finite = TRUE, factor = TRUE, whole = TRUE)
+
   if (nrow(space) != length(progression))
     stop(sQuote("nrow(space)"), " and ", sQuote("length(progression)"), " must be the same.")
 

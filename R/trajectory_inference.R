@@ -33,9 +33,7 @@
 infer_initial_trajectory <- function(space, k) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
-
-  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
-    stop(sQuote("k"), " must be a whole number and k >= 2")
+  check_numeric_vector(k, "k", whole = TRUE, finite = TRUE, range = c(1, nrow(space) - 1), length = 1)
 
   # cluster space into k clusters
   kmeans_clust <- stats::kmeans(as.matrix(space), centers = k)

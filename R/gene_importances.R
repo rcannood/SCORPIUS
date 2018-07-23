@@ -35,10 +35,12 @@ gene_importances <- function(
   num_threads = 1,
   ...
 ) {
-  check_numeric_matrix(x, "x", finite = TRUE)
-
   # remove any irrelevant parameters from time
   attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
+
+  # input checks
+  check_numeric_matrix(x, "x", finite = TRUE)
+  check_numeric_vector(time, "time", finite = TRUE)
 
   data <- data.frame(x, XXXtimeXXX = time, check.names = FALSE, stringsAsFactors = FALSE)
 
