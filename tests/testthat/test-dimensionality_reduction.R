@@ -63,9 +63,9 @@ test_that("fail gracefully", {
 
   expect_error(reduce_dimensionality(dataset$expression, 1), "must be a function")
 
-  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 0), "must be a whole number")
-  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 1.5), "must be a whole number")
-  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = nrow(dataset$expression) + 10), "must be a whole number")
+  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 0), "finite whole numbers")
+  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = 1.5), "finite whole numbers")
+  expect_error(reduce_dimensionality(dataset$expression, correlation_distance, ndim = nrow(dataset$expression) + 10), "finite whole number")
 })
 
 test_that("landmark_selection works as expected", {
@@ -106,19 +106,17 @@ test_that("cmdscale_withlandmarks works as expected", {
   check_space(cmdout, t(dist_2lm), ndim = 2, rescale = FALSE)
 
   dist_lm[1, 1] <- NA
-  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 2, rescale = FALSE), "NA values not allowed")
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 2, rescale = FALSE), "finite numeric")
   dist_lm[1, 1] <- 0
 
   expect_error(cmdscale_withlandmarks(dist_lm[-1,], dist_2lm, ndim = 2, rescale = FALSE), "square matrix")
 
-  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 0), "must be a whole number")
-  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 1.5), "must be a whole number")
-  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = nrow(dataset$expression) + 10), "must be a whole number")
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 0), "finite whole number")
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 1.5), "finite whole number")
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = nrow(dataset$expression) + 10), "finite whole number")
 
-  num_samples <- 200
+  num_samples <- 10
   sample_names <- paste0("Sample", seq_len(num_samples))
-  dist_lm <- matrix(rep(0, num_samples * num_samples), nrow = num_samples, dimnames = list(sample_names, sample_names))
-  dist_2lm <- dist_lm
-
-  expect_warning(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 49, rescale = TRUE), "of the first [0-9]* eigenvalues are")
+  dist_lm <- dist_2lm <- as.matrix(dist(matrix(rep(seq_len(num_samples), 2), ncol = 2)))
+  expect_warning(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = num_samples, rescale = TRUE), "of the first [0-9]* eigenvalues are")
 })

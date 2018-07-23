@@ -32,7 +32,7 @@
 #' draw_trajectory_plot(space, path = init_traj, progression_group = dataset$sample_info$group_name)
 infer_initial_trajectory <- function(space, k) {
   # input checks
-  check_numeric_matrix(space, "space")
+  check_numeric_matrix(space, "space", finite = TRUE)
 
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
     stop(sQuote("k"), " must be a whole number and k >= 2")
@@ -124,7 +124,7 @@ infer_trajectory <- function(
   approx_points = 100
 ) {
   # input checks
-  check_numeric_matrix(space, "space")
+  check_numeric_matrix(space, "space", finite = TRUE)
 
   if (!is.null(k)) {
     # use a clustering and shortest path based approach to define an intiial trajectory

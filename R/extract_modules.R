@@ -38,7 +38,8 @@
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
 extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose = FALSE, ...) {
   # input checks
-  check_numeric_matrix(x, "x")
+  check_numeric_matrix(x, "x", finite = TRUE)
+  check_numeric_vector(time, "time", finite = TRUE, length = nrow(x), is_nullable = TRUE)
 
   if (!suppress_warnings && ncol(x) > 1000) {
     warning(sQuote("x"), " has more than 1000 features. ",

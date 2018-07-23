@@ -44,8 +44,8 @@
 #' draw_trajectory_plot(space, progression_group=groups, path=traj$path, contour=TRUE)
 draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
   # input checks
-  check_numeric_matrix(space, "space")
-  check_numeric_matrix(path, "path", nullable = TRUE)
+  check_numeric_matrix(space, "space", finite = TRUE)
+  check_numeric_matrix(path, "path", finite = TRUE, nullable = TRUE)
 
   if ((!is.null(progression_group) && !is.vector(progression_group) && !is.factor(progression_group)) || (!is.null(progression_group) && length(progression_group) != nrow(space)))
     stop(sQuote("progression_group"), " must be a vector or a factor of length nrow(space)")

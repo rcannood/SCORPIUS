@@ -43,7 +43,7 @@ test_that("evaluate_dim_red", {
   worsescore <- evaluate_dim_red(space, groups)
   expect_lt(worsescore, badscore)
 
-  expect_error(evaluate_dim_red(list(), groups), "must be a numeric matrix or, a data frame")
+  expect_error(evaluate_dim_red(list(), groups), "must be a numeric matrix, or a data frame")
   expect_error(evaluate_dim_red(space, list()), "must be a numeric vector or a factor")
   expect_error(evaluate_dim_red(space, c(groups, groups)), "nrow.*length.*must be the same")
   expect_error(evaluate_dim_red(rbind(space, space), groups), "nrow.*length.*must be the same")

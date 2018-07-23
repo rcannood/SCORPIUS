@@ -28,13 +28,12 @@
 #' draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
 reduce_dimensionality <- function(x, dist_fun, ndim = 3, landmark_method = c("naive", "none"), num_landmarks = 1000, rescale = T) {
   # input check
-  check_numeric_matrix(x, "x")
+  check_numeric_matrix(x, "x", finite = TRUE)
+
   if (!is.function(dist_fun)) {
     stop(sQuote("dist_fun"), " must be a function(x, y) {...}")
   }
-  if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(x)) {
-    stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(x)-1")
-  }
+  check_numeric_vector(ndim, "ndim", finite = TRUE, whole = TRUE, range = c(1, nrow(x)), length = 1)
 
   landmark_method <- match.arg(landmark_method)
 
@@ -81,23 +80,19 @@ landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
 }
 
 cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = TRUE) {
-  d <- dist_lm
-  if (anyNA(d))
-    stop("NA values not allowed in 'd'")
+  check_numeric_matrix(dist_lm, "dist_lm", finite = TRUE)
+  check_numeric_matrix(dist_2lm, "dist_2lm", finite = TRUE)
+  check_numeric_vector(ndim, "ndim", finite = TRUE, whole = TRUE, range = c(1, nrow(dist_lm)), length = 1)
 
-  x <- as.matrix(d^2)
+  x <- as.matrix(dist_lm^2)
   storage.mode(x) <- "double"
   if (nrow(x) != ncol(x))
-    stop("distances must be result of 'dist' or a square matrix")
+    stop("distances must be a square matrix")
 
   rn <- rownames(x)
   rn_all <- colnames(dist_2lm)
   n <- as.integer(nrow(x))
   N <- as.integer(ncol(dist_2lm))
-
-  if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(x)) {
-    stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(x)-1")
-  }
 
   # double center data
   mu_n <- rowMeans(x)
