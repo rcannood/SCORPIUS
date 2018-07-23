@@ -16,7 +16,7 @@ News:
 
 -   See `news(package = "SCORPIUS")` for a full list of changes to the package.
 
--   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509).
+-   A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509). Use `citation("SCORPIUS")` to obtain a citation
 
 -   Check out our [review](https://www.biorxiv.org/content/early/2018/03/05/276907) on Trajectory Inference methods!
 

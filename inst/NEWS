@@ -14,6 +14,8 @@
  * BUG FIX `cmdscale_withlandmarks()`: Fix colnames bug when some eigenvalues are equal to 0.
  
  * TESTING: Expanded unit tests.
+ 
+ * DOCUMENTAION: Added citation information to package.
 
 # SCORPIUS 1.0.2 (2018-06-29)
 
