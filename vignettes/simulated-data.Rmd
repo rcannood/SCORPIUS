@@ -14,7 +14,7 @@ rmarkdown::render("vignettes/simulated-data.Rmd", output_format = "github_docume
 -->
 
 ```{r, setseed, echo=F}
-set.seed(4)
+set.seed(1)
 ```
 
 In this vignette, SCORPIUS is used to infer a trajectory through cells in artificial single-cell RNA-seq data.
@@ -95,13 +95,13 @@ expr_sel <- expression[,gene_sel$gene]
 
 
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
-```{r visualise_tafs}
+```{r visualise_tafs, fig.keep='first'}
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
 
 Finally, these genes can also be grouped into modules as follows: 
-```{r moduled_tafs}
+```{r moduled_tafs, fig.keep='first'}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```

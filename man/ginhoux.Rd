@@ -20,7 +20,7 @@ The levels of the factor in \code{sample.info} are ordered according to the matu
 The number of genes had to be reduced specifically for reducing the package size of SCORPIUS.
 Use the following code to download the original data:
 \preformatted{
-download.file("https://github.com/rcannood/SCORPIUS/raw/master/data/ginhoux_orig.rds", destfile = "local.rds")
+download.file("https://github.com/rcannood/SCORPIUS/raw/master/data-raw/ginhoux_orig.rds", destfile = "local.rds")
 ginhoux <- readRDS("local.rds")
 # do something with ginhoux
 }

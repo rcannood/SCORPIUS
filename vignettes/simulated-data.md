@@ -26,13 +26,13 @@ The resulting dataset is a list containing a matrix named `expression` and a dat
 dataset$expression[1:6, 1:6]
 ```
 
-    ##             Gene1    Gene2    Gene3    Gene4    Gene5    Gene6
-    ## Sample1 7.0888310 0.000000 0.000000 2.038639 0.000000 5.131362
-    ## Sample2 6.2477708 0.000000 0.915955 0.000000 6.420908 5.834446
-    ## Sample3 9.2618226 3.943155 0.000000 2.077188 6.481860 6.450960
-    ## Sample4 6.5399238 4.318685 0.000000 5.943639 1.025464 4.386607
-    ## Sample5 0.8599413 7.037318 0.000000 4.289563 0.000000 2.973694
-    ## Sample6 3.9560420 0.000000 6.246375 0.000000 4.308269 4.198609
+    ##             Gene1     Gene2     Gene3    Gene4     Gene5     Gene6
+    ## Sample1  4.229293  0.000000  6.752726 2.911327  9.116873  7.968772
+    ## Sample2 12.063623  6.101313  0.000000 8.023840  6.612786  0.000000
+    ## Sample3  7.973086 12.969934 10.412038 5.564873 10.258806  0.000000
+    ## Sample4  0.000000 10.665796  7.329762 4.635637  9.743435  5.462945
+    ## Sample5  8.467850 12.182375  5.609669 0.000000  7.102293  7.985970
+    ## Sample6  9.269898  9.630904 10.455783 0.000000  8.349845 13.157807
 
 `sample_info` is a data frame with the metadata of the cells, containing only the group each cell belongs to.
 
@@ -114,9 +114,13 @@ To visualise the expression of the selected genes, use the `draw_trajectory_heat
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
+![](simulated-data_files/figure-markdown_github/visualise_tafs-1.png)
+
 Finally, these genes can also be grouped into modules as follows:
 
 ``` r
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
+
+![](simulated-data_files/figure-markdown_github/moduled_tafs-1.png)

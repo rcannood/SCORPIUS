@@ -84,7 +84,7 @@ draw_trajectory_plot(space, group_name, traj$path, contour = TRUE)
 
 ![](man/figures/README_infer_trajectory-1.png)
 
-To identify candidate marker genes
+To identify candidate marker genes, run:
 
 ``` r
 # warning: setting num_permutations to 10 requires a long time (~30min) to run!
@@ -99,18 +99,12 @@ gimp <- gene_importances(
 ) 
 ```
 
-Select the most important genes and scale its expession.
+To select the most important genes and scale its expession, run:
 
 ``` r
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- scale_quantile(expression[,gene_sel])
-```
-
-Oftentimes by performing ordering on a good selection of genes can result in better trajectories.
-
-``` r
-traj <- infer_trajectory(expr_sel)
 ```
 
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.

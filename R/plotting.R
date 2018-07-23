@@ -1,6 +1,6 @@
-#' @title Visualise SCORPIUS
+#' Visualise SCORPIUS
 #'
-#' @description \code{draw_trajectory_plot} is used to plot samples after performing dimensionality reduction.
+#' \code{draw_trajectory_plot} is used to plot samples after performing dimensionality reduction.
 #' Additional arguments can be provided to colour the samples, plot the trajectory inferred by SCORPIUS,
 #' and draw a contour around the samples.
 #'
@@ -121,9 +121,9 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   g
 }
 
-#' @title Draw time-series heatmap
+#' Draw time-series heatmap
 #'
-#' @description \code{draw_trajectory_heatmap} draws a heatmap in which the samples
+#' \code{draw_trajectory_heatmap} draws a heatmap in which the samples
 #' are ranked according their position in an inferred trajectory. In addition, the progression groups and
 #' feature modules can be passed along to further enhance the visualisation.
 #'

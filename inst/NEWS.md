@@ -16,6 +16,8 @@
  * TESTING: Expanded unit tests.
  
  * DOCUMENTAION: Added citation information to package.
+ 
+ * MINOR CHANGE: Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
 
 # SCORPIUS 1.0.2 (2018-06-29)
 

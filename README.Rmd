@@ -80,7 +80,7 @@ To get started, read the introductory example below, or read one of the vignette
 ## Introductory example
 
 ```{r, echo=F}
-set.seed(6)
+set.seed(1)
 ```
 
 This section describes the main workflow of SCORPIUS without going in depth in the R code. For a more detailed explanation, see the vignettes listed below.
@@ -114,8 +114,7 @@ traj <- infer_trajectory(space)
 draw_trajectory_plot(space, group_name, traj$path, contour = TRUE)
 ```
 
-
-To identify candidate marker genes
+To identify candidate marker genes, run:
 ```{r find_tafs, message=F, warning=F}
 # warning: setting num_permutations to 10 requires a long time (~30min) to run!
 # set it to 0 and define a manual cutoff for the genes (e.g. top 200) for a much shorter execution time.
@@ -129,35 +128,29 @@ gimp <- gene_importances(
 ) 
 ```
 
-Select the most important genes and scale its expession.
+To select the most important genes and scale its expession, run:
 ```{r calculate_pvalue, message=F, warning=F}
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
 expr_sel <- scale_quantile(expression[,gene_sel])
 ```
 
-Oftentimes by performing ordering on a good selection of genes can result in better trajectories.
-```{r recalculate_time}
-traj <- infer_trajectory(expr_sel)
-```
 
 ```{r echo=F}
 # reverse the trajectory. This does not change the results in any way,
 # other than the heatmap being ordered more logically.
-traj <- reverse_trajectory(traj)
+# traj <- reverse_trajectory(traj)
 ```
 
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
-```{r visualise_tafs}
+```{r visualise_tafs, fig.keep='first'}
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
-
 Finally, these genes can also be grouped into modules as follows: 
-```{r moduled_tafs}
+```{r moduled_tafs, fig.keep='first'}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
-
 
 ## References

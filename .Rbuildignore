@@ -5,7 +5,7 @@
 ^SCORPIUS\.Rproj$
 ^\.travis\.yml$
 ^vignettes/.*\.md$
-^data/ginhoux_orig\.rds$
+^data-raw$
 ^\.git$
 ^appveyor\.yml$
 ^inst/NEWS.md$
