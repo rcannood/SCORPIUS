@@ -107,8 +107,7 @@ evaluate_trajectory <- function(time, progression) {
 #' evaluate_dim_red(space, dataset$sample_info$group_name)
 evaluate_dim_red <- function(space, progression, k = 5) {
   # input checks
-  if (!is.matrix(space) && !is.data.frame(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
+  check_numeric_matrix(space, "space")
   if (!is.factor(progression) && (!is.vector(progression) || !is.numeric(progression)))
     stop(sQuote("progression"), " must be a numeric vector or a factor")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)

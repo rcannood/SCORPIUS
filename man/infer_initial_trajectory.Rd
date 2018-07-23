@@ -7,7 +7,7 @@
 infer_initial_trajectory(space, k)
 }
 \arguments{
-\item{space}{A numeric matrix or data frame containing the coordinates of samples.}
+\item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
 \item{k}{The number of clusters to cluster the data into.}
 }

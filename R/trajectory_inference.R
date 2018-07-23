@@ -9,7 +9,7 @@
 #' @usage
 #' infer_initial_trajectory(space, k)
 #'
-#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param space A numeric matrix or a data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
 #'
 #' @return the initial trajectory obtained by this method
@@ -32,15 +32,13 @@
 #' draw_trajectory_plot(space, path = init_traj, progression_group = dataset$sample_info$group_name)
 infer_initial_trajectory <- function(space, k) {
   # input checks
-  if (is.data.frame(space))
-    space <- as.matrix(space)
-  if (!is.matrix(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
+  check_numeric_matrix(space, "space")
+
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 2)
     stop(sQuote("k"), " must be a whole number and k >= 2")
 
   # cluster space into k clusters
-  kmeans_clust <- stats::kmeans(space, centers = k)
+  kmeans_clust <- stats::kmeans(as.matrix(space), centers = k)
   centers <- kmeans_clust$centers
 
   # calculate the euclidean space between clusters
@@ -89,7 +87,7 @@ infer_initial_trajectory <- function(space, k) {
 #' }
 #'
 #' @inheritParams princurve::principal_curve
-#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param space A numeric matrix or a data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
 #'
 #' @return A list containing several objects:
@@ -126,10 +124,7 @@ infer_trajectory <- function(
   approx_points = 100
 ) {
   # input checks
-  if (is.data.frame(space))
-    space <- as.matrix(space)
-  if (!is.matrix(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
+  check_numeric_matrix(space, "space")
 
   if (!is.null(k)) {
     # use a clustering and shortest path based approach to define an intiial trajectory
@@ -140,7 +135,7 @@ infer_trajectory <- function(
 
   # iteratively improve this curve using principal_curve
   fit <- princurve::principal_curve(
-    space,
+    as.matrix(space),
     start = init_traj,
     thresh = thresh,
     maxit = maxit,

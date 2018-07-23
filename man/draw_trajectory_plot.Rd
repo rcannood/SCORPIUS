@@ -7,11 +7,11 @@
 draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
 }
 \arguments{
-\item{space}{A numeric matrix or data frame containing the coordinates of samples.}
+\item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
 \item{progression_group}{\code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).}
 
-\item{path}{A numeric matrix or data frame containing the coordinates of the inferred path.}
+\item{path}{A numeric matrix or a data frame containing the coordinates of the inferred path.}
 
 \item{contour}{\code{TRUE} if contours are to be drawn around the samples.}
 }

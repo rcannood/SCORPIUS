@@ -28,9 +28,7 @@
 #' draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
 reduce_dimensionality <- function(x, dist_fun, ndim = 3, landmark_method = c("naive", "none"), num_landmarks = 1000, rescale = T) {
   # input check
-  if (!is.matrix(x) && !is.data.frame(x)) {
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
-  }
+  check_numeric_matrix(x, "x")
   if (!is.function(dist_fun)) {
     stop(sQuote("dist_fun"), " must be a function(x, y) {...}")
   }

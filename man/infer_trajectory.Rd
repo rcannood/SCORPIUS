@@ -8,7 +8,7 @@ infer_trajectory(space, k = 4, thresh = 0.001, maxit = 10, stretch = 0,
   smoother = "smooth_spline", approx_points = 100)
 }
 \arguments{
-\item{space}{A numeric matrix or data frame containing the coordinates of samples.}
+\item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
 \item{k}{The number of clusters to cluster the data into.}
 

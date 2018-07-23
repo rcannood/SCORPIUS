@@ -7,9 +7,9 @@
 #' @usage
 #' draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
 #'
-#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param space A numeric matrix or a data frame containing the coordinates of samples.
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
-#' @param path A numeric matrix or data frame containing the coordinates of the inferred path.
+#' @param path A numeric matrix or a data frame containing the coordinates of the inferred path.
 #' @param contour \code{TRUE} if contours are to be drawn around the samples.
 #'
 #' @return A ggplot2 plot.
@@ -44,8 +44,9 @@
 #' draw_trajectory_plot(space, progression_group=groups, path=traj$path, contour=TRUE)
 draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
   # input checks
-  if (!is.matrix(space) && !is.data.frame(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
+  check_numeric_matrix(space, "space")
+  check_numeric_matrix(path, "path", nullable = TRUE)
+
   if ((!is.null(progression_group) && !is.vector(progression_group) && !is.factor(progression_group)) || (!is.null(progression_group) && length(progression_group) != nrow(space)))
     stop(sQuote("progression_group"), " must be a vector or a factor of length nrow(space)")
   if (!is.null(path) && !is.matrix(path) && !is.data.frame(path))
@@ -143,7 +144,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #'   ...
 #' )
 #'
-#' @param x A numeric matrix or data frame with one row per sample and one column per feature.
+#' @param x A numeric matrix or a data frame with one row per sample and one column per feature.
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
 #' @param modules \code{NULL} or a data frame as returned by \code{\link{extract_modules}}.
@@ -200,7 +201,7 @@ draw_trajectory_heatmap <- function(
 
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
+    stop(sQuote("x"), " must be a numeric matrix, or a data frame")
   if (!is.vector(time) || !is.numeric(time))
     stop(sQuote("time"), " must be a numeric vector")
   if (nrow(x) != length(time))

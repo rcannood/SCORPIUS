@@ -16,7 +16,7 @@ draw_trajectory_heatmap(
 )
 }
 \arguments{
-\item{x}{A numeric matrix or data frame with one row per sample and one column per feature.}
+\item{x}{A numeric matrix or a data frame with one row per sample and one column per feature.}
 
 \item{time}{A numeric vector containing the inferred time points of each sample along a trajectory.}
 

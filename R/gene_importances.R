@@ -2,7 +2,7 @@
 #'
 #' @description Calculates the feature importance of each column in \code{x} in trying to predict the time ordering.
 #'
-#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param x A numeric matrix or a data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer_trajectory}}.
 #' @param num_permutations The number of permutations to test against for calculating the p-values (default: 0).
 #' @param ntree The number of trees to grow (default: 10000).
@@ -35,6 +35,8 @@ gene_importances <- function(
   num_threads = 1,
   ...
 ) {
+  check_numeric_matrix(x, "x")
+
   # remove any irrelevant parameters from time
   attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
 
