@@ -5,20 +5,30 @@
 \title{Infer linear trajectory through space}
 \usage{
 infer_trajectory(space, k = 4, thresh = 0.001, maxit = 10, stretch = 0,
-  smoother = "smooth_spline")
+  smoother = "smooth_spline", approx_points = 100)
 }
 \arguments{
 \item{space}{A numeric matrix or data frame containing the coordinates of samples.}
 
 \item{k}{The number of clusters to cluster the data into.}
 
-\item{thresh}{\code{\link[princurve]{principal_curve}} parameter: convergence threshhold on shortest distances to the curve}
+\item{thresh}{convergence threshold on shortest distances to the curve.}
 
-\item{maxit}{\code{\link[princurve]{principal_curve}} parameter: maximum number of iterations}
+\item{maxit}{maximum number of iterations.}
 
-\item{stretch}{\code{\link[princurve]{principal_curve}} parameter: a factor by which the curve can be extrapolated when points are projected}
+\item{stretch}{A stretch factor for the endpoints of the curve,
+allowing the curve to grow to avoid bunching at the end.
+Must be a numeric value between 0 and 2.}
 
-\item{smoother}{\code{\link[princurve]{principal_curve}} parameter: choice of smoother}
+\item{smoother}{choice of smoother. The default is
+\code{"smooth_spline"}, and other choices are \code{"lowess"} and
+\code{"periodic_lowess"}. The latter allows one to fit closed curves.
+Beware, you may want to use \code{iter = 0} with \code{lowess()}.}
+
+\item{approx_points}{Approximate curve after smoothing to reduce computational time.
+If \code{FALSE}, no approximation of the curve occurs. Otherwise,
+\code{approx_points} must be equal to the number of points the curve
+gets approximated to; preferably about 100.}
 }
 \value{
 A list containing several objects:

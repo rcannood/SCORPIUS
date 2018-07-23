@@ -107,19 +107,28 @@ infer_initial_trajectory <- function(space, k) {
 #' @export
 #'
 #' @importFrom princurve principal_curve
+#' @importFrom dynutils scale_minmax
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise the trajectory
-#' draw_trajectory_plot(space, path=traj$path, progression_group=dataset$sample_info$group_name)
-infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 0, smoother = "smooth_spline") {
+#' draw_trajectory_plot(space, path=traj$path, progression_group = dataset$sample_info$group_name)
+infer_trajectory <- function(
+  space,
+  k = 4,
+  thresh = .001,
+  maxit = 10,
+  stretch = 0,
+  smoother = "smooth_spline",
+  approx_points = 100
+) {
   # input checks
   if (is.data.frame(space))
     space <- as.matrix(space)
@@ -138,11 +147,12 @@ infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
     space,
     start = init_traj,
     thresh = thresh,
-    plot_iterations = FALSE,
     maxit = maxit,
     stretch = stretch,
     smoother = smoother,
-    trace = FALSE
+    approx_points = approx_points,
+    trace = FALSE,
+    plot_iterations = FALSE
   )
 
   # construct final trajectory
@@ -150,25 +160,20 @@ infer_trajectory <- function(space, k = 4, thresh = .001, maxit = 10, stretch = 
   dimnames(path) <- list(NULL, paste0("Comp", seq_len(ncol(path))))
 
   # construct timeline values
-  time <- fit$lambda
-  time <- (time - min(time)) / (max(time) - min(time))
-  names(time) <- rownames(space)
+  time <- dynutils::scale_minmax(fit$lambda)
 
   # output result
-  trajectory <- list(
+  list(
     path = path,
     time = time
+  ) %>% dynutils::add_class(
+    "SCORPIUS::trajectory"
   )
-  class(trajectory) <- c(class(trajectory), "SCORPIUS::trajectory")
-  trajectory
 }
 
-#' @title Reverse a trajectory
+#' Reverse a trajectory
 #'
-#' @description Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse_trajectory}.
-#'
-#' @usage
-#' reverse_trajectory(trajectory)
+#' Since the direction of the trajectory is not specified, the ordering of a trajectory may be inverted using \code{reverse_trajectory}.
 #'
 #' @param trajectory A trajectory as returned by \code{\link{infer_trajectory}}.
 #'
