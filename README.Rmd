@@ -9,6 +9,19 @@ bibliography: library.bib
 knitr::opts_chunk$set(fig.path = "man/figures/README_", warning = FALSE, message = FALSE, error = FALSE, echo = TRUE)
 ```
 
+
+```{r news, echo=FALSE}
+# Automatically update inst/NEWS
+news_md <- readr::read_lines("inst/NEWS.md")
+
+# creating NEWS for package
+news_normal <- news_md %>% 
+  stringr::str_replace_all("^# dynutils", "dynutils") %>% 
+  stringr::str_replace_all("\\[[^\\]]*\\]\\(([^\\)]*)\\)", "\\1")
+readr::write_lines(news_normal, "inst/NEWS")
+```
+
+
 # SCORPIUS
 
 [![Build Status](https://travis-ci.org/rcannood/SCORPIUS.svg?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)

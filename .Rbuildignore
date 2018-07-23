@@ -8,3 +8,9 @@
 ^data/ginhoux_orig\.rds$
 ^\.git$
 ^appveyor\.yml$
+^inst/NEWS.md$
+^cran-comments\.md$
+^revdep$
+^vignettes/.*\.html$
+^vignettes/.*\.md$
+^vignettes/.*/.*\.png$
