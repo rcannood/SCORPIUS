@@ -72,6 +72,7 @@ test_that("landmark_selection works as expected", {
   landmarks <- landmark_selection(dataset$expression, correlation_distance, landmark_method = "naive", num_landmarks = 77)
   dist_normal <- correlation_distance(dataset$expression)
 
+  expect_equal(length(landmarks$ix_lm), 77)
   expect_true(all(landmarks$ix_lm %in% seq_len(nrow(dataset$expression))))
   expect_gte(cor(as.vector(landmarks$dist_lm), as.vector(dist_normal[landmarks$ix_lm, landmarks$ix_lm, drop = FALSE])), .99)
   expect_gte(cor(as.vector(landmarks$dist_2lm), as.vector(dist_normal[landmarks$ix_lm, , drop = FALSE])), .99)
@@ -84,4 +85,40 @@ test_that("landmark_selection works as expected", {
   expect_gte(cor(as.vector(landmarks$dist_2lm), as.vector(dist_normal[landmarks$ix_lm, , drop = FALSE])), .99)
 
   expect_error(landmark_selection(dataset$expression, correlation_distance, landmark_method = "nioewnioew", num_landmarks = 100), "must be one of")
+})
+
+test_that("cmdscale_withlandmarks works as expected", {
+  landmarks <- landmark_selection(dataset$expression, correlation_distance, landmark_method = "naive", num_landmarks = 77)
+  num_samples <- 200
+  num_landmarks <- 50
+  sample_names <- paste0("Sample", seq_len(num_samples))
+  landmark_names <- sample(sample_names, num_landmarks)
+
+  dist_lm <- matrix(runif(num_landmarks * num_landmarks), nrow = num_landmarks, dimnames = list(landmark_names, landmark_names))
+  dist_2lm <- matrix(runif(num_landmarks * num_samples), nrow = num_landmarks, dimnames = list(landmark_names, sample_names))
+
+  cmdout <- cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 4, rescale = TRUE)
+
+  check_space(cmdout, t(dist_2lm), ndim = 4, rescale = TRUE)
+
+  cmdout <- cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 2, rescale = FALSE)
+
+  check_space(cmdout, t(dist_2lm), ndim = 2, rescale = FALSE)
+
+  dist_lm[1, 1] <- NA
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 2, rescale = FALSE), "NA values not allowed")
+  dist_lm[1, 1] <- 0
+
+  expect_error(cmdscale_withlandmarks(dist_lm[-1,], dist_2lm, ndim = 2, rescale = FALSE), "square matrix")
+
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 0), "must be a whole number")
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 1.5), "must be a whole number")
+  expect_error(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = nrow(dataset$expression) + 10), "must be a whole number")
+
+  num_samples <- 200
+  sample_names <- paste0("Sample", seq_len(num_samples))
+  dist_lm <- matrix(rep(0, num_samples * num_samples), nrow = num_samples, dimnames = list(sample_names, sample_names))
+  dist_2lm <- dist_lm
+
+  expect_warning(cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 49, rescale = TRUE), "of the first [0-9]* eigenvalues are")
 })
