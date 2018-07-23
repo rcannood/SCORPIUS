@@ -3,11 +3,8 @@
 #' SCORPIUS orders single cells with regard to an implicit timeline,
 #' such as cellular development or progression over time.
 #'
-#' @section Distance functions:
-#' \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}
-#'
 #' @section Dimensionality Reduction functions:
-#' \code{\link{reduce_dimensionality}}, \code{\link{scale_uniform}}, \code{\link{scale_quantile}}
+#' \code{\link{reduce_dimensionality}}, \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}
 #'
 #' @section Trajectory Inference functions:
 #' \code{\link{infer_trajectory}}, \code{\link{infer_initial_trajectory}}, \code{\link{reverse_trajectory}}, \code{\link{gene_importances}}, \code{\link{extract_modules}}
@@ -20,6 +17,9 @@
 #'
 #' @section Evaluation functions:
 #' \code{\link{evaluate_trajectory}}, \code{\link{evaluate_dim_red}}
+#'
+#' @section Scaling functions:
+#' \code{\link{scale_uniform}}, \code{\link{scale_quantile}}, \code{\link{scale_minmax}}
 #'
 #' @docType package
 #' @name SCORPIUS
