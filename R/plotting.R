@@ -66,15 +66,20 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   if (!is.null(progression_group))
     space_df$progression_group <- progression_group
 
-  lim <- if (contour) c(min-.1*diff, max+.1*diff) else c(min, max)
+  lim <-
+    if (contour) {
+      c(min - .1*diff, max + .1*diff)
+    } else {
+      c(min, max)
+    }
 
   # construct base ggplot
   g <- ggplot() +
     theme_classic() +
-    labs(x="Component 1", y="Component 2", colour="Group", fill="Group") +
-    xlim(min-diff, max+diff) +
-    ylim(min-diff, max+diff) +
-    coord_equal(xlim=lim, ylim=lim)
+    labs(x = "Component 1", y = "Component 2", colour = "Group", fill = "Group") +
+    xlim(min - diff, max + diff) +
+    ylim(min - diff, max + diff) +
+    coord_equal(xlim = lim, ylim = lim)
 
   # if a contour is desirable, add the contour layer
   if (contour) {
@@ -83,19 +88,19 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 
     groupings <-
       if (is.null(progression_group)) {
-        list(group=seq_len(nrow(space_df)))
+        list(group = seq_len(nrow(space_df)))
       } else {
         unique_groups <- unique(progression_group)
-        gr <- lapply(unique_groups, function(col) which(col==progression_group))
+        gr <- lapply(unique_groups, function(col) which(col == progression_group))
         names(gr) <- unique_groups
         gr
       }
 
-    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN=function(group_name) {
+    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN = function(group_name) {
       group_ix <- groupings[[group_name]]
-      kde_out <- MASS::kde2d(space_df[group_ix,1], space_df[group_ix,2], lims=c(min-diff, max+diff, min-diff, max+diff))
+      kde_out <- MASS::kde2d(space_df[group_ix, 1], space_df[group_ix, 2], lims=c(min - diff, max + diff, min - diff, max + diff))
       z_melt <- reshape2::melt(kde_out$z)
-      df <- data.frame(group_name, kde_out$x[z_melt$Var1], kde_out$y[z_melt$Var2], z_melt$value, stringsAsFactors = F)
+      df <- data.frame(group_name, kde_out$x[z_melt$Var1], kde_out$y[z_melt$Var2], z_melt$value, stringsAsFactors = FALSE)
       colnames(df) <- c("progression_group", "Comp1", "Comp2", "density")
       df
     })))
@@ -103,7 +108,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
     if (!is.null(progression_group) && is.factor(progression_group))
       density_df$progression_group <- factor(density_df$progression_group, levels = levels(progression_group))
 
-    g <- g + stat_contour(geom="polygon", aes_contour, density_df, breaks=c(1), alpha=.2)
+    g <- g + stat_contour(geom = "polygon", aes_contour, density_df, breaks = 1, alpha = .2)
   }
 
   # add the point layer
@@ -180,7 +185,16 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, progression_group=groups, modules=modules)
 #' }
-draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NULL, show_labels_row=FALSE, show_labels_col=FALSE, scale_features=TRUE, ...) {
+draw_trajectory_heatmap <- function(
+  x,
+  time,
+  progression_group = NULL,
+  modules = NULL,
+  show_labels_row = FALSE,
+  show_labels_col = FALSE,
+  scale_features = TRUE,
+  ...
+) {
   # input checks
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
@@ -195,7 +209,7 @@ draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NUL
     rownames(x) <- paste("Row ", seq_len(nrow(x)))
   }
 
-  col_ann <- data.frame(row.names = rownames(x), Time=time)
+  col_ann <- data.frame(row.names = rownames(x), Time = time)
 
   x_part <- x[order(time),,drop=FALSE]
   if (scale_features) {
@@ -209,7 +223,7 @@ draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NUL
   }
 
   ann_col <- list(
-    Time=RColorBrewer::brewer.pal(5, "RdGy")
+    Time = RColorBrewer::brewer.pal(5, "RdGy")
   )
 
   if (!is.null(progression_group)) {
