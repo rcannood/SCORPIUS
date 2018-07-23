@@ -35,7 +35,9 @@ gene_importances <- function(
   num_threads = 1,
   ...
 ) {
-  data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
+  attributes(time) <- NULL
+  data <- data.frame(x, XXXtimeXXX = time, check.names = FALSE, stringsAsFactors = FALSE)
+
   importance <- ranger::ranger(
     data = data,
     dependent.variable.name = "XXXtimeXXX",
@@ -45,6 +47,7 @@ gene_importances <- function(
     num.threads = num_threads,
     ...
   )$variable.importance
+
   if (num_permutations > 0) {
     perms <- unlist(pbapply::pblapply(seq_len(num_permutations), function(i) {
       data$XXXtimeXXX <- sample(data$XXXtimeXXX)
@@ -62,5 +65,11 @@ gene_importances <- function(
   } else {
     pvalue <- rep(NA, length(importance))
   }
-  data_frame(gene = colnames(x), importance, pvalue) %>% arrange(desc(importance))
+
+  data_frame(
+    gene = colnames(x),
+    importance,
+    pvalue
+  ) %>%
+    arrange(desc(importance))
 }
