@@ -22,7 +22,7 @@
 #' @examples
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
@@ -68,20 +68,20 @@ infer_initial_trajectory <- function(space, k) {
   tsp <- TSP::insert_dummy(TSP::TSP(cluster_distances))
   tour <- as.vector(TSP::solve_TSP(tsp))
   tour2 <- c(tour, tour)
-  start <- min(which(tour2 == k+1))
-  stop <- max(which(tour2 == k+1))
-  best_ord <- tour2[(start+1):(stop-1)]
+  start <- min(which(tour2 == k + 1))
+  stop <- max(which(tour2 == k + 1))
+  best_ord <- tour2[(start + 1):(stop - 1)]
 
   # use this ordering as the initial curve
-  init_traj <- centers[best_ord,,drop=FALSE]
+  init_traj <- centers[best_ord, , drop = FALSE]
 
   init_traj
 }
 
 
-#' @title Infer linear trajectory through space
+#' Infer linear trajectory through space
 #'
-#' @description \code{infer_trajectory} infers a trajectory through samples in a given space in a four-step process:
+#' \code{infer_trajectory} infers a trajectory through samples in a given space in a four-step process:
 #' \enumerate{
 #'   \item Perform \emph{k}-means clustering
 #'   \item Calculate distance matrix between cluster centers using a custom distance function
@@ -89,12 +89,9 @@ infer_initial_trajectory <- function(space, k) {
 #'   \item Iteratively fit a curve to the given data using principal curves
 #' }
 #'
+#' @inheritParams princurve::principal_curve
 #' @param space A numeric matrix or data frame containing the coordinates of samples.
 #' @param k The number of clusters to cluster the data into.
-#' @param thresh \code{\link[princurve]{principal_curve}} parameter: convergence threshhold on shortest distances to the curve
-#' @param maxit \code{\link[princurve]{principal_curve}} parameter: maximum number of iterations
-#' @param stretch \code{\link[princurve]{principal_curve}} parameter: a factor by which the curve can be extrapolated when points are projected
-#' @param smoother \code{\link[princurve]{principal_curve}} parameter: choice of smoother
 #'
 #' @return A list containing several objects:
 #' \itemize{
@@ -185,24 +182,23 @@ infer_trajectory <- function(
 #'
 #' @examples
 #' ## Generate an example dataset and infer a trajectory through it
-#' dataset <- generate_dataset(type="poly", num_genes=500, num_samples=1000, num_groups=4)
+#' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 #' group_name <- dataset$sample_info$group_name
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
+#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise the trajectory
-#' draw_trajectory_plot(space, group_name, path=traj$path)
+#' draw_trajectory_plot(space, group_name, path = traj$path)
 #'
 #' ## Reverse the trajectory
 #' reverse_traj <- reverse_trajectory(traj)
-#' draw_trajectory_plot(space, group_name, path=reverse_traj$path)
+#' draw_trajectory_plot(space, group_name, path = reverse_traj$path)
 #'
-#' ## It's the same but reversed?!
-#' plot(traj$time, reverse_traj$time, type="l")
+#' plot(traj$time, reverse_traj$time, type = "l")
 reverse_trajectory <- function(trajectory) {
   if (! "SCORPIUS::trajectory" %in% class(trajectory))
     stop(sQuote("trajectory"), " needs to be an object returned by infer_trajectory")
-  trajectory$time <- 1-trajectory$time
-  trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))),,drop=FALSE]
+  trajectory$time <- 1 - trajectory$time
+  trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))), , drop = FALSE]
   trajectory
 }
