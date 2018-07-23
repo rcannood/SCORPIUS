@@ -113,6 +113,8 @@ evaluate_dim_red <- function(space, progression, k = 5) {
     stop(sQuote("progression"), " must be a numeric vector or a factor")
   if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
     stop(sQuote("k"), " must be a whole number and k >= 1")
+  if (nrow(space) != length(progression))
+    stop(sQuote("nrow(space)"), " and ", sQuote("length(progression)"), " must be the same.")
 
   # if progression is a factor, convert it to an integer
   if (is.factor(progression)) {
