@@ -49,7 +49,7 @@ evaluate_trajectory <- function(time, progression) {
 
   ## If progression is a factor, convert it to an integer
   if (is.factor(progression)) {
-    progression <- as.integer(progression)
+    progression <- as.integer(rank(progression))
   }
 
   ## satisfying r cmd check
@@ -115,7 +115,9 @@ evaluate_dim_red <- function(space, progression, k = 5) {
     stop(sQuote("k"), " must be a whole number and k >= 1")
 
   # if progression is a factor, convert it to an integer
-  if (is.factor(progression)) progression <- as.integer(progression)
+  if (is.factor(progression)) {
+    progression <- as.integer(progression)
+  }
 
   # perform 5NN LOOCV
   knn_out <- knn(as.matrix(stats::dist(space)), k = k)
