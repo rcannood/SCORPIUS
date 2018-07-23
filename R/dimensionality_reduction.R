@@ -75,7 +75,7 @@ landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
       list(ix_lm = ix_lm, dist_lm = dist_lm, dist_2lm = dist_2lm)
     },
     {
-      stop("landmark_method must be ", sQuote("naive"), ".")
+      stop("landmark_method must be one of: ", sQuote("naive"), ".")
     }
   )
 }
