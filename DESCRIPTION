@@ -42,7 +42,7 @@ Imports:
   mclust,
   pbapply,
   pheatmap,
-  princurve (>= 2.1.0.9000),
+  princurve (>= 2.1.1),
   purrr,
   ranger,
   RColorBrewer,
@@ -56,5 +56,3 @@ Suggests:
   knitr,
   rmarkdown,
   testthat
-Remotes:
-  dynverse/princurve@devel
