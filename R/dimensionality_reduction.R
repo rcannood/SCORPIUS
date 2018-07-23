@@ -1,6 +1,7 @@
-#' @title Dimensionality reduction
+#' Dimensionality reduction
 #'
-#' @description \code{reduce_dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
+#' \code{reduce_dimensionality} performs an eigenanalysis of the given dissimilarity matrix
+#' and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
 #'
 #' @param x a numeric matrix
 #' @param dist_fun the distance function to be used; must have exactly two arguments, namely dist_fun(x, y).
@@ -26,7 +27,14 @@
 #'
 #' ## Visualise the dataset
 #' draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
-reduce_dimensionality <- function(x, dist_fun, ndim = 3, landmark_method = c("naive", "none"), num_landmarks = 1000, rescale = T) {
+reduce_dimensionality <- function(
+  x,
+  dist_fun,
+  ndim = 3,
+  landmark_method = c("naive", "none"),
+  num_landmarks = 1000,
+  rescale = TRUE
+) {
   # input check
   check_numeric_matrix(x, "x", finite = TRUE)
 
