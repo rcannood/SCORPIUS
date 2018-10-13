@@ -25,7 +25,7 @@ reduce_dimensionality(x, dist_fun, ndim = 3,
 A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
 }
 \description{
-\code{reduce_dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
+Perform an eigenanalysis of the given dissimilarity matrix and return coordinates of the samples represented in an \code{ndim}-dimensional space.
 }
 \examples{
 ## Generate an example dataset

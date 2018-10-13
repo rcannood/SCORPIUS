@@ -1,6 +1,6 @@
 #' @title Dimensionality reduction
 #'
-#' @description \code{reduce_dimensionality} performs an eigenanalysis of the given dissimilarity matrix and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
+#' @description Perform an eigenanalysis of the given dissimilarity matrix and return coordinates of the samples represented in an \code{ndim}-dimensional space.
 #'
 #' @param x a numeric matrix
 #' @param dist_fun the distance function to be used; must have exactly two arguments, namely dist_fun(x, y).
