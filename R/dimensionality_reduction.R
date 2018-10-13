@@ -30,20 +30,31 @@ reduce_dimensionality <- function(x, dist_fun, ndim = 3, landmark_method = c("na
   # input check
   if (!is.matrix(x) && !is.data.frame(x))
     stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if (!is.function(dist_fun)) {
+  if (!is.function(dist_fun))
     stop(sQuote("dist_fun"), " must be a function(x, y) {...}")
-  }
   if (!is.finite(ndim) || round(ndim) != ndim || length(ndim) != 1 || ndim < 1 || ndim >= nrow(x))
     stop(sQuote("ndim"), " must be a whole number and 1 <= ndim <= nrow(x)-1")
 
+  # check landmark parameter
   landmark_method <- match.arg(landmark_method)
 
+  # if no landmark method is specified, use regular MDS
   if (landmark_method == "none") {
     space <- stats::cmdscale(dist_fun(x), k = ndim)
+
+    # rescale dimred if so desired
     if (rescale) space <- scale_uniform(space)
+
+    # rename columns
     colnames(space) <- paste("Comp", seq_len(ncol(space)), sep = "")
+
+    # return dimred
     space
+
+  # otherwise, use landmark MDS
   } else {
+
+    # select the landmarks
     lm_out <- landmark_selection(
       x = x,
       dist_fun = dist_fun,
@@ -51,50 +62,75 @@ reduce_dimensionality <- function(x, dist_fun, ndim = 3, landmark_method = c("na
       num_landmarks = num_landmarks
     )
 
+    # reduce dimensionality for landmarks and project to non-landmarks
     cmd_out <- cmdscale_withlandmarks(
       dist_lm = lm_out$dist_lm,
       dist_2lm = lm_out$dist_2lm,
       ndim = ndim,
       rescale = rescale
     )
+
+    # add landmark indices to output
     attr(cmd_out, "landmarks") <- lm_out$ix_lm
+
+    # return dimred several attributes attached
     cmd_out
   }
 }
 
+#' Select landmarks
+#'
+#' @inheritParams reduce_dimensionality
+#'
+#' @return A list with the following elements:
+#' \itemize{
+#'   \item{\code{ix_lm}: The incides of the selected landmarks}
+#'   \item{\code{dist_lm}: Pairwise distance matrix between the selected landmarks}
+#'   \item{\code{dist_2lm}: Distance matrix between the landmarks and all the samples in \code{x}}
+#' }
 landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
-  if (nrow(x) < num_landmarks) {
+  # parameter check on num_landmarks
+  if (num_landmarks > nrow(x)) {
     num_landmarks <- nrow(x)
   }
-  switch(
-    landmark_method,
-    "naive" = {
-      ix_lm <- sample.int(nrow(x), num_landmarks)
-      dist_lm <- dist_fun(x[ix_lm,,drop=FALSE], x[ix_lm,,drop=FALSE])
-      dist_2lm <- dist_fun(x[ix_lm,,drop=FALSE], x)
-      list(ix_lm = ix_lm, dist_lm = dist_lm, dist_2lm = dist_2lm)
-    },
-    {
-      stop("landmark_method must be ", sQuote("naive"), ".")
-    }
-  )
+
+  # naive -> just subsample the cell ids
+  if (landmark_method == "naive") {
+    ix_lm <- sample.int(nrow(x), num_landmarks)
+    dist_lm <- dist_fun(x[ix_lm,,drop=FALSE], x[ix_lm,,drop=FALSE])
+    dist_2lm <- dist_fun(x[ix_lm,,drop=FALSE], x)
+
+  # print helpful warning message if landmark methods is not amongst the list of acceptable landmark methods
+  } else {
+    landmark_methods <- setdiff(eval(formals(reduce_dimensionality)$landmark_method), "none")
+    landmark_methods_str <- paste(sQuote(landmark_methods), collapse = ", ")
+    stop("landmark_method must be in ", landmark_methods_str, ".")
+  }
+
+  list(ix_lm = ix_lm, dist_lm = dist_lm, dist_2lm = dist_2lm)
 }
 
-cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = T) {
-  d <- dist_lm
-  if (anyNA(d))
-    stop("NA values not allowed in 'd'")
-
-  x <- as.matrix(d^2)
-  storage.mode(x) <- "double"
-  if (nrow(x) != ncol(x))
-    stop("distances must be result of 'dist' or a square matrix")
-
-  rn <- rownames(x)
-  rn_all <- colnames(dist_2lm)
+#' Landmark MDS
+#'
+#' @param dist_lm Pairwise distance matrix between the selected landmarks
+#' @param dist2_lm Distance matrix between the landmarks and all the samples in original dataset
+#' @inheritParams reduce_dimensionality
+cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = TRUE) {
+  # short hand notations
+  x <- as.matrix(dist_lm^2)
   n <- as.integer(nrow(x))
   N <- as.integer(ncol(dist_2lm))
 
+  # check storage mode
+  storage.mode(x) <- "double"
+
+  # check for NAs
+  if (anyNA(x))
+    stop("NA values not allowed in 'd'")
+
+  # check dimensionality
+  if (nrow(x) != ncol(x))
+    stop("distances must be result of 'dist' or a square matrix")
   if((ndim <- as.integer(ndim)) > n - 1 || ndim < 1)
     stop("'ndim' must be in {1, 2, ..  n - 1}")
 
@@ -119,9 +155,12 @@ cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = T) {
   points_inv <- evec / rep(sqrt(ev), each=n)
   S <- (-t(dist_2lm - rep(mu_n, each = N))/2) %*% points_inv
 
-  # clean up dimension names
-  dimnames(Slm) <- list(rn, paste0("Comp", seq_len(ndim)))
-  dimnames(S) <- list(rn_all, paste0("Comp", seq_len(ndim)))
+  # set dimension names
+  rn_lm <- rownames(dist_lm)
+  rn_all <- colnames(dist_2lm)
+  cn <- paste0("Comp", seq_len(ndim))
+  dimnames(Slm) <- list(rn_lm, cn)
+  dimnames(S) <- list(rn_all, cn)
 
   # rescale if necessary
   if (rescale) {
