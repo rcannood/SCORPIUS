@@ -4,7 +4,6 @@
 \name{reexports}
 \alias{reexports}
 \alias{euclidean_distance}
-\alias{reexports}
 \alias{correlation_distance}
 \title{Objects exported from other packages}
 \keyword{internal}
