@@ -15,9 +15,11 @@
  
  * TESTING: Expanded unit tests.
  
- * DOCUMENTAION: Added citation information to package.
+ * DOCUMENTATION: Added citation information to package.
  
  * MINOR CHANGE: Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
+ 
+ * MINOR CHANGE: Clean up `cmdscale_withlandmarks()` code.
 
 # SCORPIUS 1.0.2 (2018-06-29)
 
