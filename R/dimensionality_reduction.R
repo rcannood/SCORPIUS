@@ -113,7 +113,7 @@ landmark_selection <- function(x, dist_fun, landmark_method, num_landmarks) {
 #' Landmark MDS
 #'
 #' @param dist_lm Pairwise distance matrix between the selected landmarks
-#' @param dist2_lm Distance matrix between the landmarks and all the samples in original dataset
+#' @param dist_2lm Distance matrix between the landmarks and all the samples in original dataset
 #' @inheritParams reduce_dimensionality
 cmdscale_withlandmarks <- function(dist_lm, dist_2lm, ndim = 3, rescale = TRUE) {
   # short hand notations

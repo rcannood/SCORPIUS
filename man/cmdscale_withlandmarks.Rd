@@ -9,11 +9,11 @@ cmdscale_withlandmarks(dist_lm, dist_2lm, ndim = 3, rescale = TRUE)
 \arguments{
 \item{dist_lm}{Pairwise distance matrix between the selected landmarks}
 
+\item{dist_2lm}{Distance matrix between the landmarks and all the samples in original dataset}
+
 \item{ndim}{the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.}
 
 \item{rescale}{A logical indicating whether or not the returned space should be rescaled and centered.}
-
-\item{dist2_lm}{Distance matrix between the landmarks and all the samples in original dataset}
 }
 \description{
 Landmark MDS
