@@ -4,8 +4,9 @@
 \alias{reduce_dimensionality}
 \title{Dimensionality reduction}
 \usage{
-reduce_dimensionality(x, dist_fun, ndim = 3, landmark_method = c("naive",
-  "none"), num_landmarks = 1000, rescale = TRUE)
+reduce_dimensionality(x, dist_fun, ndim = 3,
+  landmark_method = c("naive", "none"), num_landmarks = 1000,
+  rescale = TRUE)
 }
 \arguments{
 \item{x}{a numeric matrix}

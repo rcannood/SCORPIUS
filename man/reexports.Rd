@@ -4,19 +4,12 @@
 \name{reexports}
 \alias{reexports}
 \alias{euclidean_distance}
-\alias{reexports}
 \alias{correlation_distance}
-\alias{reexports}
 \alias{scale_quantile}
-\alias{reexports}
 \alias{scale_minmax}
-\alias{reexports}
 \alias{scale_uniform}
-\alias{reexports}
 \alias{apply_quantile_scale}
-\alias{reexports}
 \alias{apply_minmax_scale}
-\alias{reexports}
 \alias{apply_uniform_scale}
 \title{Objects exported from other packages}
 \keyword{internal}
