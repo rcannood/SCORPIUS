@@ -1,7 +1,7 @@
 Package: SCORPIUS
 Type: Package
 Title: Inferring Developmental Chronologies from Single-Cell RNA Sequencing Data
-Version: 1.0.2.9001
+Version: 1.0.3.9001
 Date: 2018-06-12
 Description: An accurate and easy tool for performing trajectory inference on
   single cells using single-cell RNA sequencing data. In addition, SCORPIUS
@@ -10,17 +10,15 @@ Description: An accurate and easy tool for performing trajectory inference on
   Cannoodt et al. (2016) <doi:10.1101/079509>.
 Authors@R: c(
     person(
-      "Robrecht", 
-      "Cannoodt", 
+      "Robrecht", "Cannoodt", 
       email = "rcannood@gmail.com", 
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0003-3641-729X", github = "rcannood")
     ),
     person(
-      "Wouter", 
-      "Saelens", 
+      "Wouter", "Saelens", 
       email = "wouter.saelens@ugent.be", 
-      role = c("aut"), 
+      role = c("ctb"), 
       comment = c(ORCID = "0000-0002-7114-6248", github = "zouter")
     )
   )
@@ -34,7 +32,7 @@ Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
-  dynutils,
+  dynutils (>= 1.0.0),
   grDevices,
   ggplot2 (>= 2.0),
   magrittr,
@@ -42,7 +40,7 @@ Imports:
   mclust,
   pbapply,
   pheatmap,
-  princurve (>= 2.0.2),
+  princurve (>= 2.1.1),
   purrr,
   ranger,
   RColorBrewer,

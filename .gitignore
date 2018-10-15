@@ -1,7 +1,10 @@
 .Rproj.user
 .Rhistory
 .RData
+.Ruserdata
 inst/doc
 *.o
 *.so
 .DS_Store
+revdep/**/
+vignettes/*.html

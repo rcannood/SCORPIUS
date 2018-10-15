@@ -1,17 +1,17 @@
-context("Gene importances")
+context("Testing gene_importances.R")
+
+dataset <- generate_dataset(type = "poly", num_genes = 400, num_samples = 101, num_groups = 4)
+expression <- dataset$expression %>% scale_quantile(0)
+
+time <- seq(-1, 1, length.out = nrow(expression))
+
+amount_noise <- runif(ncol(expression))
+for (i in seq_len(ncol(expression))) {
+  pct <- amount_noise[[i]]
+  expression[,i] <- pct * expression[,i] + (1-pct) * runif(nrow(expression))
+}
 
 test_that("With generated data", {
-  dataset <- generate_dataset(type = "poly", num_genes = 400, num_samples = 101, num_groups = 4)
-  expression <- dataset$expression %>% scale_quantile(0)
-
-  time <- seq(-1, 1, length.out = nrow(expression))
-
-  amount_noise <- runif(ncol(expression))
-  for (i in seq_len(ncol(expression))) {
-    pct <- amount_noise[[i]]
-    expression[,i] <- pct * expression[,i] + (1-pct) * runif(nrow(expression))
-  }
-
   gimp1 <- gene_importances(expression, time, ntree = 5) %>% slice(match(colnames(expression), gene))
   gimp2 <- gene_importances(expression, time, ntree = 300) %>% slice(match(colnames(expression), gene))
   gimp3 <- gene_importances(expression, time, ntree = 10000) %>% slice(match(colnames(expression), gene))
