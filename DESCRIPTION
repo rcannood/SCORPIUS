@@ -23,10 +23,11 @@ Authors@R: c(
     )
   )
 License: GPL-3
+Encoding: UTF-8
 URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Depends:
   R (>= 3.0.0)
