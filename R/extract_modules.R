@@ -81,7 +81,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
     value <- order_data(x[,ix,drop=FALSE])
     within_module_ordering <- percent_rank(value)
 
-    data_frame(
+    tibble(
       feature = feature_names[ix],
       orig_index = ix,
       module = l,

@@ -72,7 +72,7 @@ gene_importances <- function(
     pvalue <- rep(NA, length(importance))
   }
 
-  data_frame(
+  tibble(
     gene = colnames(x),
     importance,
     pvalue
