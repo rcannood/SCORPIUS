@@ -1,28 +1,42 @@
 # SCORPIUS 1.0.3 (unreleased)
 
- * MINOR CHANGES: Cleaned up code style; mostly spacing issues, but now piping is used more.
- 
- * MINOR CHANGE: Use scaling functions from dynutils (`scale_minmax()`, `scale_quantile()`, `scale_uniform()`)
- 
- * OPTIMISATION `infer_trajectory()`: Added `approx_points` parameter, which greatly speeds up
-   for trajectory inference for large sample numbers.
 
- * DOCUMENTATION: Vignettes were updated and regenerated.
+## Optimisation
+
+ * `infer_trajectory()`: Use princurve's `approx_points` parameter, which greatly speeds up
+   for trajectory inference for large sample numbers.
+   
+## Documentation
+
+ * Vignettes were updated.
+
+ * Added `cran-comments.md`.
  
- * DOCUMENTATION: Added `cran-comments.md` and `inst/NEWS.md`.
+ * Added recent news (`inst/NEWS.md`).
+ 
+ * Added citation information (`inst/CITATION`).
+ 
+## Minor changes
+
+ * Use dynutils' `calculate_distance()`.
+ 
+ * Use scaling functions from dynutils (`scale_minmax()`, `scale_quantile()`, `scale_uniform()`).
+ 
+ * Expanded unit tests.
+ 
+ * Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
+ 
+ * Moved `cmdscale_withlandmarks()` to dyndimred.
+ 
+## Bug fixes
  
  * BUG FIX `cmdscale_withlandmarks()`: Fix colnames bug when some eigenvalues are equal to 0.
  
- * TESTING: Expanded unit tests.
- 
- * DOCUMENTATION: Added citation information to package.
- 
- * MINOR CHANGE: Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
- 
- * MINOR CHANGE: Clean up `cmdscale_withlandmarks()` code.
- 
- * DEPRECATION: Deprecated unused functions `evaluate_trajectory()` and `evaluate_dim_red()`.
+## Deprecation
+
+ * Deprecated unused functions `evaluate_trajectory()` and `evaluate_dim_red()`.
    Use `dyneval::evaluate_ti_method()` instead.
+
 
 # SCORPIUS 1.0.2 (2018-06-29)
 
