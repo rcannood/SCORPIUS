@@ -35,5 +35,4 @@
 #' @import ggplot2
 #' @importFrom tidyr spread gather crossing
 #' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep
-#' @importFrom magrittr %<>% %$%
 NULL
