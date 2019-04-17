@@ -92,14 +92,18 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
         gr
       }
 
-    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN = function(group_name) {
+    density_df <- map_df(names(groupings), function(group_name) {
       group_ix <- groupings[[group_name]]
       kde_out <- MASS::kde2d(space_df[group_ix, 1], space_df[group_ix, 2], lims=c(min - diff, max + diff, min - diff, max + diff))
       z_melt <- reshape2::melt(kde_out$z)
-      df <- data.frame(group_name, kde_out$x[z_melt$Var1], kde_out$y[z_melt$Var2], z_melt$value, stringsAsFactors = FALSE)
-      colnames(df) <- c("progression_group", "Comp1", "Comp2", "density")
-      df
-    })))
+
+      tibble(
+        progression_group = group_name,
+        Comp1 = kde_out$x[z_melt$Var1],
+        Comp2 = kde_out$y[z_melt$Var2],
+        density = z_melt$value
+      )
+    })
 
     if (!is.null(progression_group) && is.factor(progression_group))
       density_df$progression_group <- factor(density_df$progression_group, levels = levels(progression_group))

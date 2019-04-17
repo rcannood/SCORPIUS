@@ -75,7 +75,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
   labels <- order(order(module_time))[labels]
 
   # order features within one module according to a dimensionality reduction of the correlation distance
-  modules <- bind_rows(lapply(sort(unique(labels)), function(l) {
+  modules <- map_df(sort(unique(labels)), function(l) {
     ix <- which(labels==l)
 
     value <- order_data(x[,ix,drop=FALSE])
@@ -88,7 +88,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
       within_module_ordering
     ) %>%
       arrange(within_module_ordering)
-  }))
+  })
 
   # return output
   modules
