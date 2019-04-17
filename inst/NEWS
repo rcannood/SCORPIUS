@@ -1,4 +1,4 @@
-# SCORPIUS 1.0.3 (unreleased)
+SCORPIUS 1.0.3 (unreleased)
 
  * MINOR CHANGES: Cleaned up code style; mostly spacing issues, but now piping is used more.
  
@@ -20,8 +20,11 @@
  * MINOR CHANGE: Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
  
  * MINOR CHANGE: Clean up `cmdscale_withlandmarks()` code.
+ 
+ * DEPRECATION: Deprecated unused functions `evaluate_trajectory()` and `evaluate_dim_red()`.
+   Use `dyneval::evaluate_ti_method()` instead.
 
-# SCORPIUS 1.0.2 (2018-06-29)
+SCORPIUS 1.0.2 (2018-06-29)
 
  * MINOR CHANGE: Depend on dynutils for distance functions.
  
@@ -31,7 +34,7 @@
  * REMOVAL: Removed `outlier_filter()`; there are much better scRNA-seq preprocessing
    pipelines in existance by now.
 
-# SCORPIUS 1.0.1 (2018-06-21)
+SCORPIUS 1.0.1 (2018-06-21)
 
  * MINOR CHANGE: Update for princurve 2.0.2.
 
@@ -41,6 +44,6 @@
 
  * TESTING: Calculate code coverage on travis.
  
-# SCORPIUS 1.0.0 (2017-09-15)
+SCORPIUS 1.0.0 (2017-09-15)
 
  * Initial release on CRAN.

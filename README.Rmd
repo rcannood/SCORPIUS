@@ -14,15 +14,6 @@ library(tidyverse)
 ```
 
 
-```{r news, echo=FALSE}
-# automatically update inst/NEWS with inst/NEWS.md
-readr::read_lines("inst/NEWS.md") %>% 
-  stringr::str_replace_all("^# dynutils", "dynutils") %>% 
-  stringr::str_replace_all("\\[[^\\]]*\\]\\(([^\\)]*)\\)", "\\1") %>% 
-  readr::write_lines("inst/NEWS")
-```
-
-
 # SCORPIUS
 
 [![Build Status](https://travis-ci.org/rcannood/SCORPIUS.svg?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
@@ -151,6 +142,17 @@ Finally, these genes can also be grouped into modules as follows:
 ```{r moduled_tafs, fig.keep='first'}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
+```
+
+## Latest changes
+
+Check out `news(package = "SCORPIUS")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+
+<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+
+```{r news, echo=FALSE, results="asis"}
+dynutils::update_news()
+cat(dynutils::recent_news())
 ```
 
 ## References

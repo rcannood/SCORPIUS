@@ -20,6 +20,9 @@
  * MINOR CHANGE: Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
  
  * MINOR CHANGE: Clean up `cmdscale_withlandmarks()` code.
+ 
+ * DEPRECATION: Deprecated unused functions `evaluate_trajectory()` and `evaluate_dim_red()`.
+   Use `dyneval::evaluate_ti_method()` instead.
 
 # SCORPIUS 1.0.2 (2018-06-29)
 
