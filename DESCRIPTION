@@ -46,7 +46,6 @@ Imports:
   ranger,
   RColorBrewer,
   reshape2,
-  splines,
   stats,
   tidyr,
   TSP,
