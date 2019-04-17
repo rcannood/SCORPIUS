@@ -25,10 +25,10 @@
 #' @section Datasets:
 #' \code{\link{generate_dataset}}, \code{\link{ginhoux}}
 #'
-#' @importFrom dplyr tibble as_tibble mutate select transmute arrange percent_rank desc
+#' @importFrom dplyr tibble as_tibble transmute arrange percent_rank desc slice
 #' @import ggplot2
 #' @importFrom tidyr spread gather crossing
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl
 #'
 #' @examples
 #' ## Load dataset from Schlitzer et al., 2015

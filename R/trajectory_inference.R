@@ -46,16 +46,17 @@ infer_initial_trajectory <- function(space, k) {
   # calculate the densities along the straight lines between any two cluster centers
   density_dist <- sapply(seq_len(k), function(i) {
     sapply(seq_len(k), function(j) {
-      if (i == j) {
-        0
-      } else {
+      if (i < j) {
         twocent <- centers[c(i,j), , drop = FALSE]
         segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
         dists <- as.matrix(dynutils::calculate_distance(segment_pts, space, method = "euclidean"))
         mean(knn_distances(dists, 10, self_loops=TRUE))
+      } else {
+        0
       }
     })
   })
+  density_dist <- density_dist + t(density_dist)
 
   # combine both distance matrices
   cluster_distances <- eucl_dist * density_dist

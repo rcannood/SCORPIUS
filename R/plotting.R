@@ -95,8 +95,6 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
     density_df <- map_df(names(groupings), function(group_name) {
       group_ix <- groupings[[group_name]]
 
-      x <- y <- density <- NULL # satisfy r cmd check
-
       kde_out <- MASS::kde2d(
         space_df[group_ix, 1],
         space_df[group_ix, 2],
@@ -112,9 +110,9 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
         as_tibble() %>%
         transmute(
           progression_group = group_name,
-          Comp1 = kde_out$x[x],
-          Comp2 = kde_out$y[y],
-          density
+          Comp1 = kde_out$x[.data$x],
+          Comp2 = kde_out$y[.data$y],
+          density = .data$density
         )
     })
 
