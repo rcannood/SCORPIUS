@@ -16,5 +16,5 @@ correlation_distance(x, y)
 }
 \description{
 Passing \code{euclidean_distance()} and \code{correlation_distance()} to \code{\link[=reduce_dimensionality]{reduce_dimensionality()}} is deprecated.
-Simply pass \code{"euclidean"} or \code{"pearson"} instead.
+Instead simply pass \code{"euclidean"} or \code{"pearson"}, respectively.
 }

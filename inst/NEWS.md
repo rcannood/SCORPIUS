@@ -6,6 +6,10 @@
  * `infer_trajectory()`: Use princurve's `approx_points` parameter, which greatly speeds up
    for trajectory inference for large sample numbers.
    
+## Major changes
+
+ * Use dynutils' `calculate_distance()` instead of `correlation_distance()` and `euclidean_distance()`.
+   
 ## Documentation
 
  * Vignettes were updated.
@@ -18,8 +22,6 @@
  
 ## Minor changes
 
- * Use dynutils' `calculate_distance()`.
- 
  * Use scaling functions from dynutils (`scale_minmax()`, `scale_quantile()`, `scale_uniform()`).
  
  * Expanded unit tests.

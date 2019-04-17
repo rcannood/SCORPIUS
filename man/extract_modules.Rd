@@ -30,7 +30,7 @@ which is typically done on the smoothed expression returned by \code{\link{gene_
 dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 expression <- dataset$expression
 group_name <- dataset$sample_info$group_name
-space <- reduce_dimensionality(expression, correlation_distance, ndim=2)
+space <- reduce_dimensionality(expression, ndim=2)
 traj <- infer_trajectory(space)
 time <- traj$time
 draw_trajectory_plot(space, path=traj$path, group_name)

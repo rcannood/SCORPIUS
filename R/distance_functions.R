@@ -1,7 +1,7 @@
 #' Deprecated distance functions
 #'
 #' Passing `euclidean_distance()` and `correlation_distance()` to [reduce_dimensionality()] is deprecated.
-#' Simply pass `"euclidean"` or `"pearson"` instead.
+#' Instead simply pass `"euclidean"` or `"pearson"`, respectively.
 #'
 #' @param x deprecated
 #' @param y deprecated

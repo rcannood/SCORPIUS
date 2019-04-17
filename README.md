@@ -98,7 +98,7 @@ cells that are similar in terms of expression values will be placed
 closer together than cells with dissimilar expression values.
 
 ``` r
-space <- reduce_dimensionality(expression, correlation_distance)
+space <- reduce_dimensionality(expression, "spearman")
 draw_trajectory_plot(space, group_name, contour = TRUE)
 ```
 

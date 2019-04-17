@@ -18,11 +18,12 @@
 #'
 #' @importFrom TSP TSP insert_dummy solve_TSP
 #' @importFrom stats kmeans dist
+#' @importFrom dynutils calculate_distance
 #'
 #' @examples
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
+#' space <- reduce_dimensionality(dataset$expression, ndim = 2)
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
@@ -50,7 +51,7 @@ infer_initial_trajectory <- function(space, k) {
       } else {
         twocent <- centers[c(i,j), , drop = FALSE]
         segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
-        dists <- euclidean_distance(segment_pts, space)
+        dists <- dynutils::calculate_distance(segment_pts, space, method = "euclidean")
         mean(knn_distances(dists, 10, self_loops=TRUE))
       }
     })
@@ -104,7 +105,7 @@ infer_initial_trajectory <- function(space, k) {
 #' @examples
 #' ## Generate an example dataset and visualise it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
+#' space <- reduce_dimensionality(dataset$expression, ndim = 2)
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 #'
 #' ## Infer a trajectory through this space
@@ -176,7 +177,7 @@ infer_trajectory <- function(
 #' ## Generate an example dataset and infer a trajectory through it
 #' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 #' group_name <- dataset$sample_info$group_name
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
+#' space <- reduce_dimensionality(dataset$expression, ndim = 2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise the trajectory

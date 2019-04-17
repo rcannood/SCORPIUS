@@ -11,7 +11,7 @@ such as cellular development or progression over time.
 }
 \section{Dimensionality Reduction functions}{
 
-\code{\link{reduce_dimensionality}}, \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}
+\code{\link{reduce_dimensionality}}
 }
 
 \section{Trajectory Inference functions}{
@@ -29,16 +29,21 @@ such as cellular development or progression over time.
 \code{\link{generate_dataset}}, \code{\link{ginhoux}}
 }
 
-\section{Evaluation functions}{
+\examples{
+## Load dataset from Schlitzer et al., 2015
+data("ginhoux")
 
-\code{\link{evaluate_trajectory}}, \code{\link{evaluate_dim_red}}
+## Reduce dimensionality and infer trajectory with SCORPIUS
+space <- reduce_dimensionality(ginhoux$expression, "spearman")
+traj <- infer_trajectory(space)
+
+## Visualise
+draw_trajectory_plot(
+  space,
+  path = traj$path,
+  progression_group = ginhoux$sample_info$group_name
+)
 }
-
-\section{Scaling functions}{
-
-\code{\link{scale_uniform}}, \code{\link{scale_quantile}}, \code{\link{scale_minmax}}
-}
-
 \references{
 Cannoodt R. et al.,
 \href{https://www.biorxiv.org/content/early/2016/10/07/079509}{SCORPIUS improves trajectory inference and identifies novel modules in dendritic cell development},

@@ -26,7 +26,7 @@ and draw a contour around the samples.
 \examples{
 ## Generate a synthetic dataset
 dataset <- generate_dataset(type="p", num_genes=500, num_samples=300, num_groups=4)
-space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim=2)
+space <- reduce_dimensionality(dataset$expression, ndim=2)
 groups <- dataset$sample_info$group_name
 
 ## Simply plot the samples

@@ -23,7 +23,7 @@
 #' dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
 #' expression <- dataset$expression
 #' group_name <- dataset$sample_info$group_name
-#' space <- reduce_dimensionality(expression, correlation_distance, ndim=2)
+#' space <- reduce_dimensionality(expression, ndim=2)
 #' traj <- infer_trajectory(space)
 #' time <- traj$time
 #' draw_trajectory_plot(space, path=traj$path, group_name)
@@ -59,7 +59,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
     if (ncol(z) <= 2) {
       pct <- seq(0, 1, length.out = ncol(z))
     } else if (ncol(z) == 3) {
-      pct <- reduce_dimensionality(t(z), correlation_distance, ndim = 1)[,1]
+      pct <- reduce_dimensionality(t(z), "spearman", ndim = 1)[,1]
       pct <- (pct - min(pct)) / (max(pct) - min(pct))
     } else {
       pct <- suppressWarnings(infer_trajectory(t(z), k = NULL)$time)

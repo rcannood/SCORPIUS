@@ -33,11 +33,11 @@ and returns coordinates of the samples represented in an \code{ndim}-dimensional
 dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 
 ## Reduce the dimensionality of this dataset
-space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 2)
+space <- reduce_dimensionality(dataset$expression, ndim = 2)
 
 ## Visualise the dataset
-draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
+draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 }
 \seealso{
-\code{\link{correlation_distance}}, \code{\link{scale_uniform}}, \code{\link{draw_trajectory_plot}}
+\link{SCORPIUS}
 }

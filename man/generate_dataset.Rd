@@ -5,15 +5,12 @@
 \title{Generate a synthetic dataset}
 \usage{
 generate_dataset(
-  type = c("splines", "polynomial"),
   num_samples = 400,
   num_genes = 500,
   num_groups = 4
 )
 }
 \arguments{
-\item{type}{The type of function used in order to generate the expression data. Must be either \code{"splines"} (default) or \code{"polynomial"} (or abbreviations thereof).}
-
 \item{num_samples}{The number of samples the dataset will contain.}
 
 \item{num_genes}{The number of genes the dataset will contain.}
@@ -28,15 +25,15 @@ A list containing the expression data and the meta data of the samples.
 }
 \examples{
 ## Generate a dataset
-dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
+dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
 
 ## Reduce dimensionality and infer trajectory with SCORPIUS
-space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
+space <- reduce_dimensionality(dataset$expression, ndim = 2)
 traj <- infer_trajectory(space)
 
 ## Visualise
 draw_trajectory_plot(space, path=traj$path, progression_group=dataset$sample_info$group_name)
 }
 \seealso{
-\code{\link{correlation_distance}}, \code{\link{reduce_dimensionality}}, \code{\link{infer_trajectory}}, \code{\link{draw_trajectory_plot}}
+\link{SCORPIUS}
 }

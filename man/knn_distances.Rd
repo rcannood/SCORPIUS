@@ -27,8 +27,9 @@ knnd <- knn_distances(dist, 10)
 plot(density(knnd))
 
 ## Calculate the kNN distances between two sets of samples
+library(dynutils)
 y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
-dist <- euclidean_distance(x, y)
+dist <- calculate_distance(x, y, "euclidean")
 knnd <- knn_distances(dist, 10)
 plot(density(knnd))
 }

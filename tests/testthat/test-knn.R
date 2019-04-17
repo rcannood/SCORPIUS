@@ -6,7 +6,7 @@ test_that("With generated data", {
 
   time <- seq(-1, 1, length.out = nrow(expression))
 
-  dist <- correlation_distance(expression)
+  dist <- dynutils::calculate_distance(expression)
 
   # testing without self loops allowed
   knn_out <- knn(dist, k = 5, self_loops = F)
