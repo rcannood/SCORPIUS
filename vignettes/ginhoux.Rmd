@@ -52,7 +52,7 @@ The reduced space is constructed as follows:
 ```{r perform_mds}
 expression <- ginhoux$expression
 group_name <- ginhoux$sample_info$group_name
-space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
+space <- reduce_dimensionality(expression, "spearman", ndim = 3)
 ```
 
 The new space is a `r nrow(space)`-by-`r ncol(space)` matrix, and can be visualised with or without colouring of the

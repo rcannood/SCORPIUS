@@ -1,7 +1,7 @@
 context("Dimensionality reduction")
 
 test_that("With generated data", {
-  dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 300, num_groups = 4)
+  dataset <- generate_dataset(num_genes = 500, num_samples = 300, num_groups = 4)
   expression <- dataset$expression
 
   # testing for 1 dimension
@@ -45,7 +45,7 @@ test_that("With generated data", {
 
 
 test_that("With generated data and edge case", {
-  dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 10, num_groups = 4)
+  dataset <- generate_dataset(num_genes = 500, num_samples = 10, num_groups = 4)
   expression <- dataset$expression
 
   # testing for 1 dimension

@@ -1,6 +1,6 @@
 context("Testing dimensionality_reduction.R")
 
-dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
+dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
 
 check_space <- function(space, expression, ndim, rescale) {
   expect_is( space, c("data.frame", "matrix") )

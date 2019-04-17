@@ -27,7 +27,7 @@ which is typically done on the smoothed expression returned by \code{\link{gene_
 }
 \examples{
 ## Generate a dataset and visualise
-dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
+dataset <- generate_dataset(num_genes=500, num_samples=300, num_groups=4)
 expression <- dataset$expression
 group_name <- dataset$sample_info$group_name
 space <- reduce_dimensionality(expression, ndim=2)

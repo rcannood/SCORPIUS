@@ -1,6 +1,6 @@
 context("Testing gene_importances.R")
 
-dataset <- generate_dataset(type = "poly", num_genes = 400, num_samples = 101, num_groups = 4)
+dataset <- generate_dataset(num_genes = 400, num_samples = 101, num_groups = 4)
 expression <- dataset$expression %>% scale_quantile(0)
 
 time <- seq(-1, 1, length.out = nrow(expression))

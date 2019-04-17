@@ -24,7 +24,7 @@ Note that the dataset is generated in a very naive manner and is only meant to b
 Expression values for 384 cells and 500 genes is generated as follows.
 ```{r generate_data, message=FALSE}
 library(SCORPIUS)
-dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 384, num_groups = 4)
+dataset <- generate_dataset(num_genes = 500, num_samples = 384, num_groups = 4)
 ```
 
 The resulting dataset is a list containing a matrix named `expression` and a data frame named `sample_info`.
@@ -52,7 +52,7 @@ The reduced space is constructed as follows:
 ```{r perform_mds}
 expression <- dataset$expression
 group_name <- dataset$sample_info$group_name
-space <- reduce_dimensionality(expression, correlation_distance, ndim = 3)
+space <- reduce_dimensionality(expression, "spearman", ndim = 3)
 ```
 
 

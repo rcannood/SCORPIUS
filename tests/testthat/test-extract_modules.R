@@ -1,6 +1,6 @@
 context("Testing extract_modules.R")
 
-dataset <- generate_dataset(type = "poly", num_genes = 101, num_samples = 91, num_groups = 4)
+dataset <- generate_dataset(num_genes = 101, num_samples = 91, num_groups = 4)
 expression <- dataset$expression
 time <- seq(-1, 1, length.out = nrow(expression))
 
@@ -21,7 +21,7 @@ test_that("With generated data", {
   check_modules(modules, expression)
 })
 
-dataset <- generate_dataset(type = "poly", num_genes = 10, num_samples = 100, num_groups = 4)
+dataset <- generate_dataset(num_genes = 10, num_samples = 100, num_groups = 4)
 expression <- dataset$expression
 time <- seq(-1, 1, length.out = nrow(expression))
 

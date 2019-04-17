@@ -4,9 +4,8 @@
 #' and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
 #'
 #' @param x a numeric matrix
-#' @param dist_fun the distance metric to be used; can be any of the metrics listed in [dynutils::calculate_distance()].
+#' @param dist the distance metric to be used; can be any of the metrics listed in [dynutils::calculate_distance()].
 #' @param ndim the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.
-#' @param landmark_method Must be "naive" for now. Other landmark methods will be supported in the future.
 #' @param num_landmarks the number of landmarks to be selected.
 #' @param rescale A logical indicating whether or not the returned space should be rescaled and centered.
 #'
@@ -22,7 +21,7 @@
 #'
 #' @examples
 #' ## Generate an example dataset
-#' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
+#' dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
 #'
 #' ## Reduce the dimensionality of this dataset
 #' space <- reduce_dimensionality(dataset$expression, ndim = 2)
