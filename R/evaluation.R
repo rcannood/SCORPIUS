@@ -15,7 +15,6 @@ evaluate_trajectory <- function(time, progression) {
 #' @rdname deprecated
 #'
 #' @param space deprecated
-#' @param progression deprecated
 #' @param k deprecated
 #'
 #' @export
