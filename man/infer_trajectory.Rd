@@ -33,17 +33,17 @@ gets approximated to; preferably about 100.}
 \value{
 A list containing several objects:
 \itemize{
-  \item \code{path}: the trajectory obtained by principal curves.
-  \item \code{time}: the time point of each sample along the inferred trajectory.
+\item \code{path}: the trajectory obtained by principal curves.
+\item \code{time}: the time point of each sample along the inferred trajectory.
 }
 }
 \description{
 \code{infer_trajectory} infers a trajectory through samples in a given space in a four-step process:
 \enumerate{
-  \item Perform \emph{k}-means clustering
-  \item Calculate distance matrix between cluster centers using a custom distance function
-  \item Find the shortest path connecting all cluster centers using the custom distance matrix
-  \item Iteratively fit a curve to the given data using principal curves
+\item Perform \emph{k}-means clustering
+\item Calculate distance matrix between cluster centers using a custom distance function
+\item Find the shortest path connecting all cluster centers using the custom distance matrix
+\item Iteratively fit a curve to the given data using principal curves
 }
 }
 \examples{

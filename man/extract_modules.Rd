@@ -23,7 +23,7 @@ A data frame containing meta-data for the features in \code{x}, namely the order
 }
 \description{
 \code{extract_modules} uses adaptive branch pruning to extract modules of features,
- which is typically done on the smoothed expression returned by \code{\link{gene_importances}}.
+which is typically done on the smoothed expression returned by \code{\link{gene_importances}}.
 }
 \examples{
 ## Generate a dataset and visualise

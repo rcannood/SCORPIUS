@@ -42,6 +42,6 @@ draw_trajectory_plot(
 \references{
 Schlitzer A, Sivakamasundari V, Chen J, Sumatoh HR et al.
 Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at
- the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
+the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
 }
 \keyword{datasets}

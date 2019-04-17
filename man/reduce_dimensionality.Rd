@@ -4,22 +4,22 @@
 \alias{reduce_dimensionality}
 \title{Dimensionality reduction}
 \usage{
-reduce_dimensionality(x, dist_fun, ndim = 3,
-  landmark_method = c("naive", "none"), num_landmarks = 1000,
+reduce_dimensionality(x, dist = c("spearman", "pearson", "cosine",
+  "euclidean", "manhattan"), ndim = 3, num_landmarks = 1000,
   rescale = TRUE)
 }
 \arguments{
 \item{x}{a numeric matrix}
 
-\item{dist_fun}{the distance function to be used; must have exactly two arguments, namely dist_fun(x, y).}
-
 \item{ndim}{the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.}
-
-\item{landmark_method}{Must be "naive" for now. Other landmark methods will be supported in the future.}
 
 \item{num_landmarks}{the number of landmarks to be selected.}
 
 \item{rescale}{A logical indicating whether or not the returned space should be rescaled and centered.}
+
+\item{dist_fun}{the distance metric to be used; can be any of the metrics listed in \code{\link[dynutils:calculate_distance]{dynutils::calculate_distance()}}.}
+
+\item{landmark_method}{Must be "naive" for now. Other landmark methods will be supported in the future.}
 }
 \value{
 A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
@@ -33,7 +33,7 @@ and returns coordinates of the samples represented in an \code{ndim}-dimensional
 dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
 
 ## Reduce the dimensionality of this dataset
-space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
+space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 2)
 
 ## Visualise the dataset
 draw_trajectory_plot(space, progression_group=dataset$sample_info$group_name)
