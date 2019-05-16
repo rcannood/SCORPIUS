@@ -8,7 +8,7 @@ extract_modules(x, time = NULL, suppress_warnings = FALSE,
   verbose = FALSE, ...)
 }
 \arguments{
-\item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
+\item{x}{A numeric matrix or a data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
 \item{time}{(Optional) Order the modules according to a pseudotime}
 

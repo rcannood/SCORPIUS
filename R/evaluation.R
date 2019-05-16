@@ -24,15 +24,20 @@
 #' ## Evaluate the trajectory timeline
 #' evaluate_trajectory(traj$time, dataset$sample_info$group_name)
 evaluate_trajectory <- function(time, progression) {
-  requireNamespace("stats")
+  # remove any irrelevant parameters from time
+  attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
 
   # input checks
-  if (!is.vector(time) || !is.numeric(time))
-    stop(sQuote("time"), " must be a numeric vector")
-  if (!is.factor(progression) && (!is.vector(progression) || !is.numeric(progression)))
-    stop(sQuote("progression"), " must be a numeric vector or a factor")
-  if (length(time) != length(progression))
+  check_numeric_vector(time, "time", finite = TRUE)
+  check_numeric_vector(progression, "progression", finite = TRUE, factor = TRUE)
+  if (length(time) != length(progression)) {
     stop(sQuote("time"), " and ", sQuote("progression"), " must have equal lengths.")
+  }
+
+  # if progression is a factor, convert it to a numeric
+  if (is.factor(progression)) {
+    progression <- as.numeric(progression)
+  }
 
   ## Calculate the smallest distance between any two time values other than 0
   stime <- sort(time)
@@ -40,32 +45,38 @@ evaluate_trajectory <- function(time, progression) {
   min_diff <- min(diff[diff != 0])
 
   ## Add small values to the time points. If there are time points with same values, samples will now be ordered randomly.
-  noises <- stats::runif(length(time), 0, 0.01) * min_diff
+  noises <- stats::runif(length(time), 0, 0.01 * min_diff)
   noised_time <- time + noises
 
   ## Rank the time points
   rank <- rank(noised_time)
 
-  ## If progression is a factor, convert it to an integer
-  if (is.factor(progression)) progression <- as.integer(progression)
+  ## satisfying r cmd check
+  i <- j <- pri <- prj <- rai <- raj <- NA
 
   ## Calculate whether or not pairs of samples are consistent in terms of its progression and rank
-  comp <- expand.grid(i=seq_along(progression), j=seq_along(progression))
-  comp$pi <- progression[comp$i]
-  comp$pj <- progression[comp$j]
-  comp$ri <- rank[comp$i]
-  comp$rj <- rank[comp$j]
-  comp <- comp[comp$pi != comp$pj,,drop=FALSE]
-  comp$consistent <- with(comp, (pi < pj) == (ri < rj))
+  comp <-
+    crossing(
+      i = seq_along(progression),
+      j = seq_along(progression)
+    ) %>%
+    mutate(
+      pri = progression[i],
+      prj = progression[j],
+      rai = rank[i],
+      raj = rank[j],
+      consistent = (pri < prj) == (rai < raj)
+    ) %>%
+    filter(pri != prj)
 
   ## Calculate the mean consistency
   con <- mean(comp$consistent)
 
   ## Take into account undirectionality of the timeline
-  con <- max(con, 1-con)
+  con <- max(con, 1 - con)
 
   ## Rescale and return
-  (con-.5)*2
+  (con - .5) * 2
 }
 
 #' @title Evaluate the dimensionality reduction
@@ -95,15 +106,17 @@ evaluate_trajectory <- function(time, progression) {
 #' evaluate_dim_red(space, dataset$sample_info$group_name)
 evaluate_dim_red <- function(space, progression, k = 5) {
   # input checks
-  if (!is.matrix(space) && !is.data.frame(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
-  if (!is.factor(progression) && (!is.vector(progression) || !is.numeric(progression)))
-    stop(sQuote("progression"), " must be a numeric vector or a factor")
-  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
-    stop(sQuote("k"), " must be a whole number and k >= 1")
+  check_numeric_matrix(space, "space", finite = TRUE)
+  check_numeric_vector(k, "k", finite = TRUE, whole = TRUE, range = c(1, nrow(space) - 1), length = 1)
+  check_numeric_vector(progression, "progression", finite = TRUE, factor = TRUE, whole = TRUE)
+
+  if (nrow(space) != length(progression))
+    stop(sQuote("nrow(space)"), " and ", sQuote("length(progression)"), " must be the same.")
 
   # if progression is a factor, convert it to an integer
-  if (is.factor(progression)) progression <- as.integer(progression)
+  if (is.factor(progression)) {
+    progression <- as.integer(progression)
+  }
 
   # perform 5NN LOOCV
   knn_out <- knn(as.matrix(stats::dist(space)), k = k)

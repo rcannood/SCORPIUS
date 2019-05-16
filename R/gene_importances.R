@@ -2,7 +2,7 @@
 #'
 #' @description Calculates the feature importance of each column in \code{x} in trying to predict the time ordering.
 #'
-#' @param x A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
+#' @param x A numeric matrix or a data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer_trajectory}}.
 #' @param num_permutations The number of permutations to test against for calculating the p-values (default: 0).
 #' @param ntree The number of trees to grow (default: 10000).
@@ -35,7 +35,15 @@ gene_importances <- function(
   num_threads = 1,
   ...
 ) {
-  data <- data.frame(x, XXXtimeXXX = time, check.names = F, stringsAsFactors = F)
+  # remove any irrelevant parameters from time
+  attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
+
+  # input checks
+  check_numeric_matrix(x, "x", finite = TRUE)
+  check_numeric_vector(time, "time", finite = TRUE)
+
+  data <- data.frame(x, XXXtimeXXX = time, check.names = FALSE, stringsAsFactors = FALSE)
+
   importance <- ranger::ranger(
     data = data,
     dependent.variable.name = "XXXtimeXXX",
@@ -45,6 +53,7 @@ gene_importances <- function(
     num.threads = num_threads,
     ...
   )$variable.importance
+
   if (num_permutations > 0) {
     perms <- unlist(pbapply::pblapply(seq_len(num_permutations), function(i) {
       data$XXXtimeXXX <- sample(data$XXXtimeXXX)
@@ -62,5 +71,11 @@ gene_importances <- function(
   } else {
     pvalue <- rep(NA, length(importance))
   }
-  data_frame(gene = colnames(x), importance, pvalue) %>% arrange(desc(importance))
+
+  data_frame(
+    gene = colnames(x),
+    importance,
+    pvalue
+  ) %>%
+    arrange(desc(importance))
 }

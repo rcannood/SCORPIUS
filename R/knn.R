@@ -54,30 +54,26 @@ knn_distances <- function(dist, k, self_loops=FALSE) {
 #' dist <- euclidean_distance(x, y)
 #' knnd <- knn(dist, 10)
 #' plot(density(knnd$distances))
-knn <- function(dist, k, self_loops=FALSE) {
-  requireNamespace("utils")
-
+knn <- function(dist, k, self_loops = FALSE) {
   # input checks
-  if (!is.matrix(dist) && !is.data.frame(dist) && class(dist) != "dist")
-    stop(sQuote("dist"), " must be a numeric matrix, data frame or a ", sQuote("dist"), " object")
   if (class(dist) == "dist")
     dist <- as.matrix(dist)
+  check_numeric_matrix(dist, "dist", finite = TRUE)
+
   if (nrow(dist) < 2)
     stop(sQuote("dist"), " needs to consist of at least 2 rows")
-  if (!is.finite(k) || round(k) != k || length(k) != 1 || k < 0)
-    stop(sQuote("k"), " must be a whole number and k >= 1")
-  if (!is.logical(self_loops) || length(self_loops) != 1)
-    stop(sQuote("self_loops"), " must be a logical value")
-
-  # k can't be larger than nrow(dist)-1
-  K <- min(k, nrow(dist)-1)
+  check_numeric_vector(k, "k", finite = TRUE, whole = TRUE, range = c(1, nrow(dist) - 1), length = 1)
+  check_logical_vector(self_loops, "self_loops", length = 1)
 
   # initialise matrices with NAs
   indices <- knndist <- matrix(
     NA,
     nrow = nrow(dist),
-    ncol = K,
-    dimnames=list(rownames(dist), if (K==0) c() else paste0("knn", seq_len(K)))
+    ncol = k,
+    dimnames = list(
+      rownames(dist),
+      if (k == 0) c() else paste0("knn", seq_len(k))
+    )
   )
 
   # use dimnames if possible
@@ -87,13 +83,13 @@ knn <- function(dist, k, self_loops=FALSE) {
   # fill matrix by sample
   if (self_loops) {
     for (i in row_ix) {
-      indices[i,] <- utils::head(order(dist[i,]), K)
+      indices[i,] <- utils::head(order(dist[i,]), k)
       knndist[i,] <- dist[i,indices[i,]]
     }
   } else {
     diag(dist) <- 0 # just to make sure
     for (i in row_ix) {
-      indices[i,] <- head(order(dist[i,]), K+1)[-1]
+      indices[i,] <- head(order(dist[i,]), k+1)[-1]
       knndist[i,] <- dist[i,indices[i,]]
     }
   }

@@ -8,7 +8,7 @@ gene_importances(x, time, num_permutations = 0, ntree = 10000,
   ntree_perm = ntree/10, mtry = ncol(x) * 0.01, num_threads = 1, ...)
 }
 \arguments{
-\item{x}{A numeric matrix or data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
+\item{x}{A numeric matrix or a data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
 
 \item{time}{A numeric vector containing the inferred time points of each sample along a trajectory as returned by \code{\link{infer_trajectory}}.}
 

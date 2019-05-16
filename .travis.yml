@@ -6,6 +6,9 @@ addons:
   apt:
     packages:
       - libusb-1.0-0-dev
+os:
+ - linux
+ - osx
 bioc_required: true
 r_packages:
  - covr

@@ -6,7 +6,7 @@
 \usage{
 reduce_dimensionality(x, dist_fun, ndim = 3,
   landmark_method = c("naive", "none"), num_landmarks = 1000,
-  rescale = T)
+  rescale = TRUE)
 }
 \arguments{
 \item{x}{a numeric matrix}
@@ -25,7 +25,8 @@ reduce_dimensionality(x, dist_fun, ndim = 3,
 A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
 }
 \description{
-Perform an eigenanalysis of the given dissimilarity matrix and return coordinates of the samples represented in an \code{ndim}-dimensional space.
+\code{reduce_dimensionality} performs an eigenanalysis of the given dissimilarity matrix
+and returns coordinates of the samples represented in an \code{ndim}-dimensional space.
 }
 \examples{
 ## Generate an example dataset

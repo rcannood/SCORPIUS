@@ -1,15 +1,15 @@
-#' @title Visualise SCORPIUS
+#' Visualise SCORPIUS
 #'
-#' @description \code{draw_trajectory_plot} is used to plot samples after performing dimensionality reduction.
+#' \code{draw_trajectory_plot} is used to plot samples after performing dimensionality reduction.
 #' Additional arguments can be provided to colour the samples, plot the trajectory inferred by SCORPIUS,
 #' and draw a contour around the samples.
 #'
 #' @usage
 #' draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
 #'
-#' @param space A numeric matrix or data frame containing the coordinates of samples.
+#' @param space A numeric matrix or a data frame containing the coordinates of samples.
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
-#' @param path A numeric matrix or data frame containing the coordinates of the inferred path.
+#' @param path A numeric matrix or a data frame containing the coordinates of the inferred path.
 #' @param contour \code{TRUE} if contours are to be drawn around the samples.
 #'
 #' @return A ggplot2 plot.
@@ -44,14 +44,10 @@
 #' draw_trajectory_plot(space, progression_group=groups, path=traj$path, contour=TRUE)
 draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
   # input checks
-  if (!is.matrix(space) && !is.data.frame(space))
-    stop(sQuote("space"), " must be a numeric matrix or data frame")
-  if ((!is.null(progression_group) && !is.vector(progression_group) && !is.factor(progression_group)) || (!is.null(progression_group) && length(progression_group) != nrow(space)))
-    stop(sQuote("progression_group"), " must be a vector or a factor of length nrow(space)")
-  if (!is.null(path) && !is.matrix(path) && !is.data.frame(path))
-    stop(sQuote("path"), " must be NULL, a numeric matrix or a data frame")
-  if (!is.logical(contour))
-    stop(sQuote("contour"), " must be a logical")
+  check_numeric_matrix(space, "space", finite = TRUE)
+  check_numeric_matrix(path, "path", finite = TRUE, is_nullable = TRUE)
+  check_logical_vector(contour, "contour", length = 1)
+  check_numeric_vector(progression_group, "progression_group", is_nullable = TRUE, finite = TRUE, length = nrow(space), factor = TRUE)
 
   # retrieve data about the range of the plot
   min <- min(space[,1:2])
@@ -59,22 +55,27 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   diff <- (max - min)/2
 
   # construct data frame
-  space_df <- data.frame(space[,1:2], check.rows = F, check.names = F, stringsAsFactors = F)
+  space_df <- data.frame(space[,1:2], check.rows = FALSE, check.names = FALSE, stringsAsFactors = FALSE)
   colnames(space_df) <- c("Comp1", "Comp2")
 
   # if the grouping colours are specified, add these to the data frame
   if (!is.null(progression_group))
     space_df$progression_group <- progression_group
 
-  lim <- if (contour) c(min-.1*diff, max+.1*diff) else c(min, max)
+  lim <-
+    if (contour) {
+      c(min - .1*diff, max + .1*diff)
+    } else {
+      c(min, max)
+    }
 
   # construct base ggplot
   g <- ggplot() +
     theme_classic() +
-    labs(x="Component 1", y="Component 2", colour="Group", fill="Group") +
-    xlim(min-diff, max+diff) +
-    ylim(min-diff, max+diff) +
-    coord_equal(xlim=lim, ylim=lim)
+    labs(x = "Component 1", y = "Component 2", colour = "Group", fill = "Group") +
+    xlim(min - diff, max + diff) +
+    ylim(min - diff, max + diff) +
+    coord_equal(xlim = lim, ylim = lim)
 
   # if a contour is desirable, add the contour layer
   if (contour) {
@@ -83,19 +84,19 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 
     groupings <-
       if (is.null(progression_group)) {
-        list(group=seq_len(nrow(space_df)))
+        list(group = seq_len(nrow(space_df)))
       } else {
         unique_groups <- unique(progression_group)
-        gr <- lapply(unique_groups, function(col) which(col==progression_group))
+        gr <- lapply(unique_groups, function(col) which(col == progression_group))
         names(gr) <- unique_groups
         gr
       }
 
-    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN=function(group_name) {
+    density_df <- as.data.frame(dplyr::bind_rows(lapply(names(groupings), FUN = function(group_name) {
       group_ix <- groupings[[group_name]]
-      kde_out <- MASS::kde2d(space_df[group_ix,1], space_df[group_ix,2], lims=c(min-diff, max+diff, min-diff, max+diff))
+      kde_out <- MASS::kde2d(space_df[group_ix, 1], space_df[group_ix, 2], lims=c(min - diff, max + diff, min - diff, max + diff))
       z_melt <- reshape2::melt(kde_out$z)
-      df <- data.frame(group_name, kde_out$x[z_melt$Var1], kde_out$y[z_melt$Var2], z_melt$value, stringsAsFactors = F)
+      df <- data.frame(group_name, kde_out$x[z_melt$Var1], kde_out$y[z_melt$Var2], z_melt$value, stringsAsFactors = FALSE)
       colnames(df) <- c("progression_group", "Comp1", "Comp2", "density")
       df
     })))
@@ -103,7 +104,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
     if (!is.null(progression_group) && is.factor(progression_group))
       density_df$progression_group <- factor(density_df$progression_group, levels = levels(progression_group))
 
-    g <- g + stat_contour(geom="polygon", aes_contour, density_df, breaks=c(1), alpha=.2)
+    g <- g + stat_contour(geom = "polygon", aes_contour, density_df, breaks = 1, alpha = .2)
   }
 
   # add the point layer
@@ -120,9 +121,9 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   g
 }
 
-#' @title Draw time-series heatmap
+#' Draw time-series heatmap
 #'
-#' @description \code{draw_trajectory_heatmap} draws a heatmap in which the samples
+#' \code{draw_trajectory_heatmap} draws a heatmap in which the samples
 #' are ranked according their position in an inferred trajectory. In addition, the progression groups and
 #' feature modules can be passed along to further enhance the visualisation.
 #'
@@ -138,7 +139,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #'   ...
 #' )
 #'
-#' @param x A numeric matrix or data frame with one row per sample and one column per feature.
+#' @param x A numeric matrix or a data frame with one row per sample and one column per feature.
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
 #' @param modules \code{NULL} or a data frame as returned by \code{\link{extract_modules}}.
@@ -180,22 +181,29 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' modules <- extract_modules(scale_quantile(expr_sel))
 #' draw_trajectory_heatmap(expr_sel, time, progression_group=groups, modules=modules)
 #' }
-draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NULL, show_labels_row=FALSE, show_labels_col=FALSE, scale_features=TRUE, ...) {
+draw_trajectory_heatmap <- function(
+  x,
+  time,
+  progression_group = NULL,
+  modules = NULL,
+  show_labels_row = FALSE,
+  show_labels_col = FALSE,
+  scale_features = TRUE,
+  ...
+) {
+  # remove any irrelevant parameters from time
+  attributes(time) <- attributes(time)[intersect(names(attributes(time)), "names")]
+
   # input checks
-  if (!is.matrix(x) && !is.data.frame(x))
-    stop(sQuote("x"), " must be a numeric matrix or data frame")
-  if (!is.vector(time) || !is.numeric(time))
-    stop(sQuote("time"), " must be a numeric vector")
-  if (nrow(x) != length(time))
-    stop(sQuote("time"), " must have one value for each row in ", sQuote("x"))
-  if ((!is.null(progression_group) && !is.vector(progression_group) && !is.factor(progression_group)) || (!is.null(progression_group) && length(progression_group) != nrow(x)))
-    stop(sQuote("progression_group"), " must be a vector or a factor of length nrow(x)")
+  check_numeric_matrix(x, "x")
+  check_numeric_vector(time, "time", length = nrow(x))
+  check_numeric_vector(progression_group, "progression_group", is_nullable = TRUE, factor = TRUE, length = nrow(x))
 
   if (is.null(rownames(x))) {
     rownames(x) <- paste("Row ", seq_len(nrow(x)))
   }
 
-  col_ann <- data.frame(row.names = rownames(x), Time=time)
+  col_ann <- data.frame(row.names = rownames(x), Time = time)
 
   x_part <- x[order(time),,drop=FALSE]
   if (scale_features) {
@@ -209,7 +217,7 @@ draw_trajectory_heatmap <- function(x, time, progression_group=NULL, modules=NUL
   }
 
   ann_col <- list(
-    Time=RColorBrewer::brewer.pal(5, "RdGy")
+    Time = RColorBrewer::brewer.pal(5, "RdGy")
   )
 
   if (!is.null(progression_group)) {
