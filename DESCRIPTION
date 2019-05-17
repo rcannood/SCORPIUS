@@ -35,7 +35,7 @@ Depends:
 Imports:
   dplyr,
   dynutils (>= 1.0.3),
-  dyndimred (>= 1.0),
+  dyndimred (>= 1.0.1),
   grDevices,
   ggplot2 (>= 2.0),
   MASS,
