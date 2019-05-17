@@ -166,33 +166,47 @@ changes.
 
 ### Recent changes in SCORPIUS 1.0.3 (unreleased)
 
-  - MINOR CHANGES: Cleaned up code style; mostly spacing issues, but now
-    piping is used more.
+### Recent changes in \# Optimisation
 
-  - MINOR CHANGE: Use scaling functions from dynutils (`scale_minmax()`,
-    `scale_quantile()`, `scale_uniform()`)
+  - `infer_trajectory()`: Use princurve’s `approx_points` parameter,
+    which greatly speeds up for trajectory inference for large number of
+    samples.
 
-  - OPTIMISATION `infer_trajectory()`: Added `approx_points` parameter,
-    which greatly speeds up for trajectory inference for large sample
-    numbers.
+### Recent changes in \# Major changes
 
-  - DOCUMENTATION: Vignettes were updated and regenerated.
+  - Use dynutils’ `calculate_distance()` instead of
+    `correlation_distance()` and `euclidean_distance()`.
 
-  - DOCUMENTATION: Added `cran-comments.md` and `inst/NEWS.md`.
+### Recent changes in \# Documentation
 
-  - BUG FIX `cmdscale_withlandmarks()`: Fix colnames bug when some
-    eigenvalues are equal to 0.
+  - Vignettes were updated.
 
-  - TESTING: Expanded unit tests.
+  - Added `cran-comments.md`.
 
-  - DOCUMENTATION: Added citation information to package.
+  - Added recent news (`inst/NEWS.md`).
 
-  - MINOR CHANGE: Renormalise the original ginhoux data using
-    dynnormaliser and rerun all vignettes.
+  - Added citation information (`inst/CITATION`).
 
-  - MINOR CHANGE: Clean up `cmdscale_withlandmarks()` code.
+### Recent changes in \# Minor changes
 
-  - DEPRECATION: Deprecated unused functions `evaluate_trajectory()` and
+  - Use scaling functions from dynutils (`scale_minmax()`,
+    `scale_quantile()`, `scale_uniform()`).
+
+  - Expanded unit tests.
+
+  - Renormalise the original ginhoux data using dynnormaliser and rerun
+    all vignettes.
+
+  - Moved `cmdscale_withlandmarks()` to dyndimred.
+
+### Recent changes in \# Bug fixes
+
+  - BUG FIX `extract_modules()`: `smooth.spline()` now requires at least
+    4 unique values.
+
+### Recent changes in \# Deprecation
+
+  - Deprecated unused functions `evaluate_trajectory()` and
     `evaluate_dim_red()`. Use `dyneval::evaluate_ti_method()` instead.
 
 ### Recent changes in SCORPIUS 1.0.2 (2018-06-29)
@@ -216,7 +230,7 @@ Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin
 Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015.
 “Identification of cDC1- and cDC2-committed DC progenitors reveals
 early lineage priming at the common DC progenitor stage in the bone
-marrow.” *Nature Immunology* 16 (7):718–26.
+marrow.” *Nature Immunology* 16 (7): 718–26.
 <https://doi.org/10.1038/ni.3200>.
 
 </div>

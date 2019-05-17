@@ -4,7 +4,7 @@
 ## Optimisation
 
  * `infer_trajectory()`: Use princurve's `approx_points` parameter, which greatly speeds up
-   for trajectory inference for large sample numbers.
+   for trajectory inference for large number of samples.
    
 ## Major changes
 
@@ -32,7 +32,7 @@
  
 ## Bug fixes
  
- * BUG FIX `cmdscale_withlandmarks()`: Fix colnames bug when some eigenvalues are equal to 0.
+ * BUG FIX `extract_modules()`: `smooth.spline()` now requires at least 4 unique values.
  
 ## Deprecation
 
