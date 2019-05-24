@@ -1,12 +1,12 @@
 context("KNN")
 
 test_that("With generated data", {
-  dataset <- generate_dataset(type = "poly", num_genes = 400, num_samples = 101, num_groups = 4)
+  dataset <- generate_dataset(num_genes = 400, num_samples = 101, num_groups = 4)
   expression <- dataset$expression %>% scale_quantile(0)
 
   time <- seq(-1, 1, length.out = nrow(expression))
 
-  dist <- correlation_distance(expression)
+  dist <- dynutils::calculate_distance(expression)
 
   # testing without self loops allowed
   knn_out <- knn(dist, k = 5, self_loops = F)

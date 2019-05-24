@@ -43,9 +43,9 @@ feature modules can be passed along to further enhance the visualisation.
 \examples{
 \dontrun{
 ## Generate a dataset
-dataset <- generate_dataset(type="s", num_genes=500, num_samples=300, num_groups=4)
+dataset <- generate_dataset(num_genes=500, num_samples=300, num_groups=4)
 expression <- dataset$expression
-space <- reduce_dimensionality(expression, correlation_distance, ndim=2)
+space <- reduce_dimensionality(expression, ndim=2)
 groups <- dataset$sample_info$group_name
 traj <- infer_trajectory(space)
 time <- traj$time

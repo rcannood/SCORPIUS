@@ -25,23 +25,12 @@ ginhoux <- readRDS("local.rds")
 # do something with ginhoux
 }
 }
-\examples{
-## Load dataset from Schlitzer et al., 2015
-data("ginhoux")
-
-## Reduce dimensionality and infer trajectory with SCORPIUS
-space <- reduce_dimensionality(ginhoux$expression, correlation_distance)
-traj <- infer_trajectory(space)
-
-## Visualise
-draw_trajectory_plot(
-  space,
-  path = traj$path,
-  progression_group = ginhoux$sample_info$group_name)
-}
 \references{
 Schlitzer A, Sivakamasundari V, Chen J, Sumatoh HR et al.
 Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at
- the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
+the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
+}
+\seealso{
+\link{SCORPIUS}
 }
 \keyword{datasets}

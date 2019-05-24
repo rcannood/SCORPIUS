@@ -7,7 +7,7 @@ expression <- ginhoux$expression
 sample_info <- ginhoux$sample_info
 
 # check before normalisation
-space <- reduce_dimensionality(expression, correlation_distance)
+space <- reduce_dimensionality(expression)
 traj <- infer_trajectory(space)
 draw_trajectory_plot(space, sample_info$group_name, path = traj$path)
 gimp <- gene_importances(expression, traj$time)
@@ -19,7 +19,7 @@ expression <- norm$expression
 sample_info <- sample_info[rownames(expression), , drop = FALSE]
 
 # check after normalisation
-space <- reduce_dimensionality(expression, correlation_distance)
+space <- reduce_dimensionality(expression)
 traj <- infer_trajectory(space)
 draw_trajectory_plot(space, sample_info$group_name, path = traj$path)
 gimp <- gene_importances(expression, traj$time)
@@ -30,7 +30,7 @@ hvg_genes <- names(sort(apply(expression, 2, var), decreasing = TRUE)[1:2000])
 expression <- expression[, hvg_genes, drop = FALSE]
 
 # check after gene filtering
-space <- reduce_dimensionality(expression, correlation_distance)
+space <- reduce_dimensionality(expression)
 traj <- infer_trajectory(space)
 draw_trajectory_plot(space, sample_info$group_name, path = traj$path)
 gimp <- gene_importances(expression, traj$time)

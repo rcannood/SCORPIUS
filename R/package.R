@@ -14,7 +14,7 @@
 #' (\href{https://www.biorxiv.org/content/early/2016/10/07/079509.full.pdf}{PDF}).
 #'
 #' @section Dimensionality Reduction functions:
-#' \code{\link{reduce_dimensionality}}, \code{\link{correlation_distance}}, \code{\link{euclidean_distance}}
+#' \code{\link{reduce_dimensionality}}
 #'
 #' @section Trajectory Inference functions:
 #' \code{\link{infer_trajectory}}, \code{\link{infer_initial_trajectory}}, \code{\link{reverse_trajectory}}, \code{\link{gene_importances}}, \code{\link{extract_modules}}
@@ -25,15 +25,23 @@
 #' @section Datasets:
 #' \code{\link{generate_dataset}}, \code{\link{ginhoux}}
 #'
-#' @section Evaluation functions:
-#' \code{\link{evaluate_trajectory}}, \code{\link{evaluate_dim_red}}
-#'
-#' @section Scaling functions:
-#' \code{\link{scale_uniform}}, \code{\link{scale_quantile}}, \code{\link{scale_minmax}}
-#'
-#' @import dplyr
+#' @importFrom dplyr tibble as_tibble transmute arrange percent_rank desc slice
 #' @import ggplot2
 #' @importFrom tidyr spread gather crossing
-#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl keep
-#' @importFrom magrittr %<>% %$%
+#' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl
+#'
+#' @examples
+#' ## Load dataset from Schlitzer et al., 2015
+#' data("ginhoux")
+#'
+#' ## Reduce dimensionality and infer trajectory with SCORPIUS
+#' space <- reduce_dimensionality(ginhoux$expression, "spearman")
+#' traj <- infer_trajectory(space)
+#'
+#' ## Visualise
+#' draw_trajectory_plot(
+#'   space,
+#'   path = traj$path,
+#'   progression_group = ginhoux$sample_info$group_name
+#' )
 NULL

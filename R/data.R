@@ -1,18 +1,14 @@
-
-
 #' @title Generate a synthetic dataset
 #'
 #' @description \code{generate_dataset} generates an synthetic dataset which can be used for visualisation purposes.
 #'
 #' @usage
 #' generate_dataset(
-#'   type = c("splines", "polynomial"),
 #'   num_samples = 400,
 #'   num_genes = 500,
 #'   num_groups = 4
 #' )
 #'
-#' @param type The type of function used in order to generate the expression data. Must be either \code{"splines"} (default) or \code{"polynomial"} (or abbreviations thereof).
 #' @param num_samples The number of samples the dataset will contain.
 #' @param num_genes The number of genes the dataset will contain.
 #' @param num_groups The number of groups the samples will be split up in.
@@ -20,30 +16,27 @@
 #' @return A list containing the expression data and the meta data of the samples.
 #'
 #' @importFrom stats poly rnorm runif
-#' @importFrom splines ns
 #'
 #' @export
 #'
-#' @seealso \code{\link{correlation_distance}}, \code{\link{reduce_dimensionality}}, \code{\link{infer_trajectory}}, \code{\link{draw_trajectory_plot}}
+#' @seealso [SCORPIUS]
 #'
 #' @examples
 #' ## Generate a dataset
-#' dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 1000, num_groups = 4)
+#' dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
 #'
 #' ## Reduce dimensionality and infer trajectory with SCORPIUS
-#' space <- reduce_dimensionality(dataset$expression, correlation_distance, ndim = 2)
+#' space <- reduce_dimensionality(dataset$expression, ndim = 2)
 #' traj <- infer_trajectory(space)
 #'
 #' ## Visualise
 #' draw_trajectory_plot(space, path=traj$path, progression_group=dataset$sample_info$group_name)
-generate_dataset <- function(type = c("splines", "polynomial"), num_samples = 400, num_genes = 500, num_groups = 4) {
+generate_dataset <- function(num_samples = 400, num_genes = 500, num_groups = 4) {
   # make names for each group, gene and sample
   group_names <- paste0("Group ", seq_len(num_groups))
   gene_names <- paste0("Gene", seq_len(num_genes))
   sample_names <- paste0("Sample", seq_len(num_samples))
 
-  # match the type argument
-  type <- match.arg(type, c("splines", "polynomial"))
 
   # construct the sample info
   x <- seq(-1, 1, length.out = num_samples)
@@ -51,15 +44,8 @@ generate_dataset <- function(type = c("splines", "polynomial"), num_samples = 40
   sample_info <- data.frame(row.names = sample_names, group_name = group)
 
   # apply function and determine noise sd
-  switch(type,
-         "polynomial"={
-           y <- stats::poly(x, 2)
-           sd <- .012 * sqrt(num_genes)
-         },
-         "splines"={
-           y <- splines::ns(x, df=3)
-           sd <- .06 * sqrt(num_genes)
-         })
+  y <- stats::poly(x, 2)
+  sd <- .012 * sqrt(num_genes)
 
   # generate expression data
   expression <- sapply(seq_len(num_genes), function(g) {
@@ -115,17 +101,5 @@ generate_dataset <- function(type = c("splines", "polynomial"), num_samples = 40
 #'
 #' @docType data
 #'
-#' @examples
-#' ## Load dataset from Schlitzer et al., 2015
-#' data("ginhoux")
-#'
-#' ## Reduce dimensionality and infer trajectory with SCORPIUS
-#' space <- reduce_dimensionality(ginhoux$expression, correlation_distance)
-#' traj <- infer_trajectory(space)
-#'
-#' ## Visualise
-#' draw_trajectory_plot(
-#'   space,
-#'   path = traj$path,
-#'   progression_group = ginhoux$sample_info$group_name)
+#' @seealso [SCORPIUS]
 "ginhoux"

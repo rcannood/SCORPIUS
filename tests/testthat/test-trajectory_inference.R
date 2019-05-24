@@ -1,11 +1,11 @@
 context("Dimensionality reduction")
 
 test_that("With generated data", {
-  dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 300, num_groups = 4)
+  dataset <- generate_dataset(num_genes = 500, num_samples = 300, num_groups = 4)
   expression <- dataset$expression
 
   # testing for 1 dimension
-  space <- reduce_dimensionality(expression, correlation_distance, ndim = 1)
+  space <- reduce_dimensionality(expression, "spearman", ndim = 1)
   traj <- infer_trajectory(space)
 
   expect_is(traj, "list")
@@ -18,7 +18,7 @@ test_that("With generated data", {
   expect_equal( names(traj$time), rownames(expression) )
 
   # testing for 2 dimensions
-  space <- reduce_dimensionality(expression, correlation_distance, ndim=2)
+  space <- reduce_dimensionality(expression, "spearman", ndim=2)
   traj <- infer_trajectory(space)
 
   expect_is(traj, "list")
@@ -45,11 +45,11 @@ test_that("With generated data", {
 
 
 test_that("With generated data and edge case", {
-  dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 10, num_groups = 4)
+  dataset <- generate_dataset(num_genes = 500, num_samples = 10, num_groups = 4)
   expression <- dataset$expression
 
   # testing for 1 dimension
-  space <- reduce_dimensionality(expression, correlation_distance, ndim=1)
+  space <- reduce_dimensionality(expression, "spearman", ndim=1)
   traj <- infer_trajectory(space)
 
   expect_is(traj, "list")
@@ -62,7 +62,7 @@ test_that("With generated data and edge case", {
   expect_equal( names(traj$time), rownames(expression) )
 
   # testing for 2 dimensions
-  space <- reduce_dimensionality(expression, correlation_distance, ndim = 2)
+  space <- reduce_dimensionality(expression, "spearman", ndim = 2)
   traj <- infer_trajectory(space)
 
   expect_is(traj, "list")

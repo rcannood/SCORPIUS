@@ -20,8 +20,9 @@
 #' plot(density(knnd))
 #'
 #' ## Calculate the kNN distances between two sets of samples
+#' library(dynutils)
 #' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
-#' dist <- euclidean_distance(x, y)
+#' dist <- calculate_distance(x, y, "euclidean")
 #' knnd <- knn_distances(dist, 10)
 #' plot(density(knnd))
 knn_distances <- function(dist, k, self_loops=FALSE) {
@@ -50,8 +51,9 @@ knn_distances <- function(dist, k, self_loops=FALSE) {
 #' plot(density(knnd$distances))
 #'
 #' ## Calculate the kNN distances between two sets of samples
+#' library(dynutils)
 #' y <- matrix(rnorm(100*10, mean=1, sd=2), ncol=10)
-#' dist <- euclidean_distance(x, y)
+#' dist <- calculate_distance(x, y, "euclidean")
 #' knnd <- knn(dist, 10)
 #' plot(density(knnd$distances))
 knn <- function(dist, k, self_loops = FALSE) {

@@ -15,7 +15,7 @@ Expression values for 384 cells and 500 genes is generated as follows.
 
 ``` r
 library(SCORPIUS)
-dataset <- generate_dataset(type = "poly", num_genes = 500, num_samples = 384, num_groups = 4)
+dataset <- generate_dataset(num_genes = 500, num_samples = 384, num_groups = 4)
 ```
 
 The resulting dataset is a list containing a matrix named `expression` and a data frame named `sample_info`.
