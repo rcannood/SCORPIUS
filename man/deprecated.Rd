@@ -19,5 +19,5 @@ evaluate_dim_red(space, progression, k = 5)
 \item{k}{deprecated}
 }
 \description{
-These functions are outdated. Use \code{dyneval::evaluate_ti_method} instead. For more info, visit \url{https://www.dynverse.org}.
+These functions are outdated. Use \code{dyneval::evaluate_ti_method} instead. For more info, visit \url{https://dynverse.org}.
 }
