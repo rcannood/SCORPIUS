@@ -164,7 +164,7 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-##### Recent changes in SCORPIUS 1.0.3 (23-05-2019)
+### Recent changes in SCORPIUS 1.0.3 (23-05-2019)
 
 #### Optimisation
 
@@ -209,7 +209,7 @@ changes.
   - Deprecated unused functions `evaluate_trajectory()` and
     `evaluate_dim_red()`. Use `dyneval::evaluate_ti_method()` instead.
 
-##### Recent changes in SCORPIUS 1.0.2 (2018-06-29)
+### Recent changes in SCORPIUS 1.0.2 (2018-06-29)
 
   - MINOR CHANGE: Depend on dynutils for distance functions.
 
