@@ -55,5 +55,3 @@ Suggests:
   knitr,
   rmarkdown,
   testthat
-Remotes: 
-    dynverse/dyndimred@devel
