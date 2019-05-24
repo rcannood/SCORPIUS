@@ -1,5 +1,4 @@
-# SCORPIUS 1.0.3 (unreleased)
-
+# SCORPIUS 1.0.3 (23-05-2019)
 
 ## Optimisation
 
