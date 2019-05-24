@@ -201,8 +201,8 @@ changes.
 
 #### Bug fixes
 
-  - BUG FIX `extract_modules()`: `smooth.spline()` now requires at least
-    4 unique values.
+  - `extract_modules()`: `smooth.spline()` now requires at least 4
+    unique values.
 
 #### Deprecation
 
