@@ -49,7 +49,7 @@ I've reuploaded the package because I forgot to remove the 'Date' field from the
 * local Fedora 28 install, R 3.6.0
 * OS X (on travis-ci), R 3.6.0
 * ubuntu 14.04 (on travis-ci), R 3.6.0
-* win-builder 
+* win-builder: no, because one of the dependencies is not built for windows yet.
 
 ## R CMD check results
 
