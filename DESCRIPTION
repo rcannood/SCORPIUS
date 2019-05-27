@@ -39,6 +39,7 @@ Imports:
   grDevices,
   ggplot2 (>= 2.0),
   MASS,
+  Matrix,
   mclust,
   pbapply,
   pheatmap,
