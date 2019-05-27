@@ -36,7 +36,7 @@ test_that("With generated data with edge case", {
 })
 
 test_that("it fails gracefully", {
-  expect_error(extract_modules(list(), time), "must be a numeric matrix, or a data frame")
+  expect_error(extract_modules(list(), time), "must be a numeric matrix")
   expect_error(extract_modules(expression, list()), "must be a numeric vector")
 
   expect_warning(extract_modules(rbind(runif(1001), runif(1001))), "has more than 1000 features")

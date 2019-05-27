@@ -17,6 +17,7 @@
 #'
 #' @importFrom mclust Mclust mclustBIC
 #' @importFrom stats as.dist cor
+#' @importFrom Matrix t rowMeans
 #'
 #' @examples
 #' ## Generate a dataset and visualise
@@ -38,7 +39,7 @@
 #' draw_trajectory_heatmap(expr_sel, time, group_name, modules)
 extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose = FALSE, ...) {
   # input checks
-  check_numeric_matrix(x, "x", finite = TRUE)
+  check_numeric_matrix(x, "x", finite = TRUE, sparse = TRUE)
   check_numeric_vector(time, "time", finite = TRUE, length = nrow(x), is_nullable = TRUE)
 
   if (!suppress_warnings && ncol(x) > 1000) {
@@ -50,10 +51,10 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
   feature_names <- if (!is.null(colnames(x))) colnames(x) else seq_len(ncol(x))
 
   # cluster with mclust
-  labels <- mclust::Mclust(t(x), verbose = verbose, ...)$classification
+  labels <- mclust::Mclust(Matrix::t(x), verbose = verbose, ...)$classification
 
   # determine mean module expression
-  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) rowMeans(x[,fn,drop=FALSE])))
+  module_means <- do.call(cbind, tapply(feature_names, labels, function(fn) Matrix::rowMeans(x[,fn,drop=FALSE])))
 
   # reorder modules
   module_time <- .extract_modules_order_data(module_means, time)
@@ -79,17 +80,18 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
   modules
 }
 
+#' @importFrom Matrix t
 .extract_modules_order_data <- function(z, time) {
   if (ncol(z) <= 2) {
     pct <- seq(0, 1, length.out = ncol(z))
   } else if (ncol(z) <= 5) {
-    pct <- reduce_dimensionality(t(z), "spearman", ndim = 1)[,1]
+    pct <- reduce_dimensionality(Matrix::t(z), "spearman", ndim = 1)[,1]
     pct <- (pct - min(pct)) / (max(pct) - min(pct))
   } else {
-    tz <- t(z)
+    tz <- Matrix::t(z)
     fi <- apply(tz, 2, function(x) length(unique(x))) > 3
     tz <- tz[, fi, drop = FALSE]
-    pct <- suppressWarnings(infer_trajectory(tz, k = NULL)$time)
+    pct <- suppressWarnings(infer_trajectory(as.matrix(tz), k = NULL)$time)
   }
   if (!is.null(time) && ncol(z) > 1 && stats::cor(stats::cor(time, z)[1,], pct) < 0) {
     pct <- -pct
