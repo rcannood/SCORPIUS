@@ -1,4 +1,4 @@
-# SCORPIUS 1.0.3 (23-05-2019)
+# SCORPIUS 1.0.3 (27-05-2019)
 
 ## Optimisation
 
@@ -18,6 +18,8 @@
  * Added recent news (`inst/NEWS.md`).
  
  * Added citation information (`inst/CITATION`).
+ 
+ * Added support for sparsity in `extract_modules()` and `dimensionality_reduction()`.
  
 ## Minor changes
 
