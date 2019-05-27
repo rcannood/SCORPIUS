@@ -14,6 +14,8 @@ draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
 \item{path}{A numeric matrix or a data frame containing the coordinates of the inferred path.}
 
 \item{contour}{\code{TRUE} if contours are to be drawn around the samples.}
+
+\item{progression_group_palette}{A named vector palette for the progression group.}
 }
 \value{
 A ggplot2 plot.

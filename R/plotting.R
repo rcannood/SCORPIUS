@@ -11,6 +11,7 @@
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
 #' @param path A numeric matrix or a data frame containing the coordinates of the inferred path.
 #' @param contour \code{TRUE} if contours are to be drawn around the samples.
+#' @param progression_group_palette A named vector palette for the progression group.
 #'
 #' @return A ggplot2 plot.
 #'
@@ -42,7 +43,7 @@
 #' traj <- infer_trajectory(space)
 #' draw_trajectory_plot(space, progression_group = groups, path = traj$path)
 #' draw_trajectory_plot(space, progression_group = groups, path = traj$path, contour = TRUE)
-draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
+draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE, progression_group_palette = NULL) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
   check_numeric_matrix(path, "path", finite = TRUE, is_nullable = TRUE)
@@ -132,6 +133,14 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
   if (!is.null(path))
     g <- g + geom_path(aes_string("Comp1", "Comp2"), data.frame(path))
 
+  if (!is.null(progression_group_palette)) {
+    if (is.character(progression_group) || is.factor(progression_group)) {
+      g <- g + scale_color_manual(values = progression_group_palette)
+    } else if (is.numeric(progression_group)) {
+      g <- g + scale_color_gradientn(colours = progression_group_palette)
+    }
+  }
+
   # return the plot
   g
 }
@@ -161,6 +170,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' @param show_labels_row \code{TRUE} if the labels of the rows are to be plotted (default \code{FALSE}).
 #' @param show_labels_col \code{TRUE} if the labels of the cols are to be plotted (default \code{FALSE}).
 #' @param scale_features \code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).
+#' @param progression_group_palette A named vector palette for the progression group.
 #' @param ... Optional arguments to \code{\link[pheatmap]{pheatmap}}
 #'
 #' @return The output of the \code{\link[pheatmap]{pheatmap}} function.
@@ -204,6 +214,7 @@ draw_trajectory_heatmap <- function(
   show_labels_row = FALSE,
   show_labels_col = FALSE,
   scale_features = TRUE,
+  progression_group_palette = NULL,
   ...
 ) {
   # remove any irrelevant parameters from time
@@ -238,14 +249,20 @@ draw_trajectory_heatmap <- function(
   if (!is.null(progression_group)) {
     if (!is.factor(progression_group)) progression_group <- factor(progression_group)
     col_ann$Progression <- progression_group
-    num_progressions <- length(levels(progression_group))
-    progression_cols <-
-      if (num_progressions <= 9) {
-        RColorBrewer::brewer.pal(num_progressions, "Set1")
+
+    ann_col$Progression <-
+      if (!is.null(progression_group_palette)) {
+        progression_group_palette
       } else {
-        gg_color_hue(num_progressions)
+        num_progressions <- length(levels(progression_group))
+        progression_cols <-
+          if (num_progressions <= 9) {
+            RColorBrewer::brewer.pal(num_progressions, "Set1")
+          } else {
+            gg_color_hue(num_progressions)
+          }
+        stats::setNames(progression_cols, levels(progression_group))
       }
-    ann_col$Progression <- stats::setNames(progression_cols, levels(progression_group))
   }
 
   labels_row <- if (!show_labels_row) rep("", nrow(x_part)) else NULL
@@ -254,15 +271,15 @@ draw_trajectory_heatmap <- function(
   if (!is.null(modules)) {
     x_part <- x_part[modules$feature,]
     gaps_row <- which(modules$module[-1] != modules$module[-length(modules$module)])
-    cluster_rows <- F
+    cluster_rows <- FALSE
   } else {
     gaps_row <- NULL
-    cluster_rows <- T
+    cluster_rows <- TRUE
   }
 
   pheatmap::pheatmap(
     x_part,
-    cluster_cols = F,
+    cluster_cols = FALSE,
     cluster_rows = cluster_rows,
     annotation_col = col_ann,
     annotation_colors = ann_col,

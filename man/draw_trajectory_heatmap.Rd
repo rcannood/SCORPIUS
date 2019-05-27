@@ -30,6 +30,8 @@ draw_trajectory_heatmap(
 
 \item{scale_features}{\code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).}
 
+\item{progression_group_palette}{A named vector palette for the progression group.}
+
 \item{...}{Optional arguments to \code{\link[pheatmap]{pheatmap}}}
 }
 \value{
