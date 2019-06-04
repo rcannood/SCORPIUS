@@ -4,16 +4,9 @@
 \alias{draw_trajectory_heatmap}
 \title{Draw time-series heatmap}
 \usage{
-draw_trajectory_heatmap(
-  x,
-  time,
-  progression_group = NULL,
-  modules = NULL,
-  show_labels_row = FALSE,
-  show_labels_col = FALSE,
-  scale_features = TRUE,
-  ...
-)
+draw_trajectory_heatmap(x, time, progression_group = NULL,
+  modules = NULL, show_labels_row = FALSE, show_labels_col = FALSE,
+  scale_features = TRUE, progression_group_palette = NULL, ...)
 }
 \arguments{
 \item{x}{A numeric matrix or a data frame with one row per sample and one column per feature.}
@@ -60,7 +53,13 @@ expr_sel <- expression[,gene_sel$gene]
 draw_trajectory_heatmap(expr_sel, time)
 
 ## Also show the progression groupings
-draw_trajectory_heatmap(expr_sel, time, progression=groups)
+draw_trajectory_heatmap(expr_sel, time, progression_group=groups)
+
+## Use a different palette
+draw_trajectory_heatmap(
+  expr_sel, time, progression_group=groups,
+  progression_group_palette = setNames(RColorBrewer::brewer.pal(4, "Set2"), paste0("Group ", 1:4))
+)
 
 ## Group the genes into modules and visualise the modules in a heatmap
 modules <- extract_modules(scale_quantile(expr_sel))
