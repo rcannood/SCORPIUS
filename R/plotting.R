@@ -4,13 +4,16 @@
 #' Additional arguments can be provided to colour the samples, plot the trajectory inferred by SCORPIUS,
 #' and draw a contour around the samples.
 #'
-#' @usage
-#' draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
-#'
 #' @param space A numeric matrix or a data frame containing the coordinates of samples.
 #' @param progression_group \code{NULL} or a vector (or factor) containing the groupings of the samples (default \code{NULL}).
 #' @param path A numeric matrix or a data frame containing the coordinates of the inferred path.
 #' @param contour \code{TRUE} if contours are to be drawn around the samples.
+#' @param progression_group_palette A named vector palette for the progression group.
+#' @param point_size The size of the points.
+#' @param point_alpha The alpha of the points.
+#' @param path_size The size of the path (if any).
+#' @param path_alpha The alpha of the path (if any).
+#' @param contour_alpha The alpha of the contour (if any).
 #'
 #' @return A ggplot2 plot.
 #'
@@ -42,7 +45,21 @@
 #' traj <- infer_trajectory(space)
 #' draw_trajectory_plot(space, progression_group = groups, path = traj$path)
 #' draw_trajectory_plot(space, progression_group = groups, path = traj$path, contour = TRUE)
-draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, contour = FALSE) {
+#'
+#' ## Visualise gene expression
+#' draw_trajectory_plot(space, progression_group = dataset$expression[,1])
+draw_trajectory_plot <- function(
+  space,
+  progression_group = NULL,
+  path = NULL,
+  contour = FALSE,
+  progression_group_palette = NULL,
+  point_size = 2,
+  point_alpha = 1,
+  path_size = .5,
+  path_alpha = 1,
+  contour_alpha = .2
+) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
   check_numeric_matrix(path, "path", finite = TRUE, is_nullable = TRUE)
@@ -79,6 +96,9 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 
   # if a contour is desirable, add the contour layer
   if (contour) {
+    if (!is.null(progression_group) && is.numeric(progression_group)) {
+      stop("If contour is TRUE, the progression group must be a factor or a character.")
+    }
     aes_contour <- aes_string("Comp1", "Comp2", z="density")
     if (!is.null(progression_group)) aes_contour$fill <- quote(progression_group)
 
@@ -119,40 +139,49 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
     if (!is.null(progression_group) && is.factor(progression_group))
       density_df$progression_group <- factor(density_df$progression_group, levels = levels(progression_group))
 
-    g <- g + stat_contour(geom = "polygon", aes_contour, density_df, breaks = 1, alpha = .2)
+    g <- g + stat_contour(geom = "polygon", aes_contour, density_df, breaks = 1, alpha = contour_alpha)
   }
 
   # add the point layer
   aes_point <- aes_string("Comp1", "Comp2")
   if (!is.null(progression_group))
     aes_point$colour <- quote(progression_group)
-  g <- g + geom_point(aes_point, space_df)
+  g <- g + geom_point(aes_point, space_df, size = point_size, alpha = point_alpha)
 
   # if a path is desirable, add the path layer
   if (!is.null(path))
-    g <- g + geom_path(aes_string("Comp1", "Comp2"), data.frame(path))
+    g <- g + geom_path(aes_string("Comp1", "Comp2"), data.frame(path), size = path_size, alpha = path_alpha)
+
+  palette <-
+    if (!is.null(progression_group_palette)) {
+      progression_group_palette
+    } else if (is.character(progression_group) || is.factor(progression_group)) {
+      .default_discrete_palette(progression_group)
+    } else if (is.numeric(progression_group)) {
+      .default_continuous_palette()
+    }
+
+  if (is.character(progression_group) || is.factor(progression_group)) {
+    g <- g + scale_color_manual(values = palette)
+    if (contour) {
+      g <- g + scale_fill_manual(values = palette)
+    }
+  } else if (is.numeric(progression_group)) {
+    g <- g + scale_color_gradientn(colours = palette)
+  }
 
   # return the plot
   g
 }
+
+
+
 
 #' Draw time-series heatmap
 #'
 #' \code{draw_trajectory_heatmap} draws a heatmap in which the samples
 #' are ranked according their position in an inferred trajectory. In addition, the progression groups and
 #' feature modules can be passed along to further enhance the visualisation.
-#'
-#' @usage
-#' draw_trajectory_heatmap(
-#'   x,
-#'   time,
-#'   progression_group = NULL,
-#'   modules = NULL,
-#'   show_labels_row = FALSE,
-#'   show_labels_col = FALSE,
-#'   scale_features = TRUE,
-#'   ...
-#' )
 #'
 #' @param x A numeric matrix or a data frame with one row per sample and one column per feature.
 #' @param time A numeric vector containing the inferred time points of each sample along a trajectory.
@@ -161,6 +190,7 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' @param show_labels_row \code{TRUE} if the labels of the rows are to be plotted (default \code{FALSE}).
 #' @param show_labels_col \code{TRUE} if the labels of the cols are to be plotted (default \code{FALSE}).
 #' @param scale_features \code{TRUE} if the values of each feature is to be scaled (default \code{TRUE}).
+#' @param progression_group_palette A named vector palette for the progression group.
 #' @param ... Optional arguments to \code{\link[pheatmap]{pheatmap}}
 #'
 #' @return The output of the \code{\link[pheatmap]{pheatmap}} function.
@@ -190,7 +220,13 @@ draw_trajectory_plot <- function(space, progression_group = NULL, path = NULL, c
 #' draw_trajectory_heatmap(expr_sel, time)
 #'
 #' ## Also show the progression groupings
-#' draw_trajectory_heatmap(expr_sel, time, progression=groups)
+#' draw_trajectory_heatmap(expr_sel, time, progression_group=groups)
+#'
+#' ## Use a different palette
+#' draw_trajectory_heatmap(
+#'   expr_sel, time, progression_group=groups,
+#'   progression_group_palette = setNames(RColorBrewer::brewer.pal(4, "Set2"), paste0("Group ", 1:4))
+#' )
 #'
 #' ## Group the genes into modules and visualise the modules in a heatmap
 #' modules <- extract_modules(scale_quantile(expr_sel))
@@ -204,6 +240,7 @@ draw_trajectory_heatmap <- function(
   show_labels_row = FALSE,
   show_labels_col = FALSE,
   scale_features = TRUE,
+  progression_group_palette = NULL,
   ...
 ) {
   # remove any irrelevant parameters from time
@@ -226,26 +263,30 @@ draw_trajectory_heatmap <- function(
   }
   x_part <- t(x_part)
 
-  gg_color_hue <- function(n) {
-    hues = seq(15, 375, length=n+1)
-    grDevices::hcl(h=hues, l=65, c=100)[1:n]
-  }
-
   ann_col <- list(
     Time = RColorBrewer::brewer.pal(5, "RdGy")
   )
 
   if (!is.null(progression_group)) {
-    if (!is.factor(progression_group)) progression_group <- factor(progression_group)
+    if (is.numeric(progression_group)) {
+      ann_col$Progression <-
+        if (!is.null(progression_group_palette)) {
+          progression_group_palette
+        } else {
+          .default_continuous_palette()
+        }
+    } else {
+      if (!is.factor(progression_group)) progression_group <- factor(progression_group)
+
+      ann_col$Progression <-
+        if (!is.null(progression_group_palette)) {
+          progression_group_palette
+        } else {
+          .default_discrete_palette(progression_group)
+        }
+    }
+
     col_ann$Progression <- progression_group
-    num_progressions <- length(levels(progression_group))
-    progression_cols <-
-      if (num_progressions <= 9) {
-        RColorBrewer::brewer.pal(num_progressions, "Set1")
-      } else {
-        gg_color_hue(num_progressions)
-      }
-    ann_col$Progression <- stats::setNames(progression_cols, levels(progression_group))
   }
 
   labels_row <- if (!show_labels_row) rep("", nrow(x_part)) else NULL
@@ -254,15 +295,15 @@ draw_trajectory_heatmap <- function(
   if (!is.null(modules)) {
     x_part <- x_part[modules$feature,]
     gaps_row <- which(modules$module[-1] != modules$module[-length(modules$module)])
-    cluster_rows <- F
+    cluster_rows <- FALSE
   } else {
     gaps_row <- NULL
-    cluster_rows <- T
+    cluster_rows <- TRUE
   }
 
   pheatmap::pheatmap(
     x_part,
-    cluster_cols = F,
+    cluster_cols = FALSE,
     cluster_rows = cluster_rows,
     annotation_col = col_ann,
     annotation_colors = ann_col,
@@ -271,4 +312,26 @@ draw_trajectory_heatmap <- function(
     labels_col = labels_col,
     ...
   )
+}
+
+
+.gg_color_hue <- function(n) {
+  hues = seq(15, 375, length=n+1)
+  grDevices::hcl(h=hues, l=65, c=100)[1:n]
+}
+
+.default_discrete_palette <- function(progression_group) {
+  num_progressions <- length(levels(progression_group))
+  progression_cols <-
+    if (num_progressions <= 9) {
+      RColorBrewer::brewer.pal(num_progressions, "Set1")
+    } else {
+      .gg_color_hue(num_progressions)
+    }
+  stats::setNames(progression_cols, levels(progression_group))
+}
+
+
+.default_continuous_palette <- function() {
+  rev(RColorBrewer::brewer.pal(9, "RdYlBu"))
 }

@@ -22,7 +22,7 @@ library(tidyverse)
 [![Coverage Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
 
 
-**SCORPIUS an unsupervised approach for inferring developmental chronologies from single-cell
+**SCORPIUS an unsupervised approach for inferring linear developmental chronologies from single-cell
 RNA sequencing data.** In comparison to similar approaches, it has three main advantages:
 
 * **It accurately reconstructs linear dynamic processes.** 

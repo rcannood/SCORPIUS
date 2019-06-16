@@ -4,7 +4,10 @@
 \alias{draw_trajectory_plot}
 \title{Visualise SCORPIUS}
 \usage{
-draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
+draw_trajectory_plot(space, progression_group = NULL, path = NULL,
+  contour = FALSE, progression_group_palette = NULL, point_size = 2,
+  point_alpha = 1, path_size = 0.5, path_alpha = 1,
+  contour_alpha = 0.2)
 }
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
@@ -14,6 +17,18 @@ draw_trajectory_plot(space, progression_group=NULL, path=NULL, contour=FALSE)
 \item{path}{A numeric matrix or a data frame containing the coordinates of the inferred path.}
 
 \item{contour}{\code{TRUE} if contours are to be drawn around the samples.}
+
+\item{progression_group_palette}{A named vector palette for the progression group.}
+
+\item{point_size}{The size of the points.}
+
+\item{point_alpha}{The alpha of the points.}
+
+\item{path_size}{The size of the path (if any).}
+
+\item{path_alpha}{The alpha of the path (if any).}
+
+\item{contour_alpha}{The alpha of the contour (if any).}
 }
 \value{
 A ggplot2 plot.
@@ -45,4 +60,7 @@ draw_trajectory_plot(space, contour = TRUE)
 traj <- infer_trajectory(space)
 draw_trajectory_plot(space, progression_group = groups, path = traj$path)
 draw_trajectory_plot(space, progression_group = groups, path = traj$path, contour = TRUE)
+
+## Visualise gene expression
+draw_trajectory_plot(space, progression_group = dataset$expression[,1])
 }

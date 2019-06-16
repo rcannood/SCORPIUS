@@ -1,10 +1,13 @@
 #' @importFrom dynutils is_sparse
-check_numeric_matrix <- function(x, param_name, is_nullable = FALSE, finite = FALSE) {
+check_numeric_matrix <- function(x, param_name, is_nullable = FALSE, finite = FALSE, sparse = FALSE) {
   if (is_nullable && is.null(x)) {
     return(invisible())
   }
 
-  check <- is.matrix(x) || is.data.frame(x) || dynutils::is_sparse(x)
+  check <- is.matrix(x) || is.data.frame(x)
+  if (sparse) {
+    check <- check || dynutils::is_sparse(x)
+  }
 
   if (check) {
     for (j in seq_len(ncol(x))) {
@@ -17,7 +20,9 @@ check_numeric_matrix <- function(x, param_name, is_nullable = FALSE, finite = FA
       sQuote(param_name),
       " must be ",
       ifelse(is_nullable, "NULL, ", ""),
-      "a numeric (sparse) matrix, or a data frame containing only ",
+      "a numeric matrix, ",
+      ifelse(sparse, "a sparse numeric matrix, ", ""),
+      " or a data frame containing only ",
       ifelse(finite, "finite ", ""),
       "numeric values."
     )

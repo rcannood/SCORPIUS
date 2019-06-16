@@ -9,7 +9,7 @@ Status](https://ci.appveyor.com/api/projects/status/github/rcannood/SCORPIUS?bra
 [![Coverage
 Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
 
-**SCORPIUS an unsupervised approach for inferring developmental
+**SCORPIUS an unsupervised approach for inferring linear developmental
 chronologies from single-cell RNA sequencing data.** In comparison to
 similar approaches, it has three main advantages:
 
@@ -164,7 +164,14 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Recent changes in SCORPIUS 1.0.3 (23-05-2019)
+### Recent changes in SCORPIUS 1.0.4 (unreleased)
+
+#### Minor changes
+
+  - Added extra customisation parameters to `draw_trajectory_plot()` and
+    `draw_trajectory_heatmap()`.
+
+### Recent changes in SCORPIUS 1.0.3 (27-05-2019)
 
 #### Optimisation
 
@@ -187,6 +194,9 @@ changes.
 
   - Added citation information (`inst/CITATION`).
 
+  - Added support for sparsity in `extract_modules()` and
+    `dimensionality_reduction()`.
+
 #### Minor changes
 
   - Use scaling functions from dynutils (`scale_minmax()`,
@@ -208,17 +218,6 @@ changes.
 
   - Deprecated unused functions `evaluate_trajectory()` and
     `evaluate_dim_red()`. Use `dyneval::evaluate_ti_method()` instead.
-
-### Recent changes in SCORPIUS 1.0.2 (2018-06-29)
-
-  - MINOR CHANGE: Depend on dynutils for distance functions.
-
-  - MAJOR CHANGE `reduce_dimensionality()`: Merge
-    reduce\_dimensionality\_landmarked and reduce\_dimensionality
-    functions.
-
-  - REMOVAL: Removed `outlier_filter()`; there are much better scRNA-seq
-    preprocessing pipelines in existance by now.
 
 ## References
 

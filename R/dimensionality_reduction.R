@@ -36,7 +36,7 @@ reduce_dimensionality <- function(
   rescale = TRUE
 ) {
   # input check
-  check_numeric_matrix(x, "x", finite = TRUE)
+  check_numeric_matrix(x, "x", finite = TRUE, sparse = TRUE)
   check_numeric_vector(ndim, "ndim", finite = TRUE, whole = TRUE, range = c(1, nrow(x)), length = 1)
 
   space <- dyndimred::dimred_landmark_mds(
