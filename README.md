@@ -129,7 +129,7 @@ gimp <- gene_importances(
 ) 
 ```
 
-To select the most important genes and scale its expession, run:
+To select the most important genes and scale its expression, run:
 
 ``` r
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
