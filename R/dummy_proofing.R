@@ -4,15 +4,19 @@ check_numeric_matrix <- function(x, param_name, is_nullable = FALSE, finite = FA
     return(invisible())
   }
 
-  check <- is.matrix(x) || is.data.frame(x)
-  if (sparse) {
-    check <- check || dynutils::is_sparse(x)
-  }
+  sparse <- sparse && dynutils::is_sparse(x)
 
-  if (check) {
-    for (j in seq_len(ncol(x))) {
+  if (!sparse) {
+    check <- is.matrix(x) || is.data.frame(x)
+
+    j <- 1
+    while (j <= ncol(x) && check) {
       check <- check && is.numeric(x[,j]) && (!finite || all(is.finite(x[,j])))
+      j <- j + 1
     }
+  } else {
+    check <- is.numeric(x@x) && (!finite || all(is.finite(x@x)))
+
   }
 
   if (!check) {
