@@ -33,7 +33,7 @@ Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
-  dynutils (>= 1.0.4),
+  dynutils (>= 1.0.3),
   dyndimred (>= 1.0.1),
   grDevices,
   ggplot2 (>= 2.0),
