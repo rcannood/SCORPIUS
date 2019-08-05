@@ -51,7 +51,8 @@ infer_initial_trajectory <- function(space, k) {
       pct = seq(0, 1, length.out = 21)
     ) %>%
     filter(i < j)
-  dist_to_pts <- calculate_distance((1 - pts$pct) * centers[pts$i, ] + pts$pct * centers[pts$j, ], space, method = "euclidean")
+  pts_space <- Matrix::Matrix((1 - pts$pct) * centers[pts$i, ] + pts$pct * centers[pts$j, ], sparse = TRUE)
+  dist_to_pts <- calculate_distance(pts_space, space, method = "euclidean")
   rownames(dist_to_pts) <- NULL # remove rownames or knn distances might not work
   pts$dist <- rowMeans(knn_distances(as.matrix(dist_to_pts), 10, self_loops = TRUE))
   dendis <- pts %>% group_by(i, j) %>% summarise(dist = mean(dist)) %>% ungroup()
