@@ -1,55 +1,25 @@
-Submitting a new version of SCORPIUS due to breaking changes in R 3.6.0.
-
-I've reuploaded the package because I forgot to remove the 'Date' field from the description, earlier.
+Added extra visualisation parameters and fixed a few minor bugs.
 
 # Changelog
 
+## Minor changes
+ 
+ * Added extra customisation parameters to `draw_trajectory_plot()` and `draw_trajectory_heatmap()`.
+ 
 ## Optimisation
 
- * `infer_trajectory()`: Use princurve's `approx_points` parameter, which greatly speeds up
-   for trajectory inference for large number of samples.
+ * Fixed internal function `check_numeric_matrix()` such that it does not run for ages when applied to 
+   a large sparse matrix.
    
-## Major changes
-
- * Use dynutils' `calculate_distance()` instead of `correlation_distance()` and `euclidean_distance()`.
-   
-## Documentation
-
- * Vignettes were updated.
-
- * Added `cran-comments.md`.
- 
- * Added recent news (`inst/NEWS.md`).
- 
- * Added citation information (`inst/CITATION`).
- 
- * Added support for sparsity in `extract_modules()` and `dimensionality_reduction()`.
- 
-## Minor changes
-
- * Use scaling functions from dynutils (`scale_minmax()`, `scale_quantile()`, `scale_uniform()`).
- 
- * Expanded unit tests.
- 
- * Renormalise the original ginhoux data using dynnormaliser and rerun all vignettes. 
- 
- * Moved `cmdscale_withlandmarks()` to dyndimred.
- 
-## Bug fixes
- 
- * `extract_modules()`: `smooth.spline()` now requires at least 4 unique values.
- 
-## Deprecation
-
- * Deprecated unused functions `evaluate_trajectory()` and `evaluate_dim_red()`.
-   Use `dyneval::evaluate_ti_method()` instead.
+ * Minor improvement in `infer_initial_trajectory()` when calculating the distance from points to 
+   along candidate segments.
 
 # Checks
 ## Test environments
-* local Fedora 28 install, R 3.6.0
+* local Fedora 30 install, R 3.6.0
 * OS X (on travis-ci), R 3.6.0
-* ubuntu 14.04 (on travis-ci), R 3.6.0
-* win-builder: no, because one of the dependencies is not built for windows yet.
+* ubuntu 16.04 (on travis-ci), R 3.6.0
+* win-builder: release and devel
 
 ## R CMD check results
 
