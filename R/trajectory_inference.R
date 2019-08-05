@@ -44,19 +44,21 @@ infer_initial_trajectory <- function(space, k) {
   eucl_dist <- as.matrix(stats::dist(centers))
 
   # calculate the densities along the straight lines between any two cluster centers
-  density_dist <- sapply(seq_len(k), function(i) {
-    sapply(seq_len(k), function(j) {
-      if (i < j) {
-        twocent <- centers[c(i,j), , drop = FALSE]
-        segment_pts <- apply(twocent, 2, function(x) seq(x[[1]], x[[2]], length.out = 20))
-        dists <- as.matrix(dynutils::calculate_distance(segment_pts, space, method = "euclidean"))
-        mean(knn_distances(dists, 10, self_loops=TRUE))
-      } else {
-        0
-      }
-    })
-  })
-  density_dist <- density_dist + t(density_dist)
+  pts <-
+    crossing(
+      i = seq_len(k),
+      j = seq_len(k),
+      pct = seq(0, 1, length.out = 21)
+    ) %>%
+    filter(i < j)
+  dist_to_pts <- calculate_distance((1 - pts$pct) * centers[pts$i, ] + pts$pct * centers[pts$j, ], space, method = "euclidean")
+  rownames(dist_to_pts) <- NULL # remove rownames or knn distances might not work
+  pts$dist <- rowMeans(knn_distances(as.matrix(dist_to_pts), 10, self_loops = TRUE))
+  dendis <- pts %>% group_by(i, j) %>% summarise(dist = mean(dist)) %>% ungroup()
+
+  density_dist <- matrix(0, nrow = k, ncol = k)
+  density_dist[cbind(dendis$i, dendis$j)] <- dendis$dist
+  density_dist[cbind(dendis$j, dendis$i)] <- dendis$dist
 
   # combine both distance matrices
   cluster_distances <- eucl_dist * density_dist
