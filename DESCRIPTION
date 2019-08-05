@@ -52,6 +52,6 @@ Imports:
   TSP,
   utils
 Suggests:
-  knitr,
-  rmarkdown,
-  testthat
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0)
