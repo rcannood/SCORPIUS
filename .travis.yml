@@ -1,15 +1,15 @@
 language: r
-sudo: required
-dist: trusty
 cache: packages
-addons:
-  apt:
-    packages:
-      - libusb-1.0-0-dev
-os:
- - linux
- - osx
-bioc_required: true
+matrix:
+  include:
+  - r: oldrel
+    os: linux
+  - r: release
+    os: linux
+  - r: devel
+    os: linux
+  - r: release
+    os: osx
 r_packages:
  - covr
 after_success:
