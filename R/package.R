@@ -25,7 +25,7 @@
 #' @section Datasets:
 #' \code{\link{generate_dataset}}, \code{\link{ginhoux}}
 #'
-#' @importFrom dplyr tibble as_tibble transmute arrange percent_rank desc slice
+#' @importFrom dplyr tibble as_tibble transmute arrange percent_rank desc slice filter group_by summarise ungroup
 #' @import ggplot2
 #' @importFrom tidyr spread gather crossing
 #' @importFrom purrr %>% map map_df map_chr map_lgl map_int map_dbl

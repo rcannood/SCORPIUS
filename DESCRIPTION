@@ -33,7 +33,7 @@ Depends:
   R (>= 3.0.0)
 Imports:
   dplyr,
-  dynutils (>= 1.0.3),
+  dynutils (>= 1.0.4),
   dyndimred (>= 1.0.1),
   grDevices,
   ggplot2 (>= 2.0),
@@ -42,16 +42,15 @@ Imports:
   mclust,
   pbapply,
   pheatmap,
-  princurve (>= 2.1.3),
+  princurve (>= 2.1.4),
   purrr,
   ranger,
   RColorBrewer,
-  reshape2,
   stats,
   tidyr,
   TSP,
   utils
 Suggests:
-    knitr,
-    rmarkdown,
-    testthat (>= 2.1.0)
+  knitr,
+  rmarkdown,
+  testthat (>= 2.1.0)
