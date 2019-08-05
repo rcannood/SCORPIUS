@@ -44,7 +44,7 @@ infer_initial_trajectory <- function(space, k) {
   eucl_dist <- as.matrix(stats::dist(centers))
 
   # calculate the densities along the straight lines between any two cluster centers
-  j <- j <- NULL # satisfy r cmd check
+  i <- j <- NULL # satisfy r cmd check
   pts <-
     crossing(
       i = seq_len(k),
