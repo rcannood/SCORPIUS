@@ -33,9 +33,8 @@ News:
     `citation("SCORPIUS")` to obtain the corresponding citation
     information.
 
-  - Check out our
-    [review](https://www.biorxiv.org/content/early/2018/03/05/276907) on
-    Trajectory Inference methods\!
+  - Check out our [review](http://dx.doi.org/10.1038/s41587-019-0071-9)
+    on Trajectory Inference methods\!
 
 ## Installing SCORPIUS
 
@@ -47,7 +46,7 @@ You can install:
     install.packages("SCORPIUS")
     ```
 
-  - the latest development version from github
+  - the latest development version from GitHub
     with
     
     ``` r
@@ -62,12 +61,12 @@ the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 To get started, read the introductory example below, or read one of the
 vignettes containing more elaborate examples:
 
-  - [Investigating differentiating dendritic cell
-    progenitors](vignettes/ginhoux.md): `vignette("ginhoux",
-    package="SCORPIUS")`
-  - [Inferring trajectories from simulated
-    data](vignettes/simulated-data.md): `vignette("simulated-data",
-    package="SCORPIUS")`
+  - [Investigating dendritic cell maturation in dendritic cell
+    progenitors](vignettes/ginhoux.md):  
+    `vignette("ginhoux", package="SCORPIUS")`
+  - [Trajectory inference from simulated
+    data](vignettes/simulated-data.md):  
+    `vignette("simulated-data", package="SCORPIUS")`
 
 ## Introductory example
 
@@ -164,12 +163,20 @@ changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
-### Recent changes in SCORPIUS 1.0.4 (unreleased)
+### Recent changes in SCORPIUS 1.0.4
 
 #### Minor changes
 
   - Added extra customisation parameters to `draw_trajectory_plot()` and
     `draw_trajectory_heatmap()`.
+
+#### Optimisation
+
+  - Fixed internal function `check_numeric_matrix()` such that it does
+    not run for ages when applied to a large sparse matrix.
+
+  - Minor improvement in `infer_initial_trajectory()` when calculating
+    the distance from points to along candidate segments.
 
 ### Recent changes in SCORPIUS 1.0.3 (27-05-2019)
 

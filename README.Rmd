@@ -10,6 +10,7 @@ bibliography: library.bib
 ```{r setup1, include=FALSE}
 knitr::opts_chunk$set(fig.path = "man/figures/README_", warning = FALSE, message = FALSE, error = FALSE, echo = TRUE)
 
+submission_to_cran <- FALSE
 library(tidyverse)
 ```
 
@@ -41,7 +42,7 @@ News:
 * A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509). 
   Run `citation("SCORPIUS")` to obtain the corresponding citation information.
 
-* Check out our [review](https://www.biorxiv.org/content/early/2018/03/05/276907) on Trajectory Inference methods!
+* Check out our [review](http://dx.doi.org/10.1038/s41587-019-0071-9) on Trajectory Inference methods!
   
 ## Installing SCORPIUS
 
@@ -53,7 +54,7 @@ You can install:
     install.packages("SCORPIUS")
     ```
 
-* the latest development version from github with
+* the latest development version from GitHub with
 
     ```R
     devtools::install_github("rcannood/SCORPIUS", build_vignettes = TRUE)
@@ -65,8 +66,28 @@ If you encounter a bug, please file a minimal reproducible example on the [issue
 
 To get started, read the introductory example below, or read one of the vignettes containing more elaborate examples:
 
-* [Investigating differentiating dendritic cell progenitors](vignettes/ginhoux.md): `vignette("ginhoux", package="SCORPIUS")`
-* [Inferring trajectories from simulated data](vignettes/simulated-data.md): `vignette("simulated-data", package="SCORPIUS")`
+```{r vignettes, results='asis', echo=FALSE}
+walk(
+  list.files("vignettes", pattern = "*.Rmd"),
+  function(file) {
+    title <- 
+      read_lines(paste0("vignettes/", file)) %>% 
+      keep(~grepl("^title: ", .)) %>% 
+      gsub("title: \"(.*)\"", "\\1", .)
+    vignette_name <- gsub("\\.Rmd", "", file)
+    markdown_name <- gsub("\\.Rmd", ".md", file)
+    cat(
+      "* ",
+      ifelse(submission_to_cran, "", "["),
+      title, 
+      ifelse(submission_to_cran, "", paste0("](vignettes/", markdown_name, ")")),
+      ":  \n",
+      "`vignette(\"", vignette_name, "\", package=\"SCORPIUS\")`\n",
+      sep = ""
+    )
+  }
+)
+```
 
 ## Introductory example
 
@@ -119,7 +140,7 @@ gimp <- gene_importances(
 ) 
 ```
 
-To select the most important genes and scale its expession, run:
+To select the most important genes and scale its expression, run:
 ```{r calculate_pvalue, message=F, warning=F}
 gimp$qvalue <- p.adjust(gimp$pvalue, "BH", length(gimp$pvalue))
 gene_sel <- gimp$gene[gimp$qvalue < .05]
@@ -146,7 +167,10 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 
 ## Latest changes
 
-Check out `news(package = "SCORPIUS")` or [NEWS.md](inst/NEWS.md) for a full list of changes.
+```{r include = FALSE}
+show_link <- ifelse(submission_to_cran, "", "or [NEWS.md](inst/NEWS.md) ")
+```
+Check out `news(package = "SCORPIUS")` `r show_link` for a full list of changes.
 
 <!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
 
