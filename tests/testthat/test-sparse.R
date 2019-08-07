@@ -5,10 +5,11 @@ skip_on_cran()
 test_that("Large sparse matrix works", {
   expr <- Matrix::rsparsematrix(10000, 10000, .01)
   start <- Sys.time()
-  space <- reduce_dimensionality(expr, dist = "spearman", ndim = 3)
-  traj <- infer_trajectory(space)
-  end <- Sys.time()
-  expect_lte(as.numeric(difftime(end, start, units = "secs")), 20)
+  timing <- system.time({
+    space <- reduce_dimensionality(expr, dist = "spearman", ndim = 3)
+    traj <- infer_trajectory(space)
+  })
+  expect_lte(timing[["sys.self"]], 20)
 })
 
 
