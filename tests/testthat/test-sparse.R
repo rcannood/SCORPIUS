@@ -9,7 +9,7 @@ test_that("Large sparse matrix works", {
     space <- reduce_dimensionality(expr, dist = "spearman", ndim = 3)
     traj <- infer_trajectory(space)
   })
-  expect_lte(timing[["sys.self"]], 20)
+  expect_lte(timing[["user.self"]], 20)
 })
 
 
