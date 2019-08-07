@@ -1,5 +1,7 @@
 context("Sparsity support")
 
+skip_on_cran()
+
 test_that("Large sparse matrix works", {
   expr <- Matrix::rsparsematrix(10000, 10000, .01)
   start <- Sys.time()
