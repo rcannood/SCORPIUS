@@ -166,16 +166,11 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
 
 ## Latest changes
+Check out `news(package = "SCORPIUS")` or [NEWS.md](NEWS.md) for a full list of changes.
 
-```{r include = FALSE}
-show_link <- ifelse(submission_to_cran, "", "or [NEWS.md](inst/NEWS.md) ")
-```
-Check out `news(package = "SCORPIUS")` `r show_link` for a full list of changes.
-
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from NEWS.md -->
 
 ```{r news, echo=FALSE, results="asis"}
-dynutils::update_news()
 cat(dynutils::recent_news())
 ```
 
