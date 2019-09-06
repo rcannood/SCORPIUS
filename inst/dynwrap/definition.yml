@@ -33,7 +33,7 @@ container:
   docker: dynverse/ti_scorpius
 
 package:
-  remote: tiscorpius=dynverse/ti_scorpius/package
+  remote: SCORPIUS=rcannood/SCORPIUS
   function: ti_scorpius
 
 wrapper:
