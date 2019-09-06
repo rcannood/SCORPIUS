@@ -49,10 +49,9 @@ parameters:
     values:
     - spearman
     - pearson
-    - kendall
     description: |-
       A character string indicating which correlation
-      coefficient (or covariance) is to be computed. One of "pearson", "kendall", or "spearman".
+      coefficient (or covariance) is to be computed. One of "pearson" or "spearman" (default).
   - id: ndim
     type: integer
     default: 3
@@ -101,7 +100,3 @@ parameters:
     - lowess
     - periodic_lowess
     description: '`principal_curve` parameter; choice of smoother'
-  - id: sparse
-    type: logical
-    default: yes
-    description: Whether or not to use sparse MDS dimensionality reduction, for datasets with large amounts of cells.
