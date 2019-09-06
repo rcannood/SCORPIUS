@@ -1,9 +1,7 @@
 language: r
 cache: packages
-addons:
-  apt:
-    packages:
-    - libicu52
+apt_packages:
+- libicu-dev
 matrix:
   include:
   - r: oldrel
