@@ -75,6 +75,6 @@ run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
 #' @importFrom dynwrap create_ti_method_r
 #' @export
 ti_scorpius <- dynwrap::create_ti_method_r(
-  definition = system.file("definition.yml", package = "SCORPIUS"),
+  definition = system.file("dynwrap/definition.yml", package = "SCORPIUS"),
   run_fun = run_fun
 )
