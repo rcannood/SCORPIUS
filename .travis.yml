@@ -1,5 +1,9 @@
 language: r
 cache: packages
+addons:
+  apt:
+    packages:
+    - libicu52
 matrix:
   include:
   - r: oldrel
@@ -8,8 +12,8 @@ matrix:
     os: linux
   - r: devel
     os: linux
-  - r: release
-    os: osx
+#  - r: release
+#    os: osx
 before_install:
 - set -e
 - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
