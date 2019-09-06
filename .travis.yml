@@ -1,7 +1,6 @@
 language: r
 cache: packages
-apt_packages:
-- libicu-dev
+sudo: required
 matrix:
   include:
   - r: oldrel

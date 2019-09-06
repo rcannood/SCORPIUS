@@ -6,10 +6,10 @@
 \usage{
 ti_scorpius(distance_method = "spearman", ndim = 3L, k = 4L,
   thresh = 0.001, maxit = 10L, stretch = 0,
-  smoother = "smooth_spline", sparse = TRUE)
+  smoother = "smooth_spline")
 }
 \arguments{
-\item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson", "kendall", or "spearman". Domain: {spearman, pearson, kendall}. Default: spearman. Format: character.}
+\item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson" or "spearman" (default). Domain: {spearman, pearson}. Default: spearman. Format: character.}
 
 \item{ndim}{The number of dimensions in the new space. Domain: U(2, 20). Default: 3. Format: integer.}
 
@@ -22,8 +22,6 @@ ti_scorpius(distance_method = "spearman", ndim = 3L, k = 4L,
 \item{stretch}{\code{principal_curve} parameter; a factor by which the curve can be extrapolated when points are projected. Domain: U(0, 5). Default: 0. Format: numeric.}
 
 \item{smoother}{\code{principal_curve} parameter; choice of smoother. Domain: {smooth_spline, lowess, periodic_lowess}. Default: smooth_spline. Format: character.}
-
-\item{sparse}{Whether or not to use sparse MDS dimensionality reduction, for datasets with large amounts of cells. Default: TRUE. Format: logical.}
 }
 \description{
 Pass this object to \code{\link[dynwrap:infer_trajectory]{dynwrap::infer_trajectory()}}.
