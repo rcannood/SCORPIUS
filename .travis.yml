@@ -16,7 +16,6 @@ before_install:
 - install_hdf5
 - install_dynverse
 - install_cran remotes covr
-- install_github_withdeps dynverse/dynwrap
 after_success:
  - R -e 'covr::codecov()'
 
