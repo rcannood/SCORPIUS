@@ -1,0 +1,107 @@
+method:
+  id: scorpius
+  name: SCORPIUS
+  tool_id: scorpius
+  source: tool
+  platform: R
+  url: https://github.com/rcannood/SCORPIUS
+  license: GPL-3
+  authors:
+  - given: Robrecht
+    family: Cannoodt
+    email: rcannood@gmail.com
+    ORCID: 0000-0003-3641-729X
+    github: rcannood
+  - given: Wouter
+    family: Saelens
+    email: wouter.saelens@ugent.be
+    ORCID: 0000-0002-7114-6248
+    github: zouter
+  - given: Yvan
+    family: Saeys
+    email: yvan.saeys@ugent.be
+    github: saeyslab
+
+
+manuscript:
+  doi: 10.1101/079509
+  google_scholar_cluster_id: '7752629025700865018'
+  preprint_date: '2016-10-07'
+
+container:
+  url: https://github.com/dynverse/ti_scorpius
+  docker: dynverse/ti_scorpius
+
+package:
+  remote: tiscorpius=dynverse/ti_scorpius/package
+  function: ti_scorpius
+
+wrapper:
+  type: linear_trajectory
+  topology_inference: fixed
+  trajectory_types: linear
+  input_required: expression
+
+parameters:
+  - id: distance_method
+    type: character
+    default: spearman
+    values:
+    - spearman
+    - pearson
+    - kendall
+    description: |-
+      A character string indicating which correlation
+      coefficient (or covariance) is to be computed. One of "pearson", "kendall", or "spearman".
+  - id: ndim
+    type: integer
+    default: 3
+    distribution:
+      type: uniform
+      upper: 20
+      lower: 2
+    description: The number of dimensions in the new space.
+  - id: k
+    type: integer
+    default: 4
+    distribution:
+      type: uniform
+      upper: 20
+      lower: 1
+    description: The number of clusters to cluster the data into.
+  - id: thresh
+    type: numeric
+    default: 0.001
+    distribution:
+      type: expuniform
+      upper: 100000
+      lower: 1.0e-05
+    description: '`principal_curve` parameter; convergence threshhold on shortest distances to the curve'
+  - id: maxit
+    type: integer
+    default: 10
+    distribution:
+      type: uniform
+      upper: 50
+      lower: 0
+    description: '`principal_curve` parameter; maximum number of iterations'
+  - id: stretch
+    type: numeric
+    default: 0.0
+    distribution:
+      type: uniform
+      upper: 5.0
+      lower: 0.0
+    description: '`principal_curve` parameter; a factor by which the curve can be extrapolated when points are projected'
+  - id: smoother
+    type: character
+    default: smooth_spline
+    values:
+    - smooth_spline
+    - lowess
+    - periodic_lowess
+    description: '`principal_curve` parameter; choice of smoother'
+  - id: sparse
+    type: logical
+    default: yes
+    description: Whether or not to use sparse MDS dimensionality reduction, for datasets with large amounts of cells.
