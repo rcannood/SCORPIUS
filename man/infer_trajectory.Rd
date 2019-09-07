@@ -4,13 +4,13 @@
 \alias{infer_trajectory}
 \title{Infer linear trajectory through space}
 \usage{
-infer_trajectory(space, max_k = 10, thresh = 0.001, maxit = 10,
+infer_trajectory(space, k = 4, thresh = 0.001, maxit = 10,
   stretch = 0, smoother = "smooth_spline", approx_points = 100)
 }
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
-\item{max_k}{The maximum number of clusters to cluster the data into.}
+\item{k}{The number of clusters to cluster the data into.}
 
 \item{thresh}{convergence threshold on shortest distances to the curve.}
 

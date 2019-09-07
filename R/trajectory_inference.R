@@ -7,7 +7,7 @@
 #' points.
 #'
 #' @param space A numeric matrix or a data frame containing the coordinates of samples.
-#' @param max_k The maximum number of clusters
+#' @param k The number of clusters
 #'
 #' @return the initial trajectory obtained by this method
 #'
@@ -16,18 +16,14 @@
 #' @importFrom TSP TSP insert_dummy solve_TSP
 #' @importFrom stats kmeans dist
 #' @importFrom dynutils calculate_distance
-infer_initial_trajectory <- function(space, max_k = 10) {
+infer_initial_trajectory <- function(space, k) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
-  check_numeric_vector(max_k, "max_k", whole = TRUE, finite = TRUE, range = c(1, nrow(space) - 1), length = 1)
+  check_numeric_vector(k, "k", whole = TRUE, finite = TRUE, range = c(1, nrow(space) - 1), length = 1)
 
   # cluster space into max k clusters
-  ks <- seq(2, max_k, by = 1)
-  clusterings <- map(ks, ~ cluster::clara(space, .))
-  sil <- map_dbl(clusterings, ~ .$silinfo$avg.width)
-  ki <- which.max(sil)
-  k <- ks[[ki]]
-  centers <- clusterings[[ki]]$medoids
+  fit <- stats::kmeans(space, k)
+  centers <- fit$centers
 
   # calculate the euclidean space between clusters
   eucl_dist <- as.matrix(stats::dist(centers))
@@ -80,7 +76,7 @@ infer_initial_trajectory <- function(space, max_k = 10) {
 #'
 #' @inheritParams princurve::principal_curve
 #' @param space A numeric matrix or a data frame containing the coordinates of samples.
-#' @param max_k The maximum number of clusters to cluster the data into.
+#' @param k The number of clusters to cluster the data into.
 #'
 #' @return A list containing several objects:
 #' \itemize{
@@ -108,7 +104,7 @@ infer_initial_trajectory <- function(space, max_k = 10) {
 #' draw_trajectory_plot(space, path=traj$path, progression_group = dataset$sample_info$group_name)
 infer_trajectory <- function(
   space,
-  max_k = 10,
+  k = 4,
   thresh = .001,
   maxit = 10,
   stretch = 0,
@@ -119,10 +115,10 @@ infer_trajectory <- function(
   check_numeric_matrix(space, "space", finite = TRUE)
 
   init_traj <-
-    if (max_k <= 1) {
+    if (k <= 1) {
       NULL
     } else {
-      infer_initial_trajectory(space, max_k = max_k)
+      infer_initial_trajectory(space, k = k)
     }
 
   # iteratively improve this curve using principal_curve
