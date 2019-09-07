@@ -10,11 +10,6 @@
 run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
   if (!is.null(seed)) set.seed(seed)
 
-  # use k <= 1 to turn off clustering
-  if (parameters$k <= 1) {
-    parameters$k <- NULL
-  }
-
   # TIMING: done with preproc
   checkpoints <- list(method_afterpreproc = Sys.time())
 
@@ -28,7 +23,7 @@ run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
   # INFER TRAJECTORY
   traj <- infer_trajectory(
     space,
-    k = parameters$k,
+    max_k = parameters$max_k,
     thresh = parameters$thresh,
     maxit = parameters$maxit,
     stretch = parameters$stretch,
