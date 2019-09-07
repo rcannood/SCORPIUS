@@ -80,7 +80,7 @@ infer_initial_trajectory <- function(space, max_k = 10) {
 #'
 #' @inheritParams princurve::principal_curve
 #' @param space A numeric matrix or a data frame containing the coordinates of samples.
-#' @param k The number of clusters to cluster the data into.
+#' @param max_k The maximum number of clusters to cluster the data into.
 #'
 #' @return A list containing several objects:
 #' \itemize{

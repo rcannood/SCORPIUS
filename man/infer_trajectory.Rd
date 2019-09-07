@@ -10,6 +10,8 @@ infer_trajectory(space, max_k = 10, thresh = 0.001, maxit = 10,
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
+\item{max_k}{The maximum number of clusters to cluster the data into.}
+
 \item{thresh}{convergence threshold on shortest distances to the curve.}
 
 \item{maxit}{maximum number of iterations.}
@@ -27,8 +29,6 @@ Beware, you may want to use \code{iter = 0} with \code{lowess()}.}
 If \code{FALSE}, no approximation of the curve occurs. Otherwise,
 \code{approx_points} must be equal to the number of points the curve
 gets approximated to; preferably about 100.}
-
-\item{k}{The number of clusters to cluster the data into.}
 }
 \value{
 A list containing several objects:
