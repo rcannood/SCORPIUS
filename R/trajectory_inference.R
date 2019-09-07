@@ -11,7 +11,6 @@
 #'
 #' @return the initial trajectory obtained by this method
 #'
-#' @importFrom cluster clara
 #' @importFrom RANN nn2
 #' @importFrom TSP TSP insert_dummy solve_TSP
 #' @importFrom stats kmeans dist
