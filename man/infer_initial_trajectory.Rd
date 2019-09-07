@@ -4,12 +4,12 @@
 \alias{infer_initial_trajectory}
 \title{Infer an initial trajectory through space}
 \usage{
-infer_initial_trajectory(space, max_k = 10)
+infer_initial_trajectory(space, k)
 }
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
-\item{max_k}{The maximum number of clusters}
+\item{k}{The number of clusters}
 }
 \value{
 the initial trajectory obtained by this method

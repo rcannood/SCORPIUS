@@ -91,7 +91,7 @@ extract_modules <- function(x, time = NULL, suppress_warnings = FALSE, verbose =
     tz <- Matrix::t(z)
     fi <- apply(tz, 2, function(x) length(unique(x))) > 3
     tz <- tz[, fi, drop = FALSE]
-    pct <- suppressWarnings(infer_trajectory(as.matrix(tz), max_k = 0)$time)
+    pct <- suppressWarnings(infer_trajectory(as.matrix(tz), k = 0)$time)
   }
   if (!is.null(time) && ncol(z) > 1 && stats::cor(stats::cor(time, z)[1,], pct) < 0) {
     pct <- -pct

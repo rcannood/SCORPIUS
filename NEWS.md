@@ -1,4 +1,12 @@
-# SCORPIUS 1.0.4
+# SCORPIUS 1.0.5
+
+   
+## Minor change
+ * Use `RANN::nn2()` instead of own nearest neighbour functions. 
+ 
+ * Remove deprecated functions.
+
+# SCORPIUS 1.0.4 (07-08-2019)
 
 ## Minor changes
  
