@@ -9,7 +9,7 @@ ti_scorpius(distance_method = "spearman", ndim = 3L, k = 4L,
   smoother = "smooth_spline")
 }
 \arguments{
-\item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson" or "spearman" (default). Domain: {spearman, pearson}. Default: spearman. Format: character.}
+\item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson", "spearman" (default), or "cosine". Domain: {spearman, pearson, cosine}. Default: spearman. Format: character.}
 
 \item{ndim}{The number of dimensions in the new space. Domain: U(2, 20). Default: 3. Format: integer.}
 

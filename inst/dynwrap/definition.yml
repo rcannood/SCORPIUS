@@ -49,9 +49,10 @@ parameters:
     values:
     - spearman
     - pearson
+    - cosine
     description: |-
       A character string indicating which correlation
-      coefficient (or covariance) is to be computed. One of "pearson" or "spearman" (default).
+      coefficient (or covariance) is to be computed. One of "pearson", "spearman" (default), or "cosine".
   - id: ndim
     type: integer
     default: 3
