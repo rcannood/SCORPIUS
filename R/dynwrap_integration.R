@@ -32,7 +32,8 @@ run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
     thresh = parameters$thresh,
     maxit = parameters$maxit,
     stretch = parameters$stretch,
-    smoother = parameters$smoother
+    smoother = parameters$smoother,
+    approx_points = 100
   )
 
   # TIMING: done with method
