@@ -1,4 +1,15 @@
-# SCORPIUS 1.0.4
+# SCORPIUS 1.0.5
+
+## Major change
+ * Use `cluster::clara()` and the resulting silhouette scores to automatically determine the number of
+   clusters for the initial trajectory.
+   
+## Minor change
+ * Use `RANN::nn2()` instead of own nearest neighbour functions. 
+ 
+ * Remove deprecated functions.
+
+# SCORPIUS 1.0.4 (07-08-2019)
 
 ## Minor changes
  
