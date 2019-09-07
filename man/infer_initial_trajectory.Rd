@@ -4,12 +4,12 @@
 \alias{infer_initial_trajectory}
 \title{Infer an initial trajectory through space}
 \usage{
-infer_initial_trajectory(space, k)
+infer_initial_trajectory(space, max_k = 10)
 }
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}
 
-\item{k}{The number of clusters to cluster the data into.}
+\item{max_k}{The maximum number of clusters}
 }
 \value{
 the initial trajectory obtained by this method
@@ -20,16 +20,4 @@ the initial trajectory obtained by this method
 the shortest path through cluster centers. The shortest path takes into account
 the euclidean distance between cluster centers, and the density between those two
 points.
-}
-\examples{
-## Generate an example dataset and visualise it
-dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
-space <- reduce_dimensionality(dataset$expression, ndim = 2)
-draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
-
-## Infer a trajectory through this space
-init_traj <- infer_initial_trajectory(space, k = 4)
-
-## Visualise the trajectory
-draw_trajectory_plot(space, path = init_traj, progression_group = dataset$sample_info$group_name)
 }

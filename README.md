@@ -61,10 +61,11 @@ the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 To get started, read the introductory example below, or read one of the
 vignettes containing more elaborate examples:
 
-  - Investigating dendritic cell maturation in dendritic cell
-    progenitors:  
+  - [Investigating dendritic cell maturation in dendritic cell
+    progenitors](vignettes/ginhoux.md):  
     `vignette("ginhoux", package="SCORPIUS")`
-  - Trajectory inference from simulated data:  
+  - [Trajectory inference from simulated
+    data](vignettes/simulated-data.md):  
     `vignette("simulated-data", package="SCORPIUS")`
 
 ## Introductory example
@@ -156,10 +157,10 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 
 ## Latest changes
 
-Check out `news(package = "SCORPIUS")` for a full list of
-changes.
+Check out `news(package = "SCORPIUS")` or [NEWS.md](NEWS.md) for a full
+list of changes.
 
-<!-- This section gets automatically generated from inst/NEWS.md, and also generates inst/NEWS -->
+<!-- This section gets automatically generated from NEWS.md -->
 
 ### Recent changes in SCORPIUS 1.0.4
 
