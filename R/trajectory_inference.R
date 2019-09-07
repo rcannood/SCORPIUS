@@ -6,39 +6,28 @@
 #' the euclidean distance between cluster centers, and the density between those two
 #' points.
 #'
-#' @usage
-#' infer_initial_trajectory(space, k)
-#'
 #' @param space A numeric matrix or a data frame containing the coordinates of samples.
-#' @param k The number of clusters to cluster the data into.
+#' @param max_k The maximum number of clusters
 #'
 #' @return the initial trajectory obtained by this method
 #'
-#' @export
-#'
+#' @importFrom cluster clara
+#' @importFrom RANN nn2
 #' @importFrom TSP TSP insert_dummy solve_TSP
 #' @importFrom stats kmeans dist
 #' @importFrom dynutils calculate_distance
-#'
-#' @examples
-#' ## Generate an example dataset and visualise it
-#' dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
-#' space <- reduce_dimensionality(dataset$expression, ndim = 2)
-#' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
-#'
-#' ## Infer a trajectory through this space
-#' init_traj <- infer_initial_trajectory(space, k = 4)
-#'
-#' ## Visualise the trajectory
-#' draw_trajectory_plot(space, path = init_traj, progression_group = dataset$sample_info$group_name)
-infer_initial_trajectory <- function(space, k) {
+infer_initial_trajectory <- function(space, max_k = 10) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
-  check_numeric_vector(k, "k", whole = TRUE, finite = TRUE, range = c(1, nrow(space) - 1), length = 1)
+  check_numeric_vector(max_k, "max_k", whole = TRUE, finite = TRUE, range = c(1, nrow(space) - 1), length = 1)
 
-  # cluster space into k clusters
-  kmeans_clust <- stats::kmeans(as.matrix(space), centers = k)
-  centers <- kmeans_clust$centers
+  # cluster space into max k clusters
+  ks <- seq(2, max_k, by = 1)
+  clusterings <- map(ks, ~ cluster::clara(space, .))
+  sil <- map_dbl(clusterings, ~ .$silinfo$avg.width)
+  ki <- which.max(sil)
+  k <- ks[[ki]]
+  centers <- clusterings[[ki]]$medoids
 
   # calculate the euclidean space between clusters
   eucl_dist <- as.matrix(stats::dist(centers))
@@ -52,10 +41,9 @@ infer_initial_trajectory <- function(space, k) {
       pct = seq(0, 1, length.out = 21)
     ) %>%
     filter(i < j)
-  pts_space <- Matrix::Matrix((1 - pts$pct) * centers[pts$i, ] + pts$pct * centers[pts$j, ], sparse = TRUE)
-  dist_to_pts <- calculate_distance(pts_space, space, method = "euclidean")
-  rownames(dist_to_pts) <- NULL # remove rownames or knn distances might not work
-  pts$dist <- rowMeans(knn_distances(as.matrix(dist_to_pts), 10, self_loops = TRUE))
+  pts_space <- (1 - pts$pct) * centers[pts$i, ] + pts$pct * centers[pts$j, ]
+
+  pts$dist <- rowMeans(RANN::nn2(space, pts_space, k = 10)$nn.dist)
   dendis <- pts %>% group_by(i, j) %>% summarise(dist = mean(dist)) %>% ungroup()
 
   density_dist <- matrix(0, nrow = k, ncol = k)
@@ -120,7 +108,7 @@ infer_initial_trajectory <- function(space, k) {
 #' draw_trajectory_plot(space, path=traj$path, progression_group = dataset$sample_info$group_name)
 infer_trajectory <- function(
   space,
-  k = 4,
+  max_k = 10,
   thresh = .001,
   maxit = 10,
   stretch = 0,
@@ -130,12 +118,12 @@ infer_trajectory <- function(
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
 
-  if (!is.null(k)) {
-    # use a clustering and shortest path based approach to define an intiial trajectory
-    init_traj <- infer_initial_trajectory(space, k)
-  } else {
-    init_traj <- NULL
-  }
+  init_traj <-
+    if (max_k <= 1) {
+      NULL
+    } else {
+      infer_initial_trajectory(space, max_k = max_k)
+    }
 
   # iteratively improve this curve using principal_curve
   fit <- princurve::principal_curve(
