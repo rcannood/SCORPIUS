@@ -60,14 +60,14 @@ parameters:
       upper: 20
       lower: 2
     description: The number of dimensions in the new space.
-  - id: max_k
+  - id: k
     type: integer
     default: 4
     distribution:
       type: uniform
       upper: 20
       lower: 1
-    description: The maximum number of clusters to cluster the data into to construct the initial trajectory.
+    description: The number of clusters to cluster the data into to construct the initial trajectory.
   - id: thresh
     type: numeric
     default: 0.001

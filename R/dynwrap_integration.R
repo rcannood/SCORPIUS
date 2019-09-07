@@ -23,7 +23,7 @@ run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
   # INFER TRAJECTORY
   traj <- infer_trajectory(
     space,
-    max_k = parameters$max_k,
+    k = parameters$k,
     thresh = parameters$thresh,
     maxit = parameters$maxit,
     stretch = parameters$stretch,

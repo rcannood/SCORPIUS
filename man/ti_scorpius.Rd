@@ -13,7 +13,7 @@ ti_scorpius(distance_method = "spearman", ndim = 3L, k = 4L,
 
 \item{ndim}{The number of dimensions in the new space. Domain: U(2, 20). Default: 3. Format: integer.}
 
-\item{k}{The number of clusters to cluster the data into. Domain: U(1, 20). Default: 4. Format: integer.}
+\item{k}{The number of clusters to cluster the data into to construct the initial trajectory. Domain: U(1, 20). Default: 4. Format: integer.}
 
 \item{thresh}{\code{principal_curve} parameter; convergence threshhold on shortest distances to the curve. Domain: e^U(-11.51, 11.51). Default: 0.001. Format: numeric.}
 
