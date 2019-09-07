@@ -32,7 +32,6 @@ VignetteBuilder: knitr
 Depends:
   R (>= 3.0.0)
 Imports:
-  cluster,
   dplyr,
   dynutils (>= 1.0.3),
   dyndimred (>= 1.0.1),
