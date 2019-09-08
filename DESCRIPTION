@@ -34,10 +34,10 @@ Depends:
 Imports:
   dplyr,
   dynutils (>= 1.0.3),
-  dyndimred (>= 1.0.1),
   dynwrap,
   grDevices,
   ggplot2 (>= 2.0),
+  lmds,
   MASS,
   Matrix,
   mclust,
@@ -57,3 +57,4 @@ Suggests:
   testthat (>= 2.1.0)
 Remotes:
   dynverse/dynwrap@devel
+  dynverse/lmds

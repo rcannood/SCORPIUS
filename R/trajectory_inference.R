@@ -14,7 +14,7 @@
 #' @importFrom RANN nn2
 #' @importFrom TSP TSP insert_dummy solve_TSP
 #' @importFrom stats kmeans dist
-#' @importFrom dynutils calculate_distance
+#' @importFrom dynutils scale_minmax add_class
 infer_initial_trajectory <- function(space, k) {
   # input checks
   check_numeric_matrix(space, "space", finite = TRUE)
