@@ -34,9 +34,9 @@ Depends:
 Imports:
   dplyr,
   dynutils (>= 1.0.3),
-  dyndimred (>= 1.0.1),
   grDevices,
   ggplot2 (>= 2.0),
+  lmds,
   MASS,
   Matrix,
   mclust,
@@ -54,3 +54,5 @@ Suggests:
   knitr,
   rmarkdown,
   testthat (>= 2.1.0)
+Remotes:
+  dynverse/lmds

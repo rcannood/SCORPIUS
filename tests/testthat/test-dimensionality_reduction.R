@@ -2,48 +2,46 @@ context("Testing dimensionality_reduction.R")
 
 dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
 
-check_space <- function(space, expression, ndim, rescale) {
+check_space <- function(space, expression, ndim) {
   expect_is( space, c("data.frame", "matrix") )
   expect_equal( rownames(space), rownames(expression) )
   expect_equal( colnames(space), paste0("Comp", seq_len(ndim)) )
 
-  if (rescale) {
-    ranges <- apply(space, 2, range)
-    expect_true( all.equal(1, max(apply(ranges, 2, diff))) )
-    expect_true( all(apply(ranges, 2, function(x) all.equal(0, mean(x)))) )
-  }
+  ranges <- apply(space, 2, range)
+  expect_true( all.equal(1, max(apply(ranges, 2, diff))) )
+  expect_true( all(apply(ranges, 2, function(x) all.equal(0, mean(x)))) )
 }
 
 test_that("dimred with 1 dimension", {
-  space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 1, rescale = TRUE)
+  space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 1)
 
-  check_space(space, dataset$expression, ndim = 1, rescale = TRUE)
+  check_space(space, dataset$expression, ndim = 1)
 })
 
 test_that("dimred with 2 dimensions", {
-  space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 2, rescale = TRUE)
+  space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 2)
 
-  check_space(space, dataset$expression, ndim = 2, rescale = TRUE)
+  check_space(space, dataset$expression, ndim = 2)
 })
 
 test_that("dimred with 5 dimensions", {
-  space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 5, rescale = FALSE)
+  space <- reduce_dimensionality(dataset$expression, "spearman", ndim = 5)
 
-  check_space(space, dataset$expression, ndim = 5, rescale = FALSE)
+  check_space(space, dataset$expression, ndim = 5)
 })
 
 test_that("with landmarks", {
-  space <- reduce_dimensionality(dataset$expression, "spearman", num_landmarks = 200, ndim = 2, rescale = TRUE)
+  space <- reduce_dimensionality(dataset$expression, "spearman", num_landmarks = 200, ndim = 2)
 
-  check_space(space, dataset$expression, ndim = 2, rescale = TRUE)
+  check_space(space, dataset$expression, ndim = 2)
 
-  space <- reduce_dimensionality(dataset$expression, "spearman", num_landmarks = 100, ndim = 5, rescale = FALSE)
+  space <- reduce_dimensionality(dataset$expression, "spearman", num_landmarks = 100, ndim = 5)
 
-  check_space(space, dataset$expression, ndim = 5, rescale = FALSE)
+  check_space(space, dataset$expression, ndim = 5)
 
-  space <- reduce_dimensionality(dataset$expression, "spearman", num_landmarks = 2000, ndim = 3, rescale = FALSE)
+  space <- reduce_dimensionality(dataset$expression, "spearman", num_landmarks = 2000, ndim = 3)
 
-  check_space(space, dataset$expression, ndim = 3, rescale = FALSE)
+  check_space(space, dataset$expression, ndim = 3)
 })
 
 test_that("compare landmarked with normal dimred", {

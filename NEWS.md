@@ -5,6 +5,8 @@
  * Use `RANN::nn2()` instead of own nearest neighbour functions. 
  
  * Remove deprecated functions.
+ 
+ * Use `lmds` instead of `dyndimred`.
 
 # SCORPIUS 1.0.4 (07-08-2019)
 

@@ -4,9 +4,8 @@
 \alias{reduce_dimensionality}
 \title{Dimensionality reduction}
 \usage{
-reduce_dimensionality(x, dist = c("pearson", "spearman", "cosine",
-  "euclidean", "manhattan"), ndim = 3, num_landmarks = 1000,
-  rescale = TRUE)
+reduce_dimensionality(x, dist = c("spearman", "pearson", "euclidean",
+  "cosine", "manhattan"), ndim = 3, num_landmarks = 1000)
 }
 \arguments{
 \item{x}{a numeric matrix}
@@ -16,8 +15,6 @@ reduce_dimensionality(x, dist = c("pearson", "spearman", "cosine",
 \item{ndim}{the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.}
 
 \item{num_landmarks}{the number of landmarks to be selected.}
-
-\item{rescale}{A logical indicating whether or not the returned space should be rescaled and centered.}
 }
 \value{
 A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.

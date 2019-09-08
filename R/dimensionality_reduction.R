@@ -7,7 +7,6 @@
 #' @param dist the distance metric to be used; can be any of the metrics listed in [dynutils::calculate_distance()].
 #' @param ndim the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.
 #' @param num_landmarks the number of landmarks to be selected.
-#' @param rescale A logical indicating whether or not the returned space should be rescaled and centered.
 #'
 #' @return A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
 #'
@@ -16,8 +15,7 @@
 #' @export
 #'
 #' @importFrom stats cmdscale
-#' @importFrom dynutils calculate_distance list_distance_methods
-#' @importFrom dyndimred dimred_landmark_mds
+#' @importFrom lmds lmds
 #'
 #' @examples
 #' ## Generate an example dataset
@@ -30,16 +28,16 @@
 #' draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 reduce_dimensionality <- function(
   x,
-  dist,
+  dist = c("spearman", "pearson", "euclidean", "cosine", "manhattan"),
   ndim = 3,
-  num_landmarks = 1000,
-  rescale = TRUE
+  num_landmarks = 1000
 ) {
   # input check
   check_numeric_matrix(x, "x", finite = TRUE, sparse = TRUE)
   check_numeric_vector(ndim, "ndim", finite = TRUE, whole = TRUE, range = c(1, nrow(x)), length = 1)
+  dist <- match.arg(dist)
 
-  space <- dyndimred::dimred_landmark_mds(
+  space <- lmds::lmds(
     x = x,
     distance_method = dist,
     ndim = ndim,
@@ -50,4 +48,3 @@ reduce_dimensionality <- function(
 
   space
 }
-formals(reduce_dimensionality)$dist <- dynutils::list_distance_methods()
