@@ -56,5 +56,5 @@ Suggests:
   rmarkdown,
   testthat (>= 2.1.0)
 Remotes:
-  dynverse/dynwrap@devel
+  dynverse/dynwrap@devel,
   dynverse/lmds
