@@ -33,8 +33,9 @@ container:
   docker: dynverse/ti_scorpius
 
 package:
-  remote: SCORPIUS=rcannood/SCORPIUS
-  function: ti_scorpius
+  remote: rcannood/SCORPIUS
+  name: SCORPIUS
+  function_name: ti_scorpius
 
 wrapper:
   type: linear_trajectory
