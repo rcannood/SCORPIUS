@@ -6,8 +6,8 @@ cache:
     - $HOME/R/Library
 matrix:
   include:
-  - r: oldrel
-    os: linux
+#  - r: oldrel
+#    os: linux
   - r: release
     os: linux
   - r: devel
@@ -15,7 +15,6 @@ matrix:
 #  - r: release
 #    os: osx
 before_install:
-- set -e
 - source <(curl -sSL https://raw.githubusercontent.com/dynverse/travis_scripts/master/helper.sh)
 - install_hdf5
 - install_dynverse
