@@ -164,6 +164,10 @@ list of changes.
 
 ### Recent changes in SCORPIUS 1.0.5
 
+#### Major change
+
+  - Added a `ti_scorpius()` wrapper to SCORPIUS.
+
 #### Minor change
 
   - Use `RANN::nn2()` instead of own nearest neighbour functions.
