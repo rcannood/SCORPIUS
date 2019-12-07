@@ -41,6 +41,7 @@ Imports:
   MASS,
   Matrix,
   mclust,
+  methods,
   pbapply,
   pheatmap,
   princurve (>= 2.1.4),
