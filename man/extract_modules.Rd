@@ -4,8 +4,13 @@
 \alias{extract_modules}
 \title{Extract modules of features}
 \usage{
-extract_modules(x, time = NULL, suppress_warnings = FALSE,
-  verbose = FALSE, ...)
+extract_modules(
+  x,
+  time = NULL,
+  suppress_warnings = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric matrix or a data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}

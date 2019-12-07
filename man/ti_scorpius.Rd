@@ -4,9 +4,15 @@
 \alias{ti_scorpius}
 \title{Infer a trajectory using SCORPIUS}
 \usage{
-ti_scorpius(distance_method = "spearman", ndim = 3L, k = 4L,
-  thresh = 0.001, maxit = 10L, stretch = 0,
-  smoother = "smooth_spline")
+ti_scorpius(
+  distance_method = "spearman",
+  ndim = 3L,
+  k = 4L,
+  thresh = 0.001,
+  maxit = 10L,
+  stretch = 0,
+  smoother = "smooth_spline"
+)
 }
 \arguments{
 \item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson", "spearman" (default), or "cosine". Domain: {spearman, pearson, cosine}. Default: spearman. Format: character.}

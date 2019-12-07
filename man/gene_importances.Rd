@@ -4,8 +4,16 @@
 \alias{gene_importances}
 \title{Calculate the importance of a feature}
 \usage{
-gene_importances(x, time, num_permutations = 0, ntree = 10000,
-  ntree_perm = ntree/10, mtry = ncol(x) * 0.01, num_threads = 1, ...)
+gene_importances(
+  x,
+  time,
+  num_permutations = 0,
+  ntree = 10000,
+  ntree_perm = ntree/10,
+  mtry = ncol(x) * 0.01,
+  num_threads = 1,
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric matrix or a data frame with \emph{M} rows (one per sample) and \emph{P} columns (one per feature).}
@@ -18,7 +26,7 @@ gene_importances(x, time, num_permutations = 0, ntree = 10000,
 
 \item{ntree_perm}{The number of trees to grow for each of the permutations (default: ntree / 10).}
 
-\item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
+\item{mtry}{The number of variables randomly samples at each split (default: 1\\% of features).}
 
 \item{num_threads}{Number of threads. Default is 1.}
 

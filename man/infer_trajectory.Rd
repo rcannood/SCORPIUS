@@ -4,8 +4,15 @@
 \alias{infer_trajectory}
 \title{Infer linear trajectory through space}
 \usage{
-infer_trajectory(space, k = 4, thresh = 0.001, maxit = 10,
-  stretch = 0, smoother = "smooth_spline", approx_points = 100)
+infer_trajectory(
+  space,
+  k = 4,
+  thresh = 0.001,
+  maxit = 10,
+  stretch = 0,
+  smoother = "smooth_spline",
+  approx_points = 100
+)
 }
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}

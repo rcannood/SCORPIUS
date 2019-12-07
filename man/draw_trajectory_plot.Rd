@@ -4,10 +4,18 @@
 \alias{draw_trajectory_plot}
 \title{Visualise SCORPIUS}
 \usage{
-draw_trajectory_plot(space, progression_group = NULL, path = NULL,
-  contour = FALSE, progression_group_palette = NULL, point_size = 2,
-  point_alpha = 1, path_size = 0.5, path_alpha = 1,
-  contour_alpha = 0.2)
+draw_trajectory_plot(
+  space,
+  progression_group = NULL,
+  path = NULL,
+  contour = FALSE,
+  progression_group_palette = NULL,
+  point_size = 2,
+  point_alpha = 1,
+  path_size = 0.5,
+  path_alpha = 1,
+  contour_alpha = 0.2
+)
 }
 \arguments{
 \item{space}{A numeric matrix or a data frame containing the coordinates of samples.}

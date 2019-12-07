@@ -16,6 +16,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dynutils}{\code{\link[dynutils]{scale_quantile}}, \code{\link[dynutils]{scale_minmax}}, \code{\link[dynutils]{scale_uniform}}, \code{\link[dynutils]{apply_quantile_scale}}, \code{\link[dynutils]{apply_minmax_scale}}, \code{\link[dynutils]{apply_uniform_scale}}}
+  \item{dynutils}{\code{\link[dynutils]{apply_minmax_scale}}, \code{\link[dynutils]{apply_quantile_scale}}, \code{\link[dynutils]{apply_uniform_scale}}, \code{\link[dynutils]{scale_minmax}}, \code{\link[dynutils]{scale_quantile}}, \code{\link[dynutils]{scale_uniform}}}
 }}
 

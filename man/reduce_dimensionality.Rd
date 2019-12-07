@@ -4,8 +4,12 @@
 \alias{reduce_dimensionality}
 \title{Dimensionality reduction}
 \usage{
-reduce_dimensionality(x, dist = c("spearman", "pearson", "euclidean",
-  "cosine", "manhattan"), ndim = 3, num_landmarks = 1000)
+reduce_dimensionality(
+  x,
+  dist = c("spearman", "pearson", "euclidean", "cosine", "manhattan"),
+  ndim = 3,
+  num_landmarks = 1000
+)
 }
 \arguments{
 \item{x}{a numeric matrix}
