@@ -159,6 +159,8 @@ infer_trajectory <- function(
 #'
 #' @seealso \code{\link{infer_trajectory}}
 #'
+#' @importFrom methods is
+#'
 #' @export
 #'
 #' @examples
@@ -177,7 +179,7 @@ infer_trajectory <- function(
 #'
 #' plot(traj$time, reverse_traj$time, type = "l")
 reverse_trajectory <- function(trajectory) {
-  if (! "SCORPIUS::trajectory" %in% class(trajectory))
+  if (!is(trajectory, "SCORPIUS::trajectory"))
     stop(sQuote("trajectory"), " needs to be an object returned by infer_trajectory")
   trajectory$time <- 1 - trajectory$time
   trajectory$path <- trajectory$path[rev(seq_len(nrow(trajectory$path))), , drop = FALSE]
