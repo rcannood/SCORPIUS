@@ -7,7 +7,7 @@
 #' @param num_permutations The number of permutations to test against for calculating the p-values (default: 0).
 #' @param ntree The number of trees to grow (default: 10000).
 #' @param ntree_perm The number of trees to grow for each of the permutations (default: ntree / 10).
-#' @param mtry The number of variables randomly samples at each split (default: 1\% of features).
+#' @param mtry The number of variables randomly samples at each split (default: 1% of features).
 #' @param num_threads Number of threads. Default is 1.
 #' @param ... Extra parameters passed to \code{\link[ranger]{ranger}}.
 #'

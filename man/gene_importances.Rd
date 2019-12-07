@@ -26,7 +26,7 @@ gene_importances(
 
 \item{ntree_perm}{The number of trees to grow for each of the permutations (default: ntree / 10).}
 
-\item{mtry}{The number of variables randomly samples at each split (default: 1\\% of features).}
+\item{mtry}{The number of variables randomly samples at each split (default: 1\% of features).}
 
 \item{num_threads}{Number of threads. Default is 1.}
 
