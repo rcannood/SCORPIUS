@@ -64,6 +64,8 @@ vignettes containing more elaborate examples:
   - [Investigating dendritic cell maturation in dendritic cell
     progenitors](vignettes/ginhoux.md):  
     `vignette("ginhoux", package="SCORPIUS")`
+  - [Running SCOPIUS on a Seurat object](vignettes/seurat.md):  
+    `vignette("seurat", package="SCORPIUS")`
   - [Trajectory inference from simulated
     data](vignettes/simulated-data.md):  
     `vignette("simulated-data", package="SCORPIUS")`

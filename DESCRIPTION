@@ -55,4 +55,5 @@ Imports:
 Suggests:
   knitr,
   rmarkdown,
+  Seurat,
   testthat (>= 2.1.0)
