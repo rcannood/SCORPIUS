@@ -28,12 +28,11 @@ This vignette assumes that you have a Seurat object at the ready. As an example,
 
 ```{r load_data, message=FALSE, eval=HAS_SEURAT}
 library(SCORPIUS)
-library(Seurat)
 
 data(ginhoux)
 
 counts <- t(round(2^ginhoux$expression))
-srt <- CreateSeuratObject(counts = counts, meta.data = ginhoux$sample_info)
+srt <- Seurat::CreateSeuratObject(counts = counts, meta.data = ginhoux$sample_info)
 ```
 
 ## Normalise with Seurat
@@ -41,7 +40,7 @@ srt <- CreateSeuratObject(counts = counts, meta.data = ginhoux$sample_info)
 Seurat is used to normalise the dataset. 
 Since the dimensionality reduction method is scale-invariant, the scaling step in Seurat is not required.
 ```{r normalise, eval=HAS_SEURAT}
-srt <- NormalizeData(srt)
+srt <- Seurat::NormalizeData(srt)
 ```
 
 Fetch the expression data from the Seurat object as follows.
@@ -50,7 +49,7 @@ expression <- t(as.matrix(srt@assays$RNA@data))
 ```
 
 Also fetch some metadata from the Seurat object. Change `group_name` to whatever column in `srt@meta.data` you are interested in.
-```{r fetchmeta}
+```{r fetchmeta, eval=HAS_SEURAT}
 group_name <- srt@meta.data$group_name 
 ```
 
