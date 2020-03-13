@@ -17,13 +17,19 @@ rmarkdown::render("vignettes/seurat.Rmd", output_format = "github_document")
 
 ```{r, setseed, echo=FALSE}
 set.seed(1)
+
+HAS_SEURAT <- requireNamespace("Seurat", quietly = TRUE)
+
+if (!HAS_SEURAT)
+  warning("Seurat does not seem to be installed, not evaluating any code in this vignette.")
 ```
 
 This vignette assumes that you have a Seurat object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
 
-```{r load_data, message=FALSE}
+```{r load_data, message=FALSE, eval=HAS_SEURAT}
 library(SCORPIUS)
 library(Seurat)
+
 data(ginhoux)
 
 counts <- t(round(2^ginhoux$expression))
@@ -34,12 +40,12 @@ srt <- CreateSeuratObject(counts = counts, meta.data = ginhoux$sample_info)
 
 Seurat is used to normalise the dataset. 
 Since the dimensionality reduction method is scale-invariant, the scaling step in Seurat is not required.
-```{r normalise}
+```{r normalise, eval=HAS_SEURAT}
 srt <- NormalizeData(srt)
 ```
 
 Fetch the expression data from the Seurat object as follows.
-```{r fetchdata}
+```{r fetchdata, eval=HAS_SEURAT}
 expression <- t(as.matrix(srt@assays$RNA@data))
 ```
 
@@ -55,13 +61,13 @@ two points in that space approximates the original distance between the two cell
 
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`.
 The reduced space is constructed as follows:
-```{r perform_mds}
+```{r perform_mds, eval=HAS_SEURAT}
 space <- reduce_dimensionality(expression, "spearman", ndim = 3)
 ```
 
 The new space is a `r nrow(space)`-by-`r ncol(space)` matrix, and can be visualised with or without colouring of the
 different cell types.
-```{r show_dimred}
+```{r show_dimred, eval=HAS_SEURAT}
 draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
 ```
 
@@ -78,7 +84,7 @@ traj <- infer_trajectory(space)
 The result is a list containing the final trajectory `path` and the inferred timeline for each sample `time`.
 
 The trajectory can be visualised with respect to the samples by passing it to `draw_trajectory_plot`:
-```{r plot_trajectory}
+```{r plot_trajectory, eval=HAS_SEURAT}
 draw_trajectory_plot(
   space, 
   progression_group = group_name,
@@ -92,25 +98,19 @@ draw_trajectory_plot(
 We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, 
 as such genes might be good candidate marker genes for dendritic cell maturation.
 
-```{r find_tafs}
+```{r find_tafs, eval=HAS_SEURAT}
 gimp <- gene_importances(expression, traj$time, num_permutations = 0, num_threads = 8)
 gene_sel <- gimp[1:50,]
 expr_sel <- expression[,gene_sel$gene]
 ```
 
-```{r echo=F}
-# reverse the trajectory. This does not change the results in any way,
-# other than the heatmap being ordered more logically.
-# traj <- reverse_trajectory(traj)
-```
-
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
-```{r visualise_tafs, fig.keep='first'}
+```{r visualise_tafs, fig.keep='first', eval=HAS_SEURAT}
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
 Finally, these genes can also be grouped into modules as follows: 
-```{r moduled_tafs, fig.keep='first'}
+```{r moduled_tafs, fig.keep='first', eval=HAS_SEURAT}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
