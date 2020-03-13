@@ -75,7 +75,7 @@ draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
 The main goal of SCORPIUS is to infer a trajectory through the cells, and orden the cells according to the inferred timeline.
 
 SCORPIUS infers a trajectory through several intermediate steps, which are all executed as follows:
-```{r infer_trajectory}
+```{r infer_trajectory, eval=HAS_SEURAT}
 traj <- infer_trajectory(space)
 ```
 
