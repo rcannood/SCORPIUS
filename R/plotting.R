@@ -162,6 +162,18 @@ draw_trajectory_plot <- function(
     }
 
   if (is.character(progression_group) || is.factor(progression_group)) {
+    if (!is.null(progression_group_palette)) {
+      if (
+        is.null(names(progression_group_palette)) ||
+        !setequal(names(progression_group_palette), progression_group)
+      ) {
+        stop(
+          "progression_group_palette must be a named vector of colours\n",
+          "where the names correspond to the unique values in progression_group"
+        )
+      }
+    }
+
     g <- g + scale_color_manual(values = palette)
     if (contour) {
       g <- g + scale_fill_manual(values = palette)

@@ -1,4 +1,13 @@
-# SCORPIUS 1.0.5
+# SCORPIUS 1.0.6
+
+## Minor change
+
+ * Resubmission of SCORPIUS. SCORPIUS was removed from CRAN because 
+   dynwrap was removed from CRAN.
+   
+ * Added a vignette for using SCORPIUS to analyse Seurat data.
+
+# SCORPIUS 1.0.5 (08-12-2019)
 
 ## Major change
  * Added a `ti_scorpius()` wrapper to SCORPIUS.
