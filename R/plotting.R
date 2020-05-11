@@ -21,7 +21,7 @@
 #'
 #' @import ggplot2
 #' @importFrom MASS kde2d
-#' @importFrom dplyr as.tbl_cube
+#' @importFrom reshape2 melt
 #'
 #' @examples
 #' ## Generate a synthetic dataset
@@ -126,7 +126,7 @@ draw_trajectory_plot <- function(
       names(dimnames(kde_out$z)) <- c("x", "y")
 
       kde_out$z %>%
-        as.tbl_cube(met_name = "density") %>%
+        reshape2::melt(kde_out$z, varnames = c("x", "y"), value.name = "density") %>%
         as_tibble() %>%
         transmute(
           progression_group = group_name,
