@@ -7,4 +7,3 @@ inst/doc
 *.so
 .DS_Store
 revdep/**/
-vignettes/*.html

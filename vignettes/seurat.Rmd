@@ -12,6 +12,7 @@ editor_options:
 ---
 
 <!-- github markdown built using 
+rmarkdown::render("vignettes/seurat.Rmd")
 rmarkdown::render("vignettes/seurat.Rmd", output_format = "github_document")
 -->
 
@@ -24,6 +25,7 @@ This vignette assumes that you have a Seurat object at the ready. As an example,
 ```{r load_data, message=FALSE}
 library(SCORPIUS)
 library(Seurat)
+
 data(ginhoux)
 
 counts <- t(round(2^ginhoux$expression))
@@ -56,10 +58,10 @@ two points in that space approximates the original distance between the two cell
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`.
 The reduced space is constructed as follows:
 ```{r perform_mds}
-space <- reduce_dimensionality(expression, "spearman", ndim = 3)
+space <- reduce_dimensionality(expression, dist = "spearman", ndim = 3)
 ```
 
-The new space is a `r nrow(space)`-by-`r ncol(space)` matrix, and can be visualised with or without colouring of the
+The new space is a matrix that can be visualised with or without colouring of the
 different cell types.
 ```{r show_dimred}
 draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
@@ -96,12 +98,6 @@ as such genes might be good candidate marker genes for dendritic cell maturation
 gimp <- gene_importances(expression, traj$time, num_permutations = 0, num_threads = 8)
 gene_sel <- gimp[1:50,]
 expr_sel <- expression[,gene_sel$gene]
-```
-
-```{r echo=F}
-# reverse the trajectory. This does not change the results in any way,
-# other than the heatmap being ordered more logically.
-# traj <- reverse_trajectory(traj)
 ```
 
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.

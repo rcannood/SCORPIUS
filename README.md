@@ -164,7 +164,16 @@ list of changes.
 
 <!-- This section gets automatically generated from NEWS.md -->
 
-### Recent changes in SCORPIUS 1.0.5
+### Recent changes in SCORPIUS 1.0.6
+
+#### Minor change
+
+  - Resubmission of SCORPIUS. SCORPIUS was removed from CRAN because
+    dynwrap was removed from CRAN.
+
+  - Added a vignette for using SCORPIUS to analyse Seurat data.
+
+### Recent changes in SCORPIUS 1.0.5 (08-12-2019)
 
 #### Major change
 
@@ -177,21 +186,6 @@ list of changes.
   - Remove deprecated functions.
 
   - Use `lmds` instead of `dyndimred`.
-
-### Recent changes in SCORPIUS 1.0.4 (07-08-2019)
-
-#### Minor changes
-
-  - Added extra customisation parameters to `draw_trajectory_plot()` and
-    `draw_trajectory_heatmap()`.
-
-#### Optimisation
-
-  - Fixed internal function `check_numeric_matrix()` such that it does
-    not run for ages when applied to a large sparse matrix.
-
-  - Minor improvement in `infer_initial_trajectory()` when calculating
-    the distance from points to along candidate segments.
 
 ## References
 

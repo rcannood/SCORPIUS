@@ -4,6 +4,7 @@ Robrecht Cannoodt
 2019-01-12
 
 <!-- github markdown built using 
+rmarkdown::render("vignettes/seurat.Rmd")
 rmarkdown::render("vignettes/seurat.Rmd", output_format = "github_document")
 -->
 
@@ -14,6 +15,7 @@ dendritic cell progenitors.
 ``` r
 library(SCORPIUS)
 library(Seurat)
+
 data(ginhoux)
 
 counts <- t(round(2^ginhoux$expression))
@@ -56,11 +58,11 @@ distance, namely `1 - (cor(x, y)+1)/2`. The reduced space is constructed
 as follows:
 
 ``` r
-space <- reduce_dimensionality(expression, "spearman", ndim = 3)
+space <- reduce_dimensionality(expression, dist = "spearman", ndim = 3)
 ```
 
-The new space is a 245-by-3 matrix, and can be visualised with or
-without colouring of the different cell types.
+The new space is a matrix that can be visualised with or without
+colouring of the different cell types.
 
 ``` r
 draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
