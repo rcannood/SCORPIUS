@@ -1,7 +1,7 @@
 Package: SCORPIUS
 Type: Package
 Title: Inferring Developmental Chronologies from Single-Cell RNA Sequencing Data
-Version: 1.0.6
+Version: 1.0.7
 Description: An accurate and easy tool for performing linear trajectory inference on
   single cells using single-cell RNA sequencing data. In addition, SCORPIUS
   provides functions for discovering the most important genes with respect to
@@ -27,7 +27,7 @@ Roxygen: list(markdown = TRUE)
 URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 VignetteBuilder: 
   knitr,
   R.rsp
@@ -51,6 +51,7 @@ Imports:
   ranger,
   RANN,
   RColorBrewer,
+  reshape2,
   stats,
   tidyr,
   TSP

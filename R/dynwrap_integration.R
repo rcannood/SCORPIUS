@@ -1,4 +1,4 @@
-#' Run SCORPIUS using the dynwrap pipeline
+#' Run scorpius using the dynwrap pipeline
 #'
 #' @param expression Expression matrix
 #' @param parameters Parameters
@@ -6,7 +6,9 @@
 #' @param verbose Verbosity level
 #' @param seed Random seed
 ti_scorpius_run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
-  if (requireNamespace("dynwrap", quietly = TRUE)) {
+  if (!requireNamespace("dynwrap", quietly = TRUE)) {
+    stop("install dynwrap in order to use ti_scorpius().")
+  } else {
     if (!is.null(seed)) set.seed(seed)
 
     # TIMING: done with preproc
@@ -59,8 +61,6 @@ ti_scorpius_run_fun <- function(expression, priors, parameters, seed = NULL, ver
       )
 
     output
-  } else {
-    stop("ti_scorpius() requires dynwrap to be installed.")
   }
 }
 

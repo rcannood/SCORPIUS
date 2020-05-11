@@ -46,8 +46,7 @@ You can install:
     install.packages("SCORPIUS")
     ```
 
-  - the latest development version from GitHub
-    with
+  - the latest development version from GitHub with
     
     ``` r
     devtools::install_github("rcannood/SCORPIUS", build_vignettes = TRUE)
@@ -114,8 +113,7 @@ draw_trajectory_plot(space, group_name, traj$path, contour = TRUE)
 
 ![](man/figures/README_infer_trajectory-1.png)<!-- -->
 
-To identify candidate marker genes,
-run:
+To identify candidate marker genes, run:
 
 ``` r
 # warning: setting num_permutations to 10 requires a long time (~30min) to run!
@@ -147,8 +145,7 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 
 ![](man/figures/README_visualise_tafs-1.png)<!-- -->
 
-Finally, these genes can also be grouped into modules as
-follows:
+Finally, these genes can also be grouped into modules as follows:
 
 ``` r
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
@@ -164,7 +161,13 @@ list of changes.
 
 <!-- This section gets automatically generated from NEWS.md -->
 
-### Recent changes in SCORPIUS 1.0.6
+### Recent changes in SCORPIUS 1.0.7 (2020-05-11)
+
+Fix ahead of dplyr 1.0 release.
+
+  - MINOR CHANGE: substitute as.tbl\_cube for reshape2::melt.
+
+### Recent changes in SCORPIUS 1.0.6 (2020-03-16)
 
 #### Minor change
 
@@ -172,20 +175,6 @@ list of changes.
     dynwrap was removed from CRAN.
 
   - Added a vignette for using SCORPIUS to analyse Seurat data.
-
-### Recent changes in SCORPIUS 1.0.5 (08-12-2019)
-
-#### Major change
-
-  - Added a `ti_scorpius()` wrapper to SCORPIUS.
-
-#### Minor change
-
-  - Use `RANN::nn2()` instead of own nearest neighbour functions.
-
-  - Remove deprecated functions.
-
-  - Use `lmds` instead of `dyndimred`.
 
 ## References
 

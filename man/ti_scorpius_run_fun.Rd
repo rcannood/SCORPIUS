@@ -2,7 +2,7 @@
 % Please edit documentation in R/dynwrap_integration.R
 \name{ti_scorpius_run_fun}
 \alias{ti_scorpius_run_fun}
-\title{Run SCORPIUS using the dynwrap pipeline}
+\title{Run scorpius using the dynwrap pipeline}
 \usage{
 ti_scorpius_run_fun(expression, priors, parameters, seed = NULL, verbose = 0)
 }
@@ -18,5 +18,5 @@ ti_scorpius_run_fun(expression, priors, parameters, seed = NULL, verbose = 0)
 \item{verbose}{Verbosity level}
 }
 \description{
-Run SCORPIUS using the dynwrap pipeline
+Run scorpius using the dynwrap pipeline
 }

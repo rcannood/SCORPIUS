@@ -4,6 +4,7 @@ Robrecht Cannoodt
 2019-01-12
 
 <!-- github markdown built using 
+rmarkdown::render("vignettes/seurat.Rmd")
 rmarkdown::render("vignettes/seurat.Rmd", output_format = "github_document")
 -->
 
@@ -14,6 +15,7 @@ dendritic cell progenitors.
 ``` r
 library(SCORPIUS)
 library(Seurat)
+
 data(ginhoux)
 
 counts <- t(round(2^ginhoux$expression))
@@ -56,12 +58,11 @@ distance, namely `1 - (cor(x, y)+1)/2`. The reduced space is constructed
 as follows:
 
 ``` r
-space <- reduce_dimensionality(expression, "spearman", ndim = 3)
+space <- reduce_dimensionality(expression, dist = "spearman", ndim = 3)
 ```
 
-The new space is a 245-by-3 matrix, and can be visualised with or
-without colouring of the different cell
-types.
+The new space is a matrix that can be visualised with or without
+colouring of the different cell types.
 
 ``` r
 draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
@@ -102,8 +103,7 @@ draw_trajectory_plot(
 
 We search for genes whose expression is seems to be a function of the
 trajectory timeline that was inferred, as such genes might be good
-candidate marker genes for dendritic cell
-maturation.
+candidate marker genes for dendritic cell maturation.
 
 ``` r
 gimp <- gene_importances(expression, traj$time, num_permutations = 0, num_threads = 8)
@@ -120,8 +120,7 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 
 ![](seurat_files/figure-gfm/visualise_tafs-1.png)<!-- -->
 
-Finally, these genes can also be grouped into modules as
-follows:
+Finally, these genes can also be grouped into modules as follows:
 
 ``` r
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
