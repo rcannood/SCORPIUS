@@ -1,4 +1,10 @@
-# SCORPIUS 1.0.6
+# SCORPIUS 1.0.7 (2020-05-11)
+
+Fix ahead of dplyr 1.0 release.
+
+* MINOR CHANGE: substitute as.tbl_cube for reshape2::melt.
+
+# SCORPIUS 1.0.6 (2020-03-16)
 
 ## Minor change
 

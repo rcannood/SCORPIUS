@@ -1,11 +1,8 @@
-# SCORPIUS 1.0.6
+# SCORPIUS 1.0.7 (2020-05-11)
 
-## Minor change
+Fix ahead of dplyr 1.0 release.
 
- * Resubmission of SCORPIUS. SCORPIUS was removed from CRAN because 
-   dynwrap was removed from CRAN.
-   
- * Added a vignette for using SCORPIUS to analyse Seurat data.
+* MINOR CHANGE: substitute as.tbl_cube for reshape2::melt.
 
 # Checks
 ## Test environments
