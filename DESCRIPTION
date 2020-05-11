@@ -27,7 +27,7 @@ Roxygen: list(markdown = TRUE)
 URL: http://github.com/rcannood/SCORPIUS
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
 Depends:
   R (>= 3.0.0)
@@ -49,6 +49,7 @@ Imports:
   ranger,
   RANN,
   RColorBrewer,
+  reshape2,
   stats,
   tidyr,
   TSP
