@@ -25,8 +25,7 @@ The resulting dataset is a list containing a matrix named `expression`
 and a data frame named `sample_info`.
 
 `expression` is a 384-by-500 matrix containing the expression values of
-all the cells and all the
-    genes.
+all the cells and all the genes.
 
 ``` r
 dataset$expression[1:6, 1:6]
@@ -77,15 +76,11 @@ space <- reduce_dimensionality(expression, "spearman", ndim = 3)
 ```
 
 The new space is a 384-by-3 matrix, and can be visualised with or
-without colouring of the different cell
-types.
+without colouring of the different cell types.
 
 ``` r
 draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
 ```
-
-    ## Warning: Computation failed in `stat_contour()`:
-    ## there is no package called 'isoband'
 
 ![](simulated-data_files/figure-gfm/show_dimred-1.png)<!-- -->
 
@@ -116,9 +111,6 @@ draw_trajectory_plot(
 )
 ```
 
-    ## Warning: Computation failed in `stat_contour()`:
-    ## there is no package called 'isoband'
-
 ![](simulated-data_files/figure-gfm/plot_trajectory-1.png)<!-- -->
 
 ## Finding candidate marker genes
@@ -141,10 +133,13 @@ To visualise the expression of the selected genes, use the
 draw_trajectory_heatmap(expr_sel, traj$time, group_name)
 ```
 
-Finally, these genes can also be grouped into modules as
-follows:
+![](simulated-data_files/figure-gfm/visualise_tafs-1.png)<!-- -->
+
+Finally, these genes can also be grouped into modules as follows:
 
 ``` r
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 ```
+
+![](simulated-data_files/figure-gfm/moduled_tafs-1.png)<!-- -->
