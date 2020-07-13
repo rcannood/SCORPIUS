@@ -5,7 +5,7 @@ task <- dyncli::main()
 
 library(SCORPIUS, warn.conflicts = FALSE)
 
-output <- SCORPIUS:::run_fun(
+output <- SCORPIUS:::ti_scorpius_run_fun(
   expression = task$expression,
   priors = task$priors,
   parameters = task$parameters,
