@@ -1,10 +1,8 @@
 
 # SCORPIUS
 
-[![Build
-Status](https://travis-ci.org/rcannood/SCORPIUS.svg?branch=master)](https://travis-ci.org/rcannood/SCORPIUS)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/rcannood/SCORPIUS?branch=master&svg=true)](https://ci.appveyor.com/project/rcannood/SCORPIUS)
+[![R build
+status](https://github.com/rcannood/SCORPIUS/workflows/R-CMD-check/badge.svg)](https://github.com/rcannood/SCORPIUS/actions)
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SCORPIUS)](https://cran.r-project.org/package=SCORPIUS)
 [![Coverage
 Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
