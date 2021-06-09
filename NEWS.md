@@ -1,3 +1,7 @@
+# SCORPIUS 1.0.8
+
+* MINOR CHANGE: Allow adding row annotations to `draw_trajectory_heatmap()`.
+
 # SCORPIUS 1.0.7 (2020-05-11)
 
 Fix ahead of dplyr 1.0 release.
