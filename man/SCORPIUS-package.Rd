@@ -45,8 +45,7 @@ draw_trajectory_plot(
 )
 }
 \references{
-Cannoodt R. et al.,
-\href{https://www.biorxiv.org/content/early/2016/10/07/079509}{SCORPIUS improves trajectory inference and identifies novel modules in dendritic cell development},
-bioRxiv (Oct., 2016). DOI: \href{https://doi.org/10.1101/079509}{10.1101/079509}
-(\href{https://www.biorxiv.org/content/early/2016/10/07/079509.full.pdf}{PDF}).
+Cannoodt R. et al., SCORPIUS improves trajectory inference and identifies novel modules in dendritic cell development,
+bioRxiv (Oct., 2016). \doi{10.1101/079509}
+(\href{https://www.biorxiv.org/content/biorxiv/early/2016/10/07/079509.full.pdf}{PDF}).
 }
