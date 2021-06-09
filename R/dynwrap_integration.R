@@ -15,11 +15,17 @@ ti_scorpius_run_fun <- function(expression, priors, parameters, seed = NULL, ver
     checkpoints <- list(method_afterpreproc = Sys.time())
 
     # REDUCE DIMENSIONALITY
-    space <- reduce_dimensionality(
-      x = expression,
-      dist = parameters$distance_method,
-      ndim = parameters$ndim
-    )
+    # use prior dimred if available
+    space <-
+      if (is.null(priors$dimred)) {
+        SCORPIUS::reduce_dimensionality(
+          x = expression,
+          dist = parameters$distance_method,
+          ndim = parameters$ndim
+        )
+      } else {
+        priors$dimred
+      }
 
     # INFER TRAJECTORY
     traj <- infer_trajectory(

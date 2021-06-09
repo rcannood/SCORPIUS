@@ -33,7 +33,7 @@ container:
   docker: dynverse/ti_scorpius
 
 package:
-  remote: rcannood/SCORPIUS@dynwrap
+  remote: rcannood/SCORPIUS
   name: SCORPIUS
   function_name: ti_scorpius
 
@@ -42,6 +42,7 @@ wrapper:
   topology_inference: fixed
   trajectory_types: linear
   input_required: expression
+  input_optional: dimred
 
 parameters:
   - id: distance_method

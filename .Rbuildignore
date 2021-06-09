@@ -13,3 +13,4 @@
 ^vignettes/.*\.md$
 ^vignettes/.*/.*\.png$
 ^vignettes/Seurat.Rmd$
+^\.github$

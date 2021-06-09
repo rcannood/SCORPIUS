@@ -267,18 +267,31 @@ draw_trajectory_heatmap <- function(
     rownames(x) <- paste("Row ", seq_len(nrow(x)))
   }
 
+  # process ... params
+  params <- list(...)
+
+  # create column annotation
   col_ann <- data.frame(row.names = rownames(x), Time = time)
 
+  # process expression data
   x_part <- x[order(time),,drop=FALSE]
   if (scale_features) {
     x_part <- scale_quantile(x_part)
   }
   x_part <- t(x_part)
 
-  ann_col <- list(
-    Time = RColorBrewer::brewer.pal(5, "RdGy")
-  )
+  # get palettes
+  ann_col <-
+    if (!is.null(params$annotation_colors)) {
+      params$annotation_colors
+    } else {
+      list()
+    }
 
+  # add palette for time
+  ann_col$Time <- RColorBrewer::brewer.pal(5, "RdGy")
+
+  # add palette for progression
   if (!is.null(progression_group)) {
     if (is.numeric(progression_group)) {
       ann_col$Progression <-
@@ -301,9 +314,11 @@ draw_trajectory_heatmap <- function(
     col_ann$Progression <- progression_group
   }
 
+  # whether or not to show the labels
   labels_row <- if (!show_labels_row) rep("", nrow(x_part)) else NULL
   labels_col <- if (!show_labels_col) rep("", ncol(x_part)) else NULL
 
+  # whether or not to cluster by modules
   if (!is.null(modules)) {
     x_part <- x_part[modules$feature,]
     gaps_row <- which(modules$module[-1] != modules$module[-length(modules$module)])
@@ -313,17 +328,17 @@ draw_trajectory_heatmap <- function(
     cluster_rows <- TRUE
   }
 
-  pheatmap::pheatmap(
-    x_part,
-    cluster_cols = FALSE,
-    cluster_rows = cluster_rows,
-    annotation_col = col_ann,
-    annotation_colors = ann_col,
-    gaps_row = gaps_row,
-    labels_row = labels_row,
-    labels_col = labels_col,
-    ...
-  )
+  # pass parameters to pheatmap
+  params$mat <- x_part
+  params$cluster_cols <- FALSE
+  params$cluster_rows <- cluster_rows
+  params$annotation_col <- col_ann
+  params$annotation_colors <- ann_col
+  params$gaps_row <- gaps_row
+  params$labels_row <- labels_row
+  params$labels_col <- labels_col
+
+  do.call(pheatmap::pheatmap, params)
 }
 
 
