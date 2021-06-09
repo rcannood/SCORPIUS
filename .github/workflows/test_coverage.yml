@@ -12,6 +12,7 @@ name: test-coverage
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v2
 
@@ -34,12 +35,11 @@ jobs:
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "remotes::install_github('rcannood/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs:::sysreq_commands_pkgs(sysreqs:::get_cran_sysreqs(sysreqs:::get_cran_deps('covr'))))")
-          sudo -s eval "$sysreqs"
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Install dependencies
         run: |

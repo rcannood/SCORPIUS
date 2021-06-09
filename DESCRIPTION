@@ -56,6 +56,7 @@ Imports:
   tidyr,
   TSP
 Suggests:
+  covr,
   knitr,
   rmarkdown,
   R.rsp,
