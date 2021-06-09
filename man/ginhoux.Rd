@@ -8,7 +8,7 @@
 A list containing two data frames, \code{expression} (248x2000) and \code{sample_info} (248x1).
 }
 \source{
-\url{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
+\url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
 }
 \usage{
 ginhoux

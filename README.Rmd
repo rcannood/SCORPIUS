@@ -10,7 +10,7 @@ bibliography: library.bib
 ```{r setup1, include=FALSE}
 knitr::opts_chunk$set(fig.path = "man/figures/README_", warning = FALSE, message = FALSE, error = FALSE, echo = TRUE)
 
-submission_to_cran <- FALSE
+submission_to_cran <- TRUE
 library(tidyverse)
 ```
 
@@ -38,10 +38,10 @@ News:
 
 * See `news(package = "SCORPIUS")` for a full list of changes to the package.
 
-* A preprint is available on [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509). 
+* A preprint is available on [bioRxiv](https://biorxiv.org/content/early/2016/10/07/079509). 
   Run `citation("SCORPIUS")` to obtain the corresponding citation information.
 
-* Check out our [review](http://dx.doi.org/10.1038/s41587-019-0071-9) on Trajectory Inference methods!
+* Check out our [review](https://dx.doi.org/10.1038/s41587-019-0071-9) on Trajectory Inference methods!
   
 ## Installing SCORPIUS
 

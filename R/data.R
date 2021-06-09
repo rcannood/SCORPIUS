@@ -97,7 +97,7 @@ generate_dataset <- function(num_samples = 400, num_genes = 500, num_groups = 4)
 #' Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at
 #'  the common DC progenitor stage in the bone marrow. Nat Immunol 2015 Jul;16(7):718-28. PMID: 26054720
 #'
-#' @source \url{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
+#' @source \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE60783}
 #'
 #' @docType data
 #'

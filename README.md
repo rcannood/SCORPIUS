@@ -11,41 +11,41 @@ Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](
 chronologies from single-cell RNA sequencing data.** In comparison to
 similar approaches, it has three main advantages:
 
-  - **It accurately reconstructs linear dynamic processes.** The
+-   **It accurately reconstructs linear dynamic processes.** The
     performance was evaluated using a quantitative evaluation pipeline
     and ten single-cell RNA sequencing datasets.
 
-  - **It automatically identifies marker genes, speeding up knowledge
+-   **It automatically identifies marker genes, speeding up knowledge
     discovery.**
 
-  - **It is fully unsupervised.** Prior knowledge of the relevant marker
+-   **It is fully unsupervised.** Prior knowledge of the relevant marker
     genes or cellular states of individual cells is not required.
 
 News:
 
-  - See `news(package = "SCORPIUS")` for a full list of changes to the
+-   See `news(package = "SCORPIUS")` for a full list of changes to the
     package.
 
-  - A preprint is available on
-    [bioRxiv](http://biorxiv.org/content/early/2016/10/07/079509). Run
+-   A preprint is available on
+    [bioRxiv](https://biorxiv.org/content/early/2016/10/07/079509). Run
     `citation("SCORPIUS")` to obtain the corresponding citation
     information.
 
-  - Check out our [review](http://dx.doi.org/10.1038/s41587-019-0071-9)
-    on Trajectory Inference methods\!
+-   Check out our [review](https://dx.doi.org/10.1038/s41587-019-0071-9)
+    on Trajectory Inference methods!
 
 ## Installing SCORPIUS
 
 You can install:
 
-  - the latest released version from CRAN with
-    
+-   the latest released version from CRAN with
+
     ``` r
     install.packages("SCORPIUS")
     ```
 
-  - the latest development version from GitHub with
-    
+-   the latest development version from GitHub with
+
     ``` r
     devtools::install_github("rcannood/SCORPIUS", build_vignettes = TRUE)
     ```
@@ -58,13 +58,12 @@ the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 To get started, read the introductory example below, or read one of the
 vignettes containing more elaborate examples:
 
-  - [Investigating dendritic cell maturation in dendritic cell
-    progenitors](vignettes/ginhoux.md):  
+-   Investigating dendritic cell maturation in dendritic cell
+    progenitors:  
     `vignette("ginhoux", package="SCORPIUS")`
-  - [Running SCOPIUS on a Seurat object](vignettes/seurat.md):  
+-   Running SCOPIUS on a Seurat object:  
     `vignette("seurat", package="SCORPIUS")`
-  - [Trajectory inference from simulated
-    data](vignettes/simulated-data.md):  
+-   Trajectory inference from simulated data:  
     `vignette("simulated-data", package="SCORPIUS")`
 
 ## Introductory example
@@ -137,20 +136,7 @@ expr_sel <- scale_quantile(expression[,gene_sel])
 To visualise the expression of the selected genes, use the
 `draw_trajectory_heatmap` function.
 
-``` r
-draw_trajectory_heatmap(expr_sel, traj$time, group_name)
-```
-
-![](man/figures/README_visualise_tafs-1.png)<!-- -->
-
 Finally, these genes can also be grouped into modules as follows:
-
-``` r
-modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
-draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
-```
-
-![](man/figures/README_moduled_tafs-1.png)<!-- -->
 
 ## Latest changes
 
@@ -159,32 +145,28 @@ list of changes.
 
 <!-- This section gets automatically generated from NEWS.md -->
 
+### Recent changes in SCORPIUS 1.0.8
+
+-   MINOR CHANGE: Allow adding row annotations to
+    `draw_trajectory_heatmap()`.
+
 ### Recent changes in SCORPIUS 1.0.7 (2020-05-11)
 
 Fix ahead of dplyr 1.0 release.
 
-  - MINOR CHANGE: substitute as.tbl\_cube for reshape2::melt.
-
-### Recent changes in SCORPIUS 1.0.6 (2020-03-16)
-
-#### Minor change
-
-  - Resubmission of SCORPIUS. SCORPIUS was removed from CRAN because
-    dynwrap was removed from CRAN.
-
-  - Added a vignette for using SCORPIUS to analyse Seurat data.
+-   MINOR CHANGE: substitute as.tbl\_cube for reshape2::melt.
 
 ## References
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Schlitzer2015">
+<div id="ref-Schlitzer2015" class="csl-entry">
 
 Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin
 Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015.
-“Identification of cDC1- and cDC2-committed DC progenitors reveals
-early lineage priming at the common DC progenitor stage in the bone
-marrow.” *Nature Immunology* 16 (7): 718–26.
+“<span class="nocase">Identification of cDC1- and cDC2-committed DC
+progenitors reveals early lineage priming at the common DC progenitor
+stage in the bone marrow</span>.” *Nature Immunology* 16 (7): 718–26.
 <https://doi.org/10.1038/ni.3200>.
 
 </div>
