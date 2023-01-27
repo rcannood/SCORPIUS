@@ -1,14 +1,16 @@
 
 # SCORPIUS
 
-[![R build
-status](https://github.com/rcannood/SCORPIUS/workflows/R-CMD-check/badge.svg)](https://github.com/rcannood/SCORPIUS/actions)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/SCORPIUS)](https://cran.r-project.org/package=SCORPIUS)
-[![Coverage
-Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
+<!-- badges: start -->
 
-**SCORPIUS an unsupervised approach for inferring linear developmental
-chronologies from single-cell RNA sequencing data.** In comparison to
+[![R-CMD-check](https://github.com/rcannood/SCORPIUS/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rcannood/SCORPIUS/actions/workflows/R-CMD-check.yaml)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SCORPIUS)](https://cran.r-project.org/package=SCORPIUS)
+[![Codecov test
+coverage](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rcannood/SCORPIUS?branch=master)
+<!-- badges: end -->
+
+SCORPIUS an unsupervised approach for inferring linear developmental
+chronologies from single-cell RNA sequencing data. In comparison to
 similar approaches, it has three main advantages:
 
 -   **It accurately reconstructs linear dynamic processes.** The
@@ -58,6 +60,8 @@ the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 To get started, read the introductory example below, or read one of the
 vignettes containing more elaborate examples:
 
+-   Running SCOPIUS on an AnnData object:  
+    `vignette("anndata", package="SCORPIUS")`
 -   Investigating dendritic cell maturation in dendritic cell
     progenitors:  
     `vignette("ginhoux", package="SCORPIUS")`
@@ -136,25 +140,20 @@ expr_sel <- scale_quantile(expression[,gene_sel])
 To visualise the expression of the selected genes, use the
 `draw_trajectory_heatmap` function.
 
+``` r
+draw_trajectory_heatmap(expr_sel, traj$time, group_name)
+```
+
+![](man/figures/README_visualise_tafs-1.png)<!-- -->
+
 Finally, these genes can also be grouped into modules as follows:
 
-## Latest changes
+``` r
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
+draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
+```
 
-Check out `news(package = "SCORPIUS")` or [NEWS.md](NEWS.md) for a full
-list of changes.
-
-<!-- This section gets automatically generated from NEWS.md -->
-
-### Recent changes in SCORPIUS 1.0.8
-
--   MINOR CHANGE: Allow adding row annotations to
-    `draw_trajectory_heatmap()`.
-
-### Recent changes in SCORPIUS 1.0.7 (2020-05-11)
-
-Fix ahead of dplyr 1.0 release.
-
--   MINOR CHANGE: substitute as.tbl\_cube for reshape2::melt.
+![](man/figures/README_moduled_tafs-1.png)<!-- -->
 
 ## References
 

@@ -24,10 +24,11 @@ Authors@R: c(
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-URL: https://github.com/rcannood/SCORPIUS
+URL: https://github.com/rcannood/SCORPIUS,
+    http://rcannood.github.io/SCORPIUS/
 BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.2
 VignetteBuilder: 
   knitr,
   R.rsp
@@ -56,8 +57,10 @@ Imports:
   tidyr,
   TSP
 Suggests:
+  anndata,
   covr,
   knitr,
   rmarkdown,
   R.rsp,
+  Seurat,
   testthat (>= 2.1.0)

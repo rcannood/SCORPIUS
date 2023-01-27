@@ -14,3 +14,7 @@
 ^vignettes/.*/.*\.png$
 ^vignettes/Seurat.Rmd$
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$

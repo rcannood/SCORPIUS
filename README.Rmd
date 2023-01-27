@@ -17,13 +17,14 @@ library(tidyverse)
 
 # SCORPIUS
 
-[![R build status](https://github.com/rcannood/SCORPIUS/workflows/R-CMD-check/badge.svg)](https://github.com/rcannood/SCORPIUS/actions)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/rcannood/SCORPIUS/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rcannood/SCORPIUS/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/SCORPIUS)](https://cran.r-project.org/package=SCORPIUS)
-[![Coverage Status](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://codecov.io/gh/rcannood/SCORPIUS?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/rcannood/SCORPIUS/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rcannood/SCORPIUS?branch=master)
+<!-- badges: end -->
 
-
-**SCORPIUS an unsupervised approach for inferring linear developmental chronologies from single-cell
-RNA sequencing data.** In comparison to similar approaches, it has three main advantages:
+SCORPIUS an unsupervised approach for inferring linear developmental chronologies from single-cell
+RNA sequencing data. In comparison to similar approaches, it has three main advantages:
 
 * **It accurately reconstructs linear dynamic processes.** 
   The performance was evaluated using a quantitative evaluation pipeline and
@@ -74,14 +75,9 @@ walk(
       keep(~grepl("^title: ", .)) %>% 
       gsub("title: \"(.*)\"", "\\1", .)
     vignette_name <- gsub("\\.Rmd", "", file)
-    markdown_name <- gsub("\\.Rmd", ".md", file)
     cat(
-      "* ",
-      ifelse(submission_to_cran, "", "["),
-      title, 
-      ifelse(submission_to_cran, "", paste0("](vignettes/", markdown_name, ")")),
-      ":  \n",
-      "`vignette(\"", vignette_name, "\", package=\"SCORPIUS\")`\n",
+      "* ", title, ":  \n",
+      "`vignette(\"", vignette_name, "\", package=\"SCORPIUS\")`\n", 
       sep = ""
     )
   }
@@ -162,15 +158,6 @@ Finally, these genes can also be grouped into modules as follows:
 ```{r moduled_tafs, fig.keep='first'}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = F)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
-```
-
-## Latest changes
-Check out `news(package = "SCORPIUS")` or [NEWS.md](NEWS.md) for a full list of changes.
-
-<!-- This section gets automatically generated from NEWS.md -->
-
-```{r news, echo=FALSE, results="asis"}
-cat(dynutils::recent_news())
 ```
 
 ## References
