@@ -1,10 +1,10 @@
 ---
-title: "Running SCOPIUS on a Seurat object"
+title: "Running SCOPIUS on an AnnData object"
 author: "Robrecht Cannoodt"
 date: "2019-01-12"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Running SCOPIUS on a Seurat object}
+  %\VignetteIndexEntry{Running SCOPIUS on a AnnData object}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -12,43 +12,31 @@ editor_options:
 ---
 
 <!-- github markdown built using 
-rmarkdown::render("vignettes/seurat.Rmd")
-rmarkdown::render("vignettes/seurat.Rmd", output_format = "github_document")
+rmarkdown::render("vignettes/anndata.Rmd")
+rmarkdown::render("vignettes/anndata.Rmd", output_format = "github_document")
 -->
 
 ```{r, setseed, echo=FALSE}
 set.seed(1)
 ```
 
-This vignette assumes that you have a Seurat object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
+This vignette assumes that you have a v object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
 
 ```{r load_data, message=FALSE}
 library(SCORPIUS)
-library(Seurat)
-library(Matrix)
+library(anndata)
 
 data(ginhoux)
 
-counts <- t(round(2^ginhoux$expression))
-srt <- CreateSeuratObject(counts = counts, meta.data = ginhoux$sample_info)
-```
+adata <- AnnData(
+  X = ginhoux$expression, 
+  obs = ginhoux$sample_info
+)
 
-## Normalise with Seurat
+# short hand notation
+group_name <- adata$obs[["group_name"]]
 
-Seurat is used to normalise the dataset. 
-Since the dimensionality reduction method is scale-invariant, the scaling step in Seurat is not required.
-```{r normalise}
-srt <- NormalizeData(srt)
-```
-
-Fetch the expression data from the Seurat object as follows.
-```{r fetchdata}
-expression <- t(srt@assays$RNA@data)
-```
-
-Also fetch some metadata from the Seurat object. Change `group_name` to whatever column in `srt@meta.data` you are interested in.
-```{r fetchmeta}
-group_name <- srt@meta.data$group_name 
+adata
 ```
 
 ## Reduce dimensionality of the dataset
@@ -59,13 +47,17 @@ two points in that space approximates the original distance between the two cell
 The distance between any two samples is defined as their correlation distance, namely `1 - (cor(x, y)+1)/2`.
 The reduced space is constructed as follows:
 ```{r perform_mds}
-space <- reduce_dimensionality(expression, dist = "spearman", ndim = 3)
+space <- reduce_dimensionality(adata$X, dist = "spearman", ndim = 3)
 ```
 
 The new space is a matrix that can be visualised with or without colouring of the
 different cell types.
 ```{r show_dimred}
-draw_trajectory_plot(space, progression_group = group_name, contour = TRUE)
+draw_trajectory_plot(
+  space,
+  progression_group = group_name, 
+  contour = TRUE
+)
 ```
 
 
@@ -95,13 +87,10 @@ draw_trajectory_plot(
 We search for genes whose expression is seems to be a function of the trajectory timeline that was inferred, 
 as such genes might be good candidate marker genes for dendritic cell maturation.
 
-**Note**: this will only work for sufficiently small expression matrices!s
-
 ```{r find_tafs}
-expression <- as.matrix(expression)
-gimp <- gene_importances(expression, traj$time, num_permutations = 0, num_threads = 8)
+gimp <- gene_importances(adata$X, traj$time, num_permutations = 0, num_threads = 8)
 gene_sel <- gimp[1:50,]
-expr_sel <- expression[,gene_sel$gene]
+expr_sel <- adata$X[,gene_sel$gene]
 ```
 
 To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
@@ -113,4 +102,15 @@ Finally, these genes can also be grouped into modules as follows:
 ```{r moduled_tafs, fig.keep='first'}
 modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
 draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
+```
+
+## Store outputs in AnnData
+
+```{r}
+adata$obsm[["X_mds"]] <- space
+adata$uns[["trajectory_path"]] <- traj$path
+adata$obs[["trajectory_pseudotime"]] <- traj$time
+adata$var[["trajectory_importance"]] <- gimp[match(adata$var_names, gimp$gene), ]$importance
+
+adata
 ```
