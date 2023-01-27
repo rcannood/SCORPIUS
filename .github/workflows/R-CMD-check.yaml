@@ -43,6 +43,12 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Install Python dependencies
+        run: |
+          reticulate::install_miniconda()
+          reticulate::py_install("anndata", pip = TRUE)
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
