@@ -1,3 +1,9 @@
+# SCORPIUS 1.0.9
+
+* DOCUMENTATION: Add vignette for working with AnnData objects.
+
+* DOCUMENTATION: Create pkgdown site.
+
 # SCORPIUS 1.0.8
 
 * MINOR CHANGE: Allow adding row annotations to `draw_trajectory_heatmap()`.
