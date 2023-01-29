@@ -28,13 +28,12 @@ News:
 -   See `news(package = "SCORPIUS")` for a full list of changes to the
     package.
 
--   A preprint is available on
-    [bioRxiv](https://biorxiv.org/content/early/2016/10/07/079509). Run
-    `citation("SCORPIUS")` to obtain the corresponding citation
-    information.
+-   Our preprint is on
+    [bioRxiv](https://biorxiv.org/content/early/2016/10/07/079509)
+    (Cannoodt et al. 2016).
 
 -   Check out our [review](https://dx.doi.org/10.1038/s41587-019-0071-9)
-    on Trajectory Inference methods!
+    on Trajectory Inference methods (Saelens et al. 2019).
 
 ## Installing SCORPIUS
 
@@ -82,7 +81,7 @@ To start using SCORPIUS, simply write:
 library(SCORPIUS)
 ```
 
-The `ginhoux` dataset (See Schlitzer et al. 2015) contains 248 dendritic
+The `ginhoux` dataset (Schlitzer et al. 2015) contains 248 dendritic
 cell progenitors in one of three cellular cellular states: MDP, CDP or
 PreDC. Note that this is a reduced version of the dataset, for packaging
 reasons. See ?ginhoux for more info.
@@ -159,14 +158,33 @@ draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
+<div id="ref-Cannoodt2016" class="csl-entry">
+
+Cannoodt, Robrecht, Wouter Saelens, Dorine Sichien, Simon Tavernier,
+Sophie Janssens, Martin Guilliams, Bart Lambrecht, Katleen De Preter,
+and Yvan Saeys. 2016. “SCORPIUS Improves Trajectory Inference and
+Identifies Novel Modules in Dendritic Cell Development,” October.
+<https://doi.org/10.1101/079509>.
+
+</div>
+
+<div id="ref-Saelens2019" class="csl-entry">
+
+Saelens, Wouter, Robrecht Cannoodt, Helena Todorov, and Yvan Saeys.
+2019. “A Comparison of Single-Cell Trajectory Inference Methods.”
+*Nature Biotechnology* 37 (5): 547–54.
+<https://doi.org/10.1038/s41587-019-0071-9>.
+
+</div>
+
 <div id="ref-Schlitzer2015" class="csl-entry">
 
 Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin
 Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015.
-“<span class="nocase">Identification of cDC1- and cDC2-committed DC
-progenitors reveals early lineage priming at the common DC progenitor
-stage in the bone marrow</span>.” *Nature Immunology* 16 (7): 718–26.
-<https://doi.org/10.1038/ni.3200>.
+“Identification of <span class="nocase">cDC</span>1- and <span
+class="nocase">cDC</span>2-Committed DC Progenitors Reveals Early
+Lineage Priming at the Common DC Progenitor Stage in the Bone Marrow.”
+*Nature Immunology* 16 (7): 718–28. <https://doi.org/10.1038/ni.3200>.
 
 </div>
 

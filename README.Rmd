@@ -39,10 +39,11 @@ News:
 
 * See `news(package = "SCORPIUS")` for a full list of changes to the package.
 
-* A preprint is available on [bioRxiv](https://biorxiv.org/content/early/2016/10/07/079509). 
-  Run `citation("SCORPIUS")` to obtain the corresponding citation information.
+* Our preprint is on [bioRxiv](https://biorxiv.org/content/early/2016/10/07/079509)
+  [@Cannoodt2016].
 
-* Check out our [review](https://dx.doi.org/10.1038/s41587-019-0071-9) on Trajectory Inference methods!
+* Check out our [review](https://dx.doi.org/10.1038/s41587-019-0071-9) on Trajectory Inference methods
+  [@Saelens2019].
   
 ## Installing SCORPIUS
 
@@ -98,7 +99,7 @@ library(SCORPIUS)
 ```
 
 
-The `ginhoux` dataset [See @Schlitzer2015] contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.
+The `ginhoux` dataset [@Schlitzer2015] contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.
 ```{r load_ginhoux}
 data(ginhoux)
 expression <- ginhoux$expression
