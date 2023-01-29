@@ -91,8 +91,8 @@
 <p>News:</p>
 <ul>
 <li><p>See <code>news(package = "SCORPIUS")</code> for a full list of changes to the package.</p></li>
-<li><p>A preprint is available on <a href="https://biorxiv.org/content/early/2016/10/07/079509" class="external-link">bioRxiv</a>. Run <code>citation("SCORPIUS")</code> to obtain the corresponding citation information.</p></li>
-<li><p>Check out our <a href="https://dx.doi.org/10.1038/s41587-019-0071-9" class="external-link">review</a> on Trajectory Inference methods!</p></li>
+<li><p>Our preprint is on <a href="https://biorxiv.org/content/early/2016/10/07/079509" class="external-link">bioRxiv</a> (Cannoodt et al. 2016).</p></li>
+<li><p>Check out our <a href="https://dx.doi.org/10.1038/s41587-019-0071-9" class="external-link">review</a> on Trajectory Inference methods (Saelens et al. 2019).</p></li>
 </ul>
 <div class="section level2">
 <h2 id="installing-scorpius">Installing SCORPIUS<a class="anchor" aria-label="anchor" href="#installing-scorpius"></a>
@@ -134,7 +134,7 @@
 <p>To start using SCORPIUS, simply write:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rcannood/SCORPIUS" class="external-link">SCORPIUS</a></span><span class="op">)</span></span></code></pre></div>
-<p>The <code>ginhoux</code> dataset (See Schlitzer et al. 2015) contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.</p>
+<p>The <code>ginhoux</code> dataset (Schlitzer et al. 2015) contains 248 dendritic cell progenitors in one of three cellular cellular states: MDP, CDP or PreDC. Note that this is a reduced version of the dataset, for packaging reasons. See ?ginhoux for more info.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ginhoux</span><span class="op">)</span></span>
 <span><span class="va">expression</span> <span class="op">&lt;-</span> <span class="va">ginhoux</span><span class="op">$</span><span class="va">expression</span></span>
@@ -180,8 +180,14 @@
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Cannoodt2016" class="csl-entry">
+Cannoodt, Robrecht, Wouter Saelens, Dorine Sichien, Simon Tavernier, Sophie Janssens, Martin Guilliams, Bart Lambrecht, Katleen De Preter, and Yvan Saeys. 2016. “SCORPIUS Improves Trajectory Inference and Identifies Novel Modules in Dendritic Cell Development,” October. <a href="https://doi.org/10.1101/079509" class="external-link uri">https://doi.org/10.1101/079509</a>.
+</div>
+<div id="ref-Saelens2019" class="csl-entry">
+Saelens, Wouter, Robrecht Cannoodt, Helena Todorov, and Yvan Saeys. 2019. “A Comparison of Single-Cell Trajectory Inference Methods.” <em>Nature Biotechnology</em> 37 (5): 547–54. <a href="https://doi.org/10.1038/s41587-019-0071-9" class="external-link uri">https://doi.org/10.1038/s41587-019-0071-9</a>.
+</div>
 <div id="ref-Schlitzer2015" class="csl-entry">
-Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015. “<span class="nocase">Identification of cDC1- and cDC2-committed DC progenitors reveals early lineage priming at the common DC progenitor stage in the bone marrow</span>.” <em>Nature Immunology</em> 16 (7): 718–26. <a href="https://doi.org/10.1038/ni.3200" class="external-link uri">https://doi.org/10.1038/ni.3200</a>.
+Schlitzer, Andreas, V Sivakamasundari, Jinmiao Chen, Hermi Rizal Bin Sumatoh, Jaring Schreuder, Josephine Lum, Benoit Malleret, et al. 2015. “Identification of <span class="nocase">cDC</span>1- and <span class="nocase">cDC</span>2-Committed DC Progenitors Reveals Early Lineage Priming at the Common DC Progenitor Stage in the Bone Marrow.” <em>Nature Immunology</em> 16 (7): 718–28. <a href="https://doi.org/10.1038/ni.3200" class="external-link uri">https://doi.org/10.1038/ni.3200</a>.
 </div>
 </div>
 </div>
