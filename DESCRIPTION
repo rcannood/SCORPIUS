@@ -30,8 +30,7 @@ BugReports: https://github.com/rcannood/SCORPIUS/issues
 LazyData: true
 RoxygenNote: 7.2.2
 VignetteBuilder: 
-  knitr,
-  R.rsp
+  knitr
 Depends:
   R (>= 3.5.0)
 Imports:
@@ -61,6 +60,5 @@ Suggests:
   covr,
   knitr,
   rmarkdown,
-  R.rsp,
   Seurat,
   testthat (>= 2.1.0)
