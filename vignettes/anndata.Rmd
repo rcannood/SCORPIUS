@@ -20,7 +20,7 @@ rmarkdown::render("vignettes/anndata.Rmd", output_format = "github_document")
 set.seed(1)
 ```
 
-This vignette assumes that you have a v object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
+This vignette assumes that you have an AnnData object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
 
 ```{r load_data, message=FALSE}
 library(SCORPIUS)
