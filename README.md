@@ -59,12 +59,12 @@ the [issues](https://github.com/rcannood/SCORPIUS/issues) page.
 To get started, read the introductory example below, or read one of the
 vignettes containing more elaborate examples:
 
--   Running SCOPIUS on an AnnData object:  
+-   Running SCORPIUS on an AnnData object:  
     `vignette("anndata", package="SCORPIUS")`
 -   Investigating dendritic cell maturation in dendritic cell
     progenitors:  
     `vignette("ginhoux", package="SCORPIUS")`
--   Running SCOPIUS on a Seurat object:  
+-   Running SCORPIUS on a Seurat object:  
     `vignette("seurat", package="SCORPIUS")`
 -   Trajectory inference from simulated data:  
     `vignette("simulated-data", package="SCORPIUS")`

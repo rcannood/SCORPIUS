@@ -1,10 +1,10 @@
 ---
-title: "Running SCOPIUS on an AnnData object"
+title: "Running SCORPIUS on an AnnData object"
 author: "Robrecht Cannoodt"
 date: "2019-01-12"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Running SCOPIUS on a AnnData object}
+  %\VignetteIndexEntry{Running SCORPIUS on a AnnData object}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

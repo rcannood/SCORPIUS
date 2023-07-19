@@ -1,10 +1,10 @@
 ---
-title: "Running SCOPIUS on a Seurat object"
+title: "Running SCORPIUS on a Seurat object"
 author: "Robrecht Cannoodt"
 date: "2019-01-12"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Running SCOPIUS on a Seurat object}
+  %\VignetteIndexEntry{Running SCORPIUS on a Seurat object}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
