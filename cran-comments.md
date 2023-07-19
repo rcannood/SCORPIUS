@@ -1,8 +1,10 @@
-# SCORPIUS 1.0.7 (2020-05-11)
+# SCORPIUS 1.0.9
 
-Fix ahead of dplyr 1.0 release.
+* Resubmission after babelwhale was removed from CRAN.
 
-* MINOR CHANGE: substitute as.tbl_cube for reshape2::melt.
+* DOCUMENTATION: Add vignette for working with AnnData objects.
+
+* DOCUMENTATION: Create pkgdown site.
 
 # Checks
 ## Test environments

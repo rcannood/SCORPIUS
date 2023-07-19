@@ -1,5 +1,7 @@
 # SCORPIUS 1.0.9
 
+* Resubmission after babelwhale was removed from CRAN.
+
 * DOCUMENTATION: Add vignette for working with AnnData objects.
 
 * DOCUMENTATION: Create pkgdown site.
