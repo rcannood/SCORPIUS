@@ -61,4 +61,5 @@ Suggests:
   knitr,
   rmarkdown,
   Seurat,
+  SingleCellExperiment,
   testthat (>= 2.1.0)

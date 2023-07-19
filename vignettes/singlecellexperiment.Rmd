@@ -1,0 +1,111 @@
+---
+title: "Running SCORPIUS on a SingleCellExperiment object"
+author: "Robrecht Cannoodt"
+date: "2019-01-12"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Running SCORPIUS on a SingleCellExperiment object}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- github markdown built using 
+rmarkdown::render("vignettes/singlecellexperiment.Rmd")
+rmarkdown::render("vignettes/singlecellexperiment.Rmd", output_format = "github_document")
+-->
+
+```{r, setseed, echo=FALSE}
+set.seed(1)
+```
+
+This vignette assumes that you have a SingleCellExperiment object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
+
+```{r load_data, message=FALSE}
+library(SCORPIUS)
+library(SingleCellExperiment)
+
+data(ginhoux)
+
+sce <- SingleCellExperiment(
+  assays = list(counts = t(ginhoux$expression)),
+  colData = ginhoux$sample_info
+)
+
+# short hand notation
+group_name <- colData(sce)$group_name
+
+sce
+```
+
+## Reduce dimensionality of the dataset
+
+```{r perform_mds}
+space <- reduce_dimensionality(t(assay(sce, "counts")), dist = "spearman", ndim = 3)
+```
+
+The new space is a matrix that can be visualised with or without colouring of the
+different cell types.
+
+```{r show_dimred}
+draw_trajectory_plot(
+  space,
+  progression_group = group_name, 
+  contour = TRUE
+)
+```
+
+## Inferring a trajectory through the cells
+
+```{r infer_trajectory}
+traj <- infer_trajectory(space)
+```
+
+The result is a list containing the final trajectory `path` and the inferred timeline for each sample `time`.
+
+```{r plot_trajectory}
+draw_trajectory_plot(
+  space, 
+  progression_group = group_name,
+  path = traj$path,
+  contour = TRUE
+)
+```
+
+## Finding candidate marker genes
+
+```{r find_tafs}
+gimp <- gene_importances(
+  t(assay(sce, "counts")),
+  traj$time,
+  num_permutations = 0,
+  num_threads = 8
+)
+gene_sel <- gimp[1:50,]
+expr_sel <- t(assay(sce, "counts"))[,gene_sel$gene]
+```
+
+To visualise the expression of the selected genes, use the `draw_trajectory_heatmap` function.
+
+```{r visualise_tafs, fig.keep='first'}
+draw_trajectory_heatmap(expr_sel, traj$time, group_name)
+```
+
+Finally, these genes can also be grouped into modules as follows:
+
+```{r moduled_tafs, fig.keep='first'}
+modules <- extract_modules(scale_quantile(expr_sel), traj$time, verbose = FALSE)
+draw_trajectory_heatmap(expr_sel, traj$time, group_name, modules)
+```
+
+## Store outputs in SingleCellExperiment
+
+```{r}
+reducedDims(sce) <- SimpleList(MDS = space)
+colData(sce)$trajectory_path <- traj$path
+colData(sce)$trajectory_pseudotime <- traj$time
+rowData(sce)$trajectory_importance <- gimp[match(rownames(sce), gimp$gene),]$importance
+
+sce
+```
