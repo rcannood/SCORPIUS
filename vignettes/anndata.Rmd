@@ -16,8 +16,9 @@ rmarkdown::render("vignettes/anndata.Rmd")
 rmarkdown::render("vignettes/anndata.Rmd", output_format = "github_document")
 -->
 
-```{r, setseed, echo=FALSE}
+```{r, setup, echo=FALSE}
 set.seed(1)
+knitr::opts_chunk$set(eval = reticulate::py_module_available("anndata"))
 ```
 
 This vignette assumes that you have an AnnData object at the ready. As an example, we create one from the `ginhoux` dataset containing 248 dendritic cell progenitors.
