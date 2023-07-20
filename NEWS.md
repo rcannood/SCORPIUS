@@ -4,6 +4,8 @@
 
 * DOCUMENTATION: Add vignette for working with AnnData objects.
 
+* DOCUMENTATION: Add vignette for working with SingleCellExperiment objects.
+
 * DOCUMENTATION: Create pkgdown site.
 
 # SCORPIUS 1.0.8
