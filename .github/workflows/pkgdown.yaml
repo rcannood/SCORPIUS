@@ -40,7 +40,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           reticulate::install_miniconda()
-          reticulate::py_install("anndata", pip = TRUE)
+          anndata::install_anndata()
         shell: Rscript {0}
 
       - name: Build site
