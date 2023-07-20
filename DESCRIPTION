@@ -59,6 +59,7 @@ Suggests:
   anndata,
   covr,
   knitr,
+  reticulate,
   rmarkdown,
   Seurat,
   SingleCellExperiment,
