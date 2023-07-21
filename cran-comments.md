@@ -8,6 +8,10 @@
 
 * DOCUMENTATION: Create pkgdown site.
 
+* DOCUMENTATION: Update citEntry to bibentry.
+
+* DOCUMENTATION: Reduce execution time of examples by downscaling the example dataset.
+
 # Checks
 
 ## R CMD check results
