@@ -29,7 +29,7 @@ and returns coordinates of the samples represented in an \code{ndim}-dimensional
 }
 \examples{
 ## Generate an example dataset
-dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
+dataset <- generate_dataset(num_genes = 200, num_samples = 400, num_groups = 4)
 
 ## Reduce the dimensionality of this dataset
 space <- reduce_dimensionality(dataset$expression, ndim = 2)

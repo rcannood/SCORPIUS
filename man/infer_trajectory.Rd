@@ -55,7 +55,7 @@ A list containing several objects:
 }
 \examples{
 ## Generate an example dataset and visualise it
-dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
+dataset <- generate_dataset(num_genes = 200, num_samples = 400, num_groups = 4)
 space <- reduce_dimensionality(dataset$expression, ndim = 2)
 draw_trajectory_plot(space, progression_group = dataset$sample_info$group_name)
 

@@ -25,7 +25,7 @@ A list containing the expression data and the meta data of the samples.
 }
 \examples{
 ## Generate a dataset
-dataset <- generate_dataset(num_genes = 500, num_samples = 1000, num_groups = 4)
+dataset <- generate_dataset(num_genes = 200, num_samples = 400, num_groups = 4)
 
 ## Reduce dimensionality and infer trajectory with SCORPIUS
 space <- reduce_dimensionality(dataset$expression, ndim = 2)

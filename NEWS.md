@@ -10,6 +10,8 @@
 
 * DOCUMENTATION: Update citEntry to bibentry.
 
+* DOCUMENTATION: Reduce execution time of examples by downscaling the example dataset.
+
 # SCORPIUS 1.0.8
 
 * MINOR CHANGE: Allow adding row annotations to `draw_trajectory_heatmap()`.
