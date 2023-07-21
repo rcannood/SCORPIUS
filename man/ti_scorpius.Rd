@@ -29,6 +29,9 @@ ti_scorpius(
 
 \item{smoother}{\code{principal_curve} parameter; choice of smoother. Domain: {smooth_spline, lowess, periodic_lowess}. Default: smooth_spline. Format: character.}
 }
+\value{
+A dynwrap TI method.
+}
 \description{
 Pass this object to \code{\link[dynwrap:infer_trajectories]{dynwrap::infer_trajectory()}}.
 }

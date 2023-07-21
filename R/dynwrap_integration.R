@@ -5,6 +5,8 @@
 #' @param priors Priors
 #' @param verbose Verbosity level
 #' @param seed Random seed
+#' 
+#' @noRd
 ti_scorpius_run_fun <- function(expression, priors, parameters, seed = NULL, verbose = 0)  {
   if (!requireNamespace("dynwrap", quietly = TRUE)) {
     stop("install dynwrap in order to use ti_scorpius().")
@@ -75,6 +77,8 @@ ti_scorpius_run_fun <- function(expression, priors, parameters, seed = NULL, ver
 #' Pass this object to [dynwrap::infer_trajectory()].
 #'
 #' @eval dynwrap::generate_parameter_documentation(ti_scorpius())
+#' 
+#' @return A dynwrap TI method.
 #'
 #' @importFrom dynwrap create_ti_method_r
 #' @export

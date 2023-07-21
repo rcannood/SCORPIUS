@@ -215,7 +215,7 @@ draw_trajectory_plot <- function(
 #' @importFrom stats setNames
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ## Generate a dataset
 #' dataset <- generate_dataset(num_genes=500, num_samples=300, num_groups=4)
 #' expression <- dataset$expression

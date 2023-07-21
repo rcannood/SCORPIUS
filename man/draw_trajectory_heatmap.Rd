@@ -44,7 +44,7 @@ are ranked according their position in an inferred trajectory. In addition, the 
 feature modules can be passed along to further enhance the visualisation.
 }
 \examples{
-\dontrun{
+\donttest{
 ## Generate a dataset
 dataset <- generate_dataset(num_genes=500, num_samples=300, num_groups=4)
 expression <- dataset$expression
