@@ -96,7 +96,7 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Generate a dataset</span></span></span>
-<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">generate_dataset</span><span class="op">(</span>num_genes <span class="op">=</span> <span class="fl">500</span>, num_samples <span class="op">=</span> <span class="fl">1000</span>, num_groups <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">generate_dataset</span><span class="op">(</span>num_genes <span class="op">=</span> <span class="fl">200</span>, num_samples <span class="op">=</span> <span class="fl">400</span>, num_groups <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Reduce dimensionality and infer trajectory with SCORPIUS</span></span></span>
 <span class="r-in"><span><span class="va">space</span> <span class="op">&lt;-</span> <span class="fu"><a href="reduce_dimensionality.html">reduce_dimensionality</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">$</span><span class="va">expression</span>, ndim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>

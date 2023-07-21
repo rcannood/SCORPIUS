@@ -104,7 +104,7 @@ and returns coordinates of the samples represented in an <code>ndim</code>-dimen
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Generate an example dataset</span></span></span>
-<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_dataset.html">generate_dataset</a></span><span class="op">(</span>num_genes <span class="op">=</span> <span class="fl">500</span>, num_samples <span class="op">=</span> <span class="fl">1000</span>, num_groups <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_dataset.html">generate_dataset</a></span><span class="op">(</span>num_genes <span class="op">=</span> <span class="fl">200</span>, num_samples <span class="op">=</span> <span class="fl">400</span>, num_groups <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Reduce the dimensionality of this dataset</span></span></span>
 <span class="r-in"><span><span class="va">space</span> <span class="op">&lt;-</span> <span class="fu">reduce_dimensionality</span><span class="op">(</span><span class="va">dataset</span><span class="op">$</span><span class="va">expression</span>, ndim <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
