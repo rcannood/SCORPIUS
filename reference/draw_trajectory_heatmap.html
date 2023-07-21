@@ -127,7 +127,7 @@ feature modules can be passed along to further enhance the visualisation.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">## Generate a dataset</span></span></span>
 <span class="r-in"><span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_dataset.html">generate_dataset</a></span><span class="op">(</span>num_genes<span class="op">=</span><span class="fl">500</span>, num_samples<span class="op">=</span><span class="fl">300</span>, num_groups<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">expression</span> <span class="op">&lt;-</span> <span class="va">dataset</span><span class="op">$</span><span class="va">expression</span></span></span>
@@ -142,20 +142,24 @@ feature modules can be passed along to further enhance the visualisation.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Draw a time series heatmap</span></span></span>
 <span class="r-in"><span><span class="fu">draw_trajectory_heatmap</span><span class="op">(</span><span class="va">expr_sel</span>, <span class="va">time</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="draw_trajectory_heatmap-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Also show the progression groupings</span></span></span>
 <span class="r-in"><span><span class="fu">draw_trajectory_heatmap</span><span class="op">(</span><span class="va">expr_sel</span>, <span class="va">time</span>, progression_group<span class="op">=</span><span class="va">groups</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="draw_trajectory_heatmap-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Use a different palette</span></span></span>
 <span class="r-in"><span><span class="fu">draw_trajectory_heatmap</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">expr_sel</span>, <span class="va">time</span>, progression_group<span class="op">=</span><span class="va">groups</span>,</span></span>
 <span class="r-in"><span>  progression_group_palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">"Set2"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Group "</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="draw_trajectory_heatmap-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Group the genes into modules and visualise the modules in a heatmap</span></span></span>
 <span class="r-in"><span><span class="va">modules</span> <span class="op">&lt;-</span> <span class="fu"><a href="extract_modules.html">extract_modules</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/dynutils/man/scale_quantile.html" class="external-link">scale_quantile</a></span><span class="op">(</span><span class="va">expr_sel</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">draw_trajectory_heatmap</span><span class="op">(</span><span class="va">expr_sel</span>, <span class="va">time</span>, progression_group<span class="op">=</span><span class="va">groups</span>, modules<span class="op">=</span><span class="va">modules</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="draw_trajectory_heatmap-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
