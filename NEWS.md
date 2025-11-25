@@ -1,3 +1,7 @@
+# SCORPIUS 1.0.10
+
+* Fix documentation issues (PR #xxx).
+
 # SCORPIUS 1.0.9
 
 * Resubmission after babelwhale was removed from CRAN.

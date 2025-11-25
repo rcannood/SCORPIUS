@@ -3,7 +3,6 @@
 #' SCORPIUS orders single cells with regard to an implicit timeline,
 #' such as cellular development or progression over time.
 #'
-#' @docType package
 #' @name SCORPIUS-package
 #' @aliases SCORPIUS-package SCORPIUS
 #'
@@ -43,4 +42,4 @@
 #'   path = traj$path,
 #'   progression_group = ginhoux$sample_info$group_name
 #' )
-NULL
+"_PACKAGE"
