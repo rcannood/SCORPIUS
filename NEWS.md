@@ -1,6 +1,6 @@
 # SCORPIUS 1.0.10
 
-* Fix documentation issues (PR #xxx).
+* Fix documentation issues (PR #47).
 
 # SCORPIUS 1.0.9
 
