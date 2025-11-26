@@ -15,7 +15,7 @@ ti_scorpius(
 )
 }
 \arguments{
-\item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson", "spearman" (default), or "cosine". Domain: {spearman, pearson, cosine}. Default: spearman. Format: character.}
+\item{distance_method}{A character string indicating which correlationcoefficient (or covariance) is to be computed. One of "pearson", "spearman" (default), or "cosine". Domain: \{spearman, pearson, cosine\}. Default: spearman. Format: character.}
 
 \item{ndim}{The number of dimensions in the new space. Domain: U(2, 20). Default: 3. Format: integer.}
 
@@ -27,7 +27,7 @@ ti_scorpius(
 
 \item{stretch}{\code{principal_curve} parameter; a factor by which the curve can be extrapolated when points are projected. Domain: U(0, 5). Default: 0. Format: numeric.}
 
-\item{smoother}{\code{principal_curve} parameter; choice of smoother. Domain: {smooth_spline, lowess, periodic_lowess}. Default: smooth_spline. Format: character.}
+\item{smoother}{\code{principal_curve} parameter; choice of smoother. Domain: \{smooth_spline, lowess, periodic_lowess\}. Default: smooth_spline. Format: character.}
 }
 \value{
 A dynwrap TI method.

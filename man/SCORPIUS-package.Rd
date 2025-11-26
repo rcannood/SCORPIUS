@@ -49,3 +49,21 @@ Cannoodt R. et al., SCORPIUS improves trajectory inference and identifies novel 
 bioRxiv (Oct., 2016). \doi{10.1101/079509}
 (\href{https://www.biorxiv.org/content/biorxiv/early/2016/10/07/079509.full.pdf}{PDF}).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/rcannood/SCORPIUS}
+  \item \url{http://rcannood.github.io/SCORPIUS/}
+  \item Report bugs at \url{https://github.com/rcannood/SCORPIUS/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Robrecht Cannoodt \email{rcannood@gmail.com} (\href{https://orcid.org/0000-0003-3641-729X}{ORCID})
+
+Other contributors:
+\itemize{
+  \item Wouter Saelens \email{wouter.saelens@ugent.be} (\href{https://orcid.org/0000-0002-7114-6248}{ORCID}) [contributor]
+}
+
+}

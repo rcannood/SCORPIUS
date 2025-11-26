@@ -16,7 +16,7 @@ reduce_dimensionality(
 
 \item{dist}{the distance metric to be used; can be any of the metrics listed in \code{\link[dynutils:calculate_distance]{dynutils::calculate_distance()}}.}
 
-\item{ndim}{the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.}
+\item{ndim}{the maximum dimension of the space which the data are to be represented in; must be in \eqn{[1, n - 1]}, with \eqn{n} the number of samples (rows) in \code{x}.}
 
 \item{num_landmarks}{the number of landmarks to be selected.}
 }

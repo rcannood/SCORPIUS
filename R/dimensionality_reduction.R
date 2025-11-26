@@ -5,7 +5,7 @@
 #'
 #' @param x a numeric matrix
 #' @param dist the distance metric to be used; can be any of the metrics listed in [dynutils::calculate_distance()].
-#' @param ndim the maximum dimension of the space which the data are to be represented in; must be in {1, 2, \ldots, n-1}.
+#' @param ndim the maximum dimension of the space which the data are to be represented in; must be in \eqn{[1, n - 1]}, with \eqn{n} the number of samples (rows) in \code{x}.
 #' @param num_landmarks the number of landmarks to be selected.
 #'
 #' @return A matrix containing the coordinates of each sample, represented in an \code{ndim}-dimensional space.
