@@ -43,7 +43,7 @@ srt <- NormalizeData(srt)
 
 Fetch the expression data from the Seurat object as follows.
 ```{r fetchdata}
-expression <- t(srt@assays$RNA@data)
+expression <- t(as.matrix(LayerData(srt, assay = "RNA", layer = "data")))
 ```
 
 Also fetch some metadata from the Seurat object. Change `group_name` to whatever column in `srt@meta.data` you are interested in.
