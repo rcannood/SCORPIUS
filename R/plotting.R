@@ -362,3 +362,23 @@ draw_trajectory_heatmap <- function(
 .default_continuous_palette <- function() {
   rev(RColorBrewer::brewer.pal(9, "RdYlBu"))
 }
+
+
+
+#' Progression Group to Factor
+#'
+#' This function converts the Progression Group Column to a Factor (if not already), as expected by the draw_trajectory_plot()
+#'
+#' @param column_name A progression group column from metadata.
+#'
+#' @return Progression Group as a factor.
+
+prog_col_to_factor <- function(column_name) {
+  # Convert the column to a vector
+  column_vector <- c(column_name)
+  
+  # Convert the vector to a factor
+  column_factor <- as.factor(column_vector)
+  
+  return(column_factor)
+}

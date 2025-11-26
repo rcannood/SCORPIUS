@@ -95,6 +95,8 @@ dataset and provides a visual overview of the dataset. In this plot,
 cells that are similar in terms of expression values will be placed
 closer together than cells with dissimilar expression values.
 
+#### Note: if the `group_name` is not a factor, convert it to factor using `prog_col_to_factor(group_name)`
+
 ``` r
 space <- reduce_dimensionality(expression, "spearman")
 draw_trajectory_plot(space, group_name, contour = TRUE)
